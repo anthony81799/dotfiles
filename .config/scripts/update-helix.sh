@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~/Projects/rust/helix/
+cd ~/repos/helix/
 git checkout master
 git fetch
 git pull

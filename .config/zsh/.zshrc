@@ -28,7 +28,7 @@ export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export ZSH="$XDG_DATA_HOME"/oh-my-zsh
 export ZSH_CUSTOM="$ZSH"/custom
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 
 plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore history rust sudo zsh-syntax-highlighting)
 
@@ -72,6 +72,7 @@ alias sed='sd'
 alias find='fd'
 alias tg='topgrade'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 function osc7 {
     local LC_ALL=C
@@ -88,4 +89,7 @@ precmd() {
     print -Pn "\e]133;A\e\\"
 }
 
-[[ ! -f ${ZDOTDIR:-~}/.p10k.zsh ]] || source ${ZDOTDIR:-~}/.p10k.zsh
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
