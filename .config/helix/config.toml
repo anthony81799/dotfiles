@@ -1,0 +1,53 @@
+theme = "rust-theme"
+
+[editor]
+auto-save = true
+bufferline = "multiple"
+color-modes = true
+line-number = "relative"
+mouse = false
+rulers = [80]
+shell = ["zsh", "-c"]
+undercurl = true
+
+[editor.cursor-shape]
+insert = "bar"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "diagnostics"]
+center = ["date-time"]
+right = ["workspace-diagnostics", "selections", "position", "total-line-numbers", "position-percentage", "file-encoding", "file-line-ending", "file-type"]
+separator = "|"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+date-time-format = "%I:%M %p"
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.soft-wrap]
+enable = true
+# wrap-at-text-width = true
+
+[keys.normal]
+up = "no_op"
+down = "no_op"
+left = "no_op"
+right = "no_op"
+X = "extend_line_above"
+backspace = {c = ":sh cargo clean", f = ":sh cargo fmt" }
+esc = ["collapse_selection", "keep_primary_selection"]
+C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+
+[keys.insert]
+up = "no_op"
+down = "no_op"
+left = "no_op"
+right = "no_op"

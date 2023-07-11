@@ -1,0 +1,6 @@
+[[language]]
+name = "rust"
+diagnostic-severity = "Hint"
+
+[language-server.rust-analyzer.config]
+checkOnSave = { command = "clippy" }

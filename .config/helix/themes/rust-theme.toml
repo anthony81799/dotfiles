@@ -1,0 +1,97 @@
+#Syntax Highlighting
+"attribute" = "rust"
+"type" = "scarlet"
+"constructor" = "light-yellow"
+"constant" = "gold"
+"constant.numeric" = "scarlet"
+"string" = "dark-green"
+"string.regex" = {fg = "gold", underline = {color = "gold", style = "double_line"}}
+"string.special.path" = {fg = "light-yellow", underline = {color = "gold", style = "line"}}
+"string.special.url" = {fg = "gold", underline = {color = "gold", style = "line"}}
+"string.special.symbol" = "gold"
+"comment" = "gold"
+"variable" = "orange"
+"variable.parameter" = {fg = "orange", underline = {color = "orange", style = "line"}, modifiers = ["italic"]}
+"variable.other.member" = {fg = "crimson"}
+"label" = "gold"
+"punctuation" = "rust"
+"punctuation.delimiter" = "crimson"
+"punctuation.special" = "gold"
+"keyword" = "light-orange"
+"operator" = "rust"
+"function" = "light-yellow"
+"tag" = "orange"
+"namespace" = "orange"
+
+#html and markup
+"markup.heading" = "orange"
+"markup.bold" = {modifiers = ["bold"]}
+"markup.italic" = {modifiers = ["italic"]}
+"markup.link.url" = {fg = "gold", modifiers = ["underlined"]}
+"markup.link.text" = "light-yellow"
+"markup.raw" = "light yellow"
+
+#git indicators
+"diff.plus" = "forest-green"
+"diff.minus" = "scarlet"
+"diff.delta" = "light-yellow"
+
+#Interface Colors
+"ui.background" = {fg = "gray"}
+"ui.background.separator" = {fg = "white"}
+"ui.cursor" = {bg ="rust"}
+"ui.cursor.select" = {bg ="rust"}
+"ui.cursor.match" = {bg ="light-orange"}
+"ui.cursor.primary" = {bg ="light-gray"}
+"ui.gutter" = "dark-gray"
+"ui.gutter.selected" = "gray"
+"ui.linenr" = "gold"
+"ui.linenr.selected" = "orange"
+"ui.statusline" = {fg = "crimson", bg = "gray"}
+"ui.statusline.inactive" = {fg = "crimson", bg = "medium-gray"}
+"ui.statusline.separator" = "|"
+"ui.popup" = {fg = "crimson", bg = "gray"}
+"ui.popup.info" = {fg = "crimson", bg = "gray"}
+"ui.window" = {fg = "crimson", bg = "gray"}
+"ui.help" = {fg = "crimson", bg = "gray"}
+"ui.text" = {fg = "light-yellow"}
+"ui.text.info" = {fg = "crimson"}
+"ui.text.focus" = {fg = "gold"}
+"ui.text.inactive" = "crimson"
+"ui.virtual.ruler" = {bg = "dark-gray"}
+"ui.menu" = {fg = "crimson", bg = "medium-gray"}
+"ui.menu.selected" = {fg = "crimson", bg = "gold"}
+"ui.menu.scroll" = {fg = "crimson", bg = "gray"}
+"ui.selection" = {bg = "medium-gray"}
+"ui.virtual.wrap" = "light-yellow"
+"ui.virtual.inlay-hint" = {fg = "crimson", modifiers = ["italic", "bold"]}
+"warning" = {fg = "gold", bg = "dark-gray"}
+"error" = {fg = "scarlet", bg = "dark-gray"}
+"info" = {fg = "white", bg = "dark-gray"}
+"hint" = {fg = "forest-green", bg = "dark-gray"}
+"diagnostic" = {underline = {style = "line"}}
+"diagnostic.error" = {underline = {style = "curl", color = "scarlet"}}
+"diagnostic.warning" = {underline = {style = "curl", color = "gold"}}
+"diagnostic.info" = {underline = {style = "curl", color = "white"}}
+"diagnostic.hint" = {underline = {style = "curl", color = "forest-green"}}
+
+[palette]
+black = "#242424"
+blue = "#0000ff"
+crimson = "#880000"
+dark-gray = "#3b3b3b"
+dark-green = "#6a8759"
+forest-green = "#228b22"
+gray = "#808080"
+green = "#00ff00"
+gold = "#ffa500"
+light-orange = "#cc8242"
+light-yellow = "#ffc66d"
+medium-gray = "#656565"
+medium-orange = "#ff8800"
+orange = "#ff6600"
+purple = "#ff00ff"
+red = "#ff0000"
+rust = "#b7410e"
+scarlet = "#ff2400"
+white = "#ffffff"
