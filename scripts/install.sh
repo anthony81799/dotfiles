@@ -1,15 +1,10 @@
-#!/usr/bin/env bash
-
-# This script can be retrieved and run to install my dotfiles and full setup.
+#!/bin/zsh
 
 echo "Installing package group dependencies."
 sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Fonts" "Hardware Suppotrt" -y 
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq neofetch -y
-
-echo "Changing shell to zsh."
-chsh -s $(which zsh)
+sudo dnf install autojump-zsh perl jq neofetch -y
 
 echo "Set alias for dotfiles repo."
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
