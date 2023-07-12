@@ -26,17 +26,8 @@ mkdir repos
 git clone https://github.com/b3nj5m1n/xdg-ninja.git ~/repos/xdg-ninja
 git clone https://github.com/anthony81799/helix.git ~/repos/helix
 
-echo "Install Oh-My-ZSH."
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-echo "Add custom ZSH plugins and theme."
-cd $ZSH_CUSTOM/plugins
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
-echo "Switch to ZSH."
-source ~/.config/zsh/.zshrc
+# echo "Switch to ZSH."
+# source ~/.config/zsh/.zshrc
 
 echo "Install Rust and desired crates."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -70,6 +61,14 @@ dnf install lldb -y
 
 echo "TOML"
 cargo install taplo-cli --locked --features lsp
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+echo "Install Oh-My-ZSH."
+echo "Add custom ZSH plugins and theme."
+cd $ZSH_CUSTOM/plugins
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
 echo "The Installation is finished!"
 echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
