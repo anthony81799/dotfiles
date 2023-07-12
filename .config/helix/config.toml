@@ -8,6 +8,7 @@ line-number = "relative"
 mouse = false
 rulers = [80]
 shell = ["zsh", "-c"]
+true-color = true
 undercurl = true
 
 [editor.cursor-shape]

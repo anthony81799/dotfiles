@@ -1,15 +1,19 @@
 if [ -z "$XDG_DATA_HOME" ] ; then
     export XDG_DATA_HOME="$HOME/.local/share"
 fi
+
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export GOPATH="$XDG_DATA_HOME"/go
 export PATH=$PATH:/usr/local/bin:$GOPATH/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin
+
 if [ -z "$XDG_CONFIG_HOME" ] ; then
     export XDG_CONFIG_HOME="$HOME/.config"
 fi
+
 if [ -z "$XDG_CACHE_HOME" ] ; then
     export XDG_CACHE_HOME="$HOME/.cache"
 fi
+
 if [ -z "$XDG_STATE_HOME" ] ; then
     export XDG_STATE_HOME="$HOME/.local/state"
 fi
@@ -28,7 +32,7 @@ export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export ZSH="$XDG_DATA_HOME"/oh-my-zsh
 export ZSH_CUSTOM="$ZSH"/custom
 
-# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore history rust sudo zsh-syntax-highlighting)
 
@@ -91,5 +95,3 @@ precmd() {
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-ZSH_THEME="powerlevel10k/powerlevel10k"
