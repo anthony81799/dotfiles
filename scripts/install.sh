@@ -20,6 +20,7 @@ git clone --bare https://github.com/anthony81799/dotfiles.git $HOME/.cfg
 
 echo "Checkout dotfiles repo and hide untracked files from git status."
 config checkout
+config config --local status.showUntrackedFiles no
 
 echo "Update /etc/zshenv to use .cofig/zsh."
 sudo sh -c 'echo '"'"'ZDOTDIR=$HOME/.config/zsh'"'"' >> /etc/zshenv'
@@ -33,6 +34,11 @@ git clone https://github.com/b3nj5m1n/xdg-ninja.git ~/repos/xdg-ninja
 git clone https://github.com/anthony81799/helix.git ~/repos/helix
 
 echo "Install Oh My ZSH."
-wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-chmod +x install.sh
-ZDOTDIR=~/.config/zsh ZSH=~/.local/share/oh-my-zsh sh install.sh --keep-zshrc
+ZDOTDIR=~/.config/zsh ZSH=~/.local/share/oh-my-zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+ZSH_CUSTOM=$ZSH/custom
+
+echo "Install custom ZSH plugins and theme."
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+zsh -c "~/scripts/helix-setup.sh"

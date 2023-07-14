@@ -1,17 +1,10 @@
 #!/bin/zsh
 
-ZSH_CUSTOM=$ZSH/custom
-
-echo "Install custom ZSH plugins and theme."
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
 echo "Install Rust and desired crates."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 cargo install bacon bat bottom cargo-update exa fd-find gitui ripgrep sd tealdeer topgrade zoxide
 cargo instal --locked zellij
-./scripts/update-helix.sh
+./~/scripts/update-helix.sh
 
 echo "Install and configure npm."
 sudo dnf install nodejs-npm -y
