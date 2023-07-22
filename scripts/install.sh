@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq neofetch -y
+sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel -y
 
 echo "Add RPMFusion."
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
@@ -36,9 +36,50 @@ git clone https://github.com/anthony81799/helix.git ~/repos/helix
 echo "Install Oh My ZSH."
 ZDOTDIR=~/.config/zsh ZSH=~/.local/share/oh-my-zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
 ZSH_CUSTOM=$ZSH/custom
+XDG_DATA_HOME="$HOME/.local/share"
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_CACHE_HOME="$HOME/.cache"
+XDG_STATE_HOME="$HOME/.local/state"
+CARGO_HOME="$XDG_DATA_HOME"/cargo
 
 echo "Install custom ZSH plugins and theme."
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-./~/scripts/rust-and-helix-setup.sh
+sudo git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+sudo git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+echo "Install Rust and desired crates."
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install bacon bat bottom cargo-update exa fd-find gitui ripgrep sd tealdeer topgrade zoxide porsmo
+cargo instal --locked zellij
+./~/scripts/update-helix.sh
+
+echo "Install and configure npm."
+sudo dnf install nodejs-npm -y
+sudo npm config set prefix=${XDG_DATA_HOME}/npm;
+sudo npm config set cache=${XDG_CACHE_HOME}/npm;
+sudo npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js;
+
+echo "Install language servers helix languages."
+
+echo "Bash"
+sudo npm i -g bash-language-server
+
+echo "CSS, HTML and JSON"
+sudo npm i -g vscode-langservers-extracted
+
+echo "Go"
+go install golang.org/x/tools/gopls@latest
+sudo dnf install delve -y
+
+echo "JavaScript and TypeScript"
+sudo npm install -g typescript typescript-language-server
+
+echo "Rust"
+sudo dnf install lldb -y
+
+echo "TOML"
+cargo install taplo-cli --locked --features lsp
+
+echo "The Installation is finished!"
+echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
+neofetch
