@@ -40,7 +40,8 @@ XDG_DATA_HOME="$HOME/.local/share"
 XDG_CONFIG_HOME="$HOME/.config"
 XDG_CACHE_HOME="$HOME/.cache"
 XDG_STATE_HOME="$HOME/.local/state"
-CARGO_HOME="$XDG_DATA_HOME"/cargo
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 
 echo "Install custom ZSH plugins and theme."
 sudo git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -55,9 +56,13 @@ cargo instal --locked zellij
 
 echo "Install and configure npm."
 sudo dnf install nodejs-npm -y
-sudo npm config set prefix=${XDG_DATA_HOME}/npm;
-sudo npm config set cache=${XDG_CACHE_HOME}/npm;
-sudo npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js;
+sudo npm config set prefix=${XDG_DATA_HOME}/npm
+sudo npm config set cache=${XDG_CACHE_HOME}/npm
+sudo npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+
+npm config set prefix=${XDG_DATA_HOME}/npm
+npm config set cache=${XDG_CACHE_HOME}/npm
+npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
 
 echo "Install language servers helix languages."
 
@@ -76,9 +81,26 @@ sudo npm install -g typescript typescript-language-server
 
 echo "Rust"
 sudo dnf install lldb -y
+rustup compent add rust-analyzer
 
 echo "TOML"
 cargo install taplo-cli --locked --features lsp
+
+echo "C/C++"
+sudo dnf install clang clang-tools-extra -y
+
+echo "Dockerfile"
+sudo npm install -g dockerfile-language-server-nodejs
+
+echo "Java"
+sudo dnf copr enable freyr/jdtls -y
+sudo dnf install jdtls -y
+
+echo "WGSL"
+cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl_analyzer
+
+echo "YAML"
+sudo npm i -g yaml-language-server@next
 
 echo "The Installation is finished!"
 echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."

@@ -5,7 +5,7 @@ fi
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export GOROOT=/usr/local/go
 export GOPATH="$XDG_DATA_HOME"/go
-export PATH=$PATH:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin
+export PATH=$PATH:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin
 
 if [ -z "$XDG_CONFIG_HOME" ] ; then
     export XDG_CONFIG_HOME="$HOME/.config"

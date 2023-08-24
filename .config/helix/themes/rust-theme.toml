@@ -29,7 +29,7 @@
 "markup.italic" = {modifiers = ["italic"]}
 "markup.link.url" = {fg = "gold", modifiers = ["underlined"]}
 "markup.link.text" = "light-yellow"
-"markup.raw" = "light yellow"
+"markup.raw" = "light-yellow"
 
 #git indicators
 "diff.plus" = "forest-green"
