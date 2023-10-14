@@ -39,6 +39,7 @@ plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitign
 
 source $ZSH/oh-my-zsh.sh
 source $ZSH_CUSTOM/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+[[ ! -r /home/amason/.opam/opam-init/init.zsh ]] || source /home/amason/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
