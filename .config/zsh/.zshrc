@@ -5,7 +5,7 @@ fi
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export GOROOT=/usr/local/go
 export GOPATH="$XDG_DATA_HOME"/go
-export PATH=$PATH:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin
+export PATH=$PATH:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin:$HOME/.config/emacs/bin:$HOME/winhome/AppData/Local/Programs/Microsoft\ VS\ Code/bin/
 
 if [ -z "$XDG_CONFIG_HOME" ] ; then
     export XDG_CONFIG_HOME="$HOME/.config"
@@ -19,6 +19,7 @@ if [ -z "$XDG_STATE_HOME" ] ; then
     export XDG_STATE_HOME="$HOME/.local/state"
 fi
 
+eval "$(zellij setup --generate-auto-start zsh)"
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -30,12 +31,13 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export HISTFILE="$XDG_STATE_HOME"/zsh/history
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export ZSH="$XDG_DATA_HOME"/oh-my-zsh
 export ZSH_CUSTOM="$ZSH"/custom
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore history rust sudo zsh-syntax-highlighting)
+plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore history nvm rust sudo zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source $ZSH_CUSTOM/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
@@ -44,14 +46,14 @@ source $ZSH_CUSTOM/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='hx'
+  export EDITOR='nvim'
 fi
 
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
-alias cd='z'
-alias ls='exa --group-directories-first'
-alias l='exa --group-directories-first -alF'
+alias ls='eza --color=always --icons=always --group-directories-first'
+alias l='eza --color=always --icons=always --group-directories-first -alF'
+alias tree='eza --color=always --icons=always --tree'
 alias mv='mv -i'
 alias rm='rm -i'
 alias cp='cp -i'
@@ -73,7 +75,6 @@ alias cl='cargo clippy'
 alias cf='cargo fmt'
 alias ct='cargo test'
 alias c='clear'
-alias vim='hx'
 alias sed='sd'
 alias find='fd'
 alias tg='topgrade'
@@ -93,6 +94,15 @@ add-zsh-hook -Uz chpwd osc7
 
 precmd() {
     print -Pn "\e]133;A\e\\"
+}
+
+function ya() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+	cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
 }
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.

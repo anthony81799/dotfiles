@@ -1,0 +1,3 @@
+prefix=/home/amason/.local/share/npm
+cache=/home/amason/.cache/npm
+init-module=/home/amason/.config/npm/config/npm-init.js
