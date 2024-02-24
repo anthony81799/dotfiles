@@ -80,6 +80,7 @@ alias find='fd'
 alias tg='topgrade'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias nv='nvim'
 
 function osc7 {
     local LC_ALL=C
