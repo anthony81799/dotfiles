@@ -47,4 +47,4 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.scrolloff = 999
-
+vim.opt.colorcolumn = "80"
