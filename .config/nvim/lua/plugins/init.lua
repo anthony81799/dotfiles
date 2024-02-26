@@ -367,14 +367,14 @@ return {
       require("harpoon"):setup()
     end,
     keys = {
-      { "<C-a>", function() require("harpoon"):list():append() end,  desc = "harpoon add file" },
+      { "<C-a>",   function() require("harpoon"):list():append() end,  desc = "harpoon add file" },
       -- {"<C-e>", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu"},
-      { "<C-h>",     function() require("harpoon"):list():select(1) end, desc = "harpoon file 1" },
-      { "<C-t>",     function() require("harpoon"):list():select(2) end, desc = "harpoon file 2" },
-      { "<C-n>",     function() require("harpoon"):list():select(3) end, desc = "harpoon file 3" },
-      { "<C-s>",     function() require("harpoon"):list():select(4) end, desc = "harpoon file 4" },
-      { "<C-S-P>",   function() require("harpoon"):list():prev() end,    desc = "toggle previous buffer" },
-      { "<C-S-N>",   function() require("harpoon"):list():next() end,    desc = "toggle next buffer" },
+      { "<C-h>",   function() require("harpoon"):list():select(1) end, desc = "harpoon file 1" },
+      { "<C-t>",   function() require("harpoon"):list():select(2) end, desc = "harpoon file 2" },
+      { "<C-n>",   function() require("harpoon"):list():select(3) end, desc = "harpoon file 3" },
+      { "<C-s>",   function() require("harpoon"):list():select(4) end, desc = "harpoon file 4" },
+      { "<C-S-P>", function() require("harpoon"):list():prev() end,    desc = "toggle previous buffer" },
+      { "<C-S-N>", function() require("harpoon"):list():next() end,    desc = "toggle next buffer" },
       {
         "<C-e>",
         function()
@@ -399,6 +399,7 @@ return {
       }
     }
   },
+  { "sitiom/nvim-numbertoggle" },
   require 'plugins.autoformat',
   require 'plugins.debug',
 }

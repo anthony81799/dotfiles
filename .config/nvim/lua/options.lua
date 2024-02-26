@@ -26,8 +26,8 @@ vim.o.termguicolors = true
 
 vim.opt.guicursor = "n:block,i:ver100,v:hor100"
 
-vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.wo.number = true
+vim.wo.relativenumber = true
 
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
