@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel entr -y
+sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel entr fzf -y
 
 echo "Add RPMFusion."
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
@@ -45,7 +45,7 @@ sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUST
 
 echo "Install Rust and desired crates."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-cargo install bacon bat bottom cargo-update eza fd-find gitui ripgrep sd tealdeer topgrade zoxide porsmo
+cargo install bacon bat bottom cargo-update eza fd-find gitui ripgrep sd tealdeer topgrade zoxide porsmo atuin
 cargo instal --locked zellij
 ./~/scripts/update-helix.sh
 

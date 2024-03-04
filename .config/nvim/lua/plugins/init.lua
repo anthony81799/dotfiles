@@ -141,6 +141,14 @@ return {
         lualine_y = { "progress" },
         lualine_z = { "location" },
       },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = { "branch" },
+        lualine_c = {"buffers", "tabs", "windows"},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {},
+      },
     },
   },
   {
@@ -367,36 +375,14 @@ return {
       require("harpoon"):setup()
     end,
     keys = {
-      { "<C-a>",   function() require("harpoon"):list():append() end,  desc = "harpoon add file" },
-      -- {"<C-e>", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu"},
-      { "<C-h>",   function() require("harpoon"):list():select(1) end, desc = "harpoon file 1" },
-      { "<C-t>",   function() require("harpoon"):list():select(2) end, desc = "harpoon file 2" },
-      { "<C-n>",   function() require("harpoon"):list():select(3) end, desc = "harpoon file 3" },
-      { "<C-s>",   function() require("harpoon"):list():select(4) end, desc = "harpoon file 4" },
-      { "<C-S-P>", function() require("harpoon"):list():prev() end,    desc = "toggle previous buffer" },
-      { "<C-S-N>", function() require("harpoon"):list():next() end,    desc = "toggle next buffer" },
-      {
-        "<C-e>",
-        function()
-          local conf = require("telescope.config").values
-          local function toggle_telescope(harpoon_files)
-            local file_paths = {}
-            for _, item in ipairs(harpoon_files.items) do
-              table.insert(file_paths, item.value)
-            end
-            require("telescope.pickers").new({}, {
-              prompt_title = "Harpoon",
-              finder = require("telescope.finders").new_table({
-                results = file_paths,
-              }),
-              previewer = conf.file_previewer({}),
-              sorter = conf.generic_sorter({}),
-            }):find()
-          end
-          toggle_telescope(require("harpoon"):list())
-        end,
-        desc = "harpoon telescope window"
-      }
+      { "<leader>ha",   function() require("harpoon"):list():append() end,  desc = "harpoon add file" },
+      {"<leader>hl", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu"},
+      { "<leader>h1",   function() require("harpoon"):list():select(1) end, desc = "harpoon file 1" },
+      { "<leader>h2",   function() require("harpoon"):list():select(2) end, desc = "harpoon file 2" },
+      { "<leader>h3",   function() require("harpoon"):list():select(3) end, desc = "harpoon file 3" },
+      { "<leader>h4",   function() require("harpoon"):list():select(4) end, desc = "harpoon file 4" },
+      { "<leader>hP", function() require("harpoon"):list():prev() end,    desc = "toggle previous buffer" },
+      { "<leader>hN", function() require("harpoon"):list():next() end,    desc = "toggle next buffer" },
     }
   },
   { "sitiom/nvim-numbertoggle" },

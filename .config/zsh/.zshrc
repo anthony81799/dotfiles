@@ -37,7 +37,7 @@ export ZSH_CUSTOM="$ZSH"/custom
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore history nvm rust sudo zsh-syntax-highlighting)
+plugins=(alias-finder autojump colorize command-not-found dnf git gitfast gitignore nvm rust sudo zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source $ZSH_CUSTOM/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
@@ -108,3 +108,4 @@ function ya() {
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+eval "$(atuin init zsh)"

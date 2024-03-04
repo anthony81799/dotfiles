@@ -3,6 +3,7 @@ vim.keymap.set({ 'n', 'v' }, '<up>', '<Nop>', { noremap = true })
 vim.keymap.set({ 'n', 'v' }, '<down>', '<Nop>', { noremap = true })
 vim.keymap.set({ 'n', 'v' }, '<left>', '<Nop>', { noremap = true })
 vim.keymap.set({ 'n', 'v' }, '<right>', '<Nop>', { noremap = true })
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
