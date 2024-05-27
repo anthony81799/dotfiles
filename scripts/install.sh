@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel entr fzf git neovim -y
+sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel entr fzf git neovim openssl-devel -y
 
 echo "Add RPMFusion."
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
