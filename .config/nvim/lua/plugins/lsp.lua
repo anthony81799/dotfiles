@@ -66,7 +66,6 @@ local servers = {
     },
   },
   marksman = {},
-  ocamllsp = {},
   rust_analyzer = {},
   sqlls = {},
   taplo = {},

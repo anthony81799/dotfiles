@@ -49,9 +49,11 @@ sudo npm config set prefix=${XDG_DATA_HOME}/npm
 sudo npm config set cache=${XDG_CACHE_HOME}/npm
 sudo npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
 
-npm config set prefix=${XDG_DATA_HOME}/npm
-npm config set cache=${XDG_CACHE_HOME}/npm
-npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+#npm config set prefix=${XDG_DATA_HOME}/npm
+#npm config set cache=${XDG_CACHE_HOME}/npm
+#npm config set init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+sudo chmod 777 '.cache'
+sudo chown -R 1000:1000 "/home/amason/.cache/npm"
 
 # echo "Install language servers helix languages."
 

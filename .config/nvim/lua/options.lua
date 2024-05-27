@@ -1,3 +1,7 @@
+-- Neovide options
+vim.o.guifont = "FiraCode_Nerd_Font_Mono,MesloLGS_NF"
+vim.g.neovide_transparency = 0.3
+
 -- Disable mouse
 vim.o.mouse = ''
 -- Sync clipboard between OS and Neovim.
