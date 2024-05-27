@@ -48,7 +48,7 @@ return {
       'rafamadriz/friendly-snippets',
     },
   },
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',                       opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -144,7 +144,7 @@ return {
       inactive_sections = {
         lualine_a = {},
         lualine_b = { "branch" },
-        lualine_c = {"buffers", "tabs", "windows"},
+        lualine_c = { "buffers", "tabs", "windows" },
         lualine_x = {},
         lualine_y = {},
         lualine_z = {},
@@ -159,8 +159,6 @@ return {
     main = 'ibl',
     opts = {},
   },
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
@@ -271,6 +269,26 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          bottom_search = true,         -- use a classic bottom cmdline for search
+          command_palette = true,       -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false,       -- add a border to hover docs and signature help
+        },
+      })
+    end
   },
   {
     "rcarriga/nvim-notify",
@@ -364,7 +382,7 @@ return {
   {
     "mbbill/undotree",
     config = function()
-      vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<CR>", { desc = "Telescope Undo" })
+      vim.keymap.set("n", "<leader>uT", "<cmd>Telescope undo<CR>", { desc = "Telescope Undo" })
     end,
   },
   {
@@ -375,14 +393,17 @@ return {
       require("harpoon"):setup()
     end,
     keys = {
-      { "<leader>ha",   function() require("harpoon"):list():append() end,  desc = "harpoon add file" },
-      {"<leader>hl", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu"},
-      { "<leader>h1",   function() require("harpoon"):list():select(1) end, desc = "harpoon file 1" },
-      { "<leader>h2",   function() require("harpoon"):list():select(2) end, desc = "harpoon file 2" },
-      { "<leader>h3",   function() require("harpoon"):list():select(3) end, desc = "harpoon file 3" },
-      { "<leader>h4",   function() require("harpoon"):list():select(4) end, desc = "harpoon file 4" },
-      { "<leader>hP", function() require("harpoon"):list():prev() end,    desc = "toggle previous buffer" },
-      { "<leader>hN", function() require("harpoon"):list():next() end,    desc = "toggle next buffer" },
+      { "<leader>ha", function() require("harpoon"):list():append() end,                                              desc = "harpoon add file" },
+      { "<leader>hl", function()
+        local harpoon = require("harpoon")
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end,                                                                                                            desc = "harpoon quick menu" },
+      { "<leader>h1", function() require("harpoon"):list():select(1) end,                                             desc = "harpoon file 1" },
+      { "<leader>h2", function() require("harpoon"):list():select(2) end,                                             desc = "harpoon file 2" },
+      { "<leader>h3", function() require("harpoon"):list():select(3) end,                                             desc = "harpoon file 3" },
+      { "<leader>h4", function() require("harpoon"):list():select(4) end,                                             desc = "harpoon file 4" },
+      { "<leader>hP", function() require("harpoon"):list():prev() end,                                                desc = "toggle previous buffer" },
+      { "<leader>hN", function() require("harpoon"):list():next() end,                                                desc = "toggle next buffer" },
     }
   },
   { "sitiom/nvim-numbertoggle" },
