@@ -125,7 +125,7 @@ alias cl='cargo clippy'
 alias cf='cargo fmt'
 alias ct='cargo test'
 alias c='clear'
-# alias sed='sd'
+alias sed='sd'
 alias find='fd'
 alias tg='topgrade'
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
