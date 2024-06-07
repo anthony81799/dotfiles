@@ -13,7 +13,7 @@
 #  * kmeans     - Kmeans is an algo that divides and picks pixels all around the image
 #                  Requires more tweaking and more in depth testing but for the most part
 #                  it just werks
-backend = "resized"
+backend = "full"
 
 # What color space to use to produce and select the most prominent colors:
 #  * lab      - Uses Cie L a b color space
@@ -58,7 +58,7 @@ threshold = 20
 #  * softlight16     - softlight with color variation
 #  * softlightcomp   - softlight with complementary colors
 #  * softlightcomp16 - softlight with complementary colors with colors
-palette = "dark"
+palette = "dark16"
 
 # This field chooses a method to use when the gathered colors aren't enough:
 #  * interpolation - (default) Tries to pick two colors and built gradients over them
