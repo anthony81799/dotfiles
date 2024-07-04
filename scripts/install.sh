@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq neofetch alsa-lib-devel entr fzf git neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel -y
+sudo dnf install zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel -y
 
 echo "Add RPMFusion."
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
@@ -30,7 +30,7 @@ sudo sh -c 'echo '"'"'ZDOTDIR=$HOME/.config/zsh'"'"' >> /etc/zshenv'
 echo "Change default shell to ZSH."
 chsh -s $(which zsh)
 
-echo "Install Oh My ZSH."
+echo "Install Oh My Posh."
 curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
 
 echo "Install and configure npm."
@@ -45,4 +45,4 @@ sudo chown -R 1000:1000 "/home/amason/.cache/npm"
 echo "The Installation is finished!"
 echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
 echo "To install Rust and cargo run ~/scripts/rust.sh"
-neofetch
+fastfetch
