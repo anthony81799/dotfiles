@@ -31,6 +31,9 @@ echo "Change default shell to ZSH."
 chsh -s $(which zsh)
 
 echo "Install Oh My Posh."
+if [ ! -d ~/.local/bin ]; then
+  mkdir -p ~/.local/bin;
+fi
 curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
 
 echo "Install and configure npm."
