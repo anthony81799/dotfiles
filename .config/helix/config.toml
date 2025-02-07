@@ -19,14 +19,13 @@ select = "underline"
 hidden = false
 
 [editor.statusline]
-left = ["mode", "spinner", "file-name", "diagnostics"]
-center = ["date-time"]
-right = ["workspace-diagnostics", "selections", "position", "total-line-numbers", "position-percentage", "file-encoding", "file-line-ending", "file-type"]
+left = ["mode", "spinner"]
+center = ["file-name", "diagnostics", "workspace-diagnostics"]
+right = ["selections", "position", "total-line-numbers", "position-percentage", "file-encoding", "file-line-ending", "file-type"]
 separator = "|"
 mode.normal = "NORMAL"
 mode.insert = "INSERT"
 mode.select = "SELECT"
-date-time-format = "%I:%M %p"
 
 [editor.lsp]
 display-messages = true
