@@ -1,97 +1,78 @@
 #Syntax Highlighting
-"attribute" = "rust"
-"type" = "scarlet"
-"constructor" = "light-yellow"
-"constant" = "gold"
-"constant.numeric" = "scarlet"
-"string" = "dark-green"
-"string.regex" = {fg = "gold", underline = {color = "gold", style = "double_line"}}
-"string.special.path" = {fg = "light-yellow", underline = {color = "gold", style = "line"}}
-"string.special.url" = {fg = "gold", underline = {color = "gold", style = "line"}}
-"string.special.symbol" = "gold"
-"comment" = "gold"
-"variable" = "orange"
-"variable.parameter" = {fg = "orange", underline = {color = "orange", style = "line"}, modifiers = ["italic"]}
-"variable.other.member" = {fg = "crimson"}
-"label" = "gold"
-"punctuation" = "rust"
-"punctuation.delimiter" = "crimson"
-"punctuation.special" = "gold"
-"keyword" = "light-orange"
-"operator" = "rust"
-"function" = "light-yellow"
-"tag" = "orange"
-"namespace" = "orange"
+"attribute" = "#b7410e"
+"type" = "#ff2400"
+"constructor" = "#ffc66d"
+"constant" = "#ffa500"
+"constant.numeric" = "#ff2400"
+"string" = "#6a8759"
+"string.regex" = { fg = "#ffa500", underline = { color = "#ffa500", style = "line" } }
+"string.special.path" = { fg = "#ffa500", modifiers = ["italic"] }
+"string.special.url" = { fg = "#ffa500", modifiers = ["italic"] }
+"string.special.symbol" = "#b7410e"
+"comment" = { fg = "#ffa500", modifiers = ["italic"] }
+"variable" = "#ff6600"
+"variable.parameter" = { fg = "#ff6600", underline = { color = "#ff6600", style = "line" }, modifiers = [
+  "italic",
+] }
+"variable.other.member" = { fg = "#ff2400" }
+"label" = { fg = "#ffa500", underline = { color = "#ffa500", style = "line" } }
+"punctuation" = "#b7410e"
+"punctuation.delimiter" = "#b7410e"
+"punctuation.special" = "#b7410e"
+"keyword" = "#cc8242"
+"operator" = "#b7410e"
+"function" = "#ffc66d"
+"tag" = "#ff6600"
+"namespace" = "#ff6600"
 
 #html and markup
-"markup.heading" = "orange"
-"markup.bold" = {modifiers = ["bold"]}
-"markup.italic" = {modifiers = ["italic"]}
-"markup.link.url" = {fg = "gold", modifiers = ["underlined"]}
-"markup.link.text" = "light-yellow"
-"markup.raw" = "light-yellow"
+"markup.heading" = "#6a8759"
+"markup.bold" = { modifiers = ["bold"] }
+"markup.italic" = { modifiers = ["italic"] }
+"markup.link.url" = { fg = "#ffa500", modifiers = ["italic"] }
+"markup.link.text" = "#6a8759"
+"markup.raw" = "#6a8759"
 
 #git indicators
-"diff.plus" = "forest-green"
-"diff.minus" = "scarlet"
-"diff.delta" = "light-yellow"
+"diff.plus" = "#2EA043"
+"diff.minus" = "#f85149"
+"diff.delta" = "#0078D4"
 
 #Interface Colors
-"ui.background" = {fg = "gray"}
-"ui.background.separator" = {fg = "white"}
-"ui.cursor" = {bg ="rust"}
-"ui.cursor.select" = {bg ="rust"}
-"ui.cursor.match" = {bg ="light-orange"}
-"ui.cursor.primary" = {bg ="light-gray"}
-"ui.gutter" = "dark-gray"
-"ui.gutter.selected" = "gray"
-"ui.linenr" = "gold"
-"ui.linenr.selected" = "orange"
-"ui.statusline" = {fg = "crimson", bg = "gray"}
-"ui.statusline.inactive" = {fg = "crimson", bg = "medium-gray"}
+"ui.background" = "#1f1f1f"
+"ui.background.separator" = { fg = "#cccccc" }
+"ui.cursor" = { bg = "#ebdbb2" }
+"ui.cursor.select" = { bg = "#ebdbb2" }
+"ui.cursor.match" = { bg = "#ebdbb2" }
+"ui.cursor.primary" = { bg = "#ebdbb2" }
+"ui.gutter" = "#1f1f1f"
+"ui.gutter.selected" = "#1f1f1f"
+"ui.linenr" = "#ffa500"
+"ui.linenr.selected" = "#ff6600"
+"ui.statusline" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.statusline.inactive" = { fg = "#cccccc", bg = "#1f1f1f" }
 "ui.statusline.separator" = "|"
-"ui.popup" = {fg = "crimson", bg = "gray"}
-"ui.popup.info" = {fg = "crimson", bg = "gray"}
-"ui.window" = {fg = "crimson", bg = "gray"}
-"ui.help" = {fg = "crimson", bg = "gray"}
-"ui.text" = {fg = "light-yellow"}
-"ui.text.info" = {fg = "crimson"}
-"ui.text.focus" = {fg = "gold"}
-"ui.text.inactive" = "crimson"
-"ui.virtual.ruler" = {bg = "dark-gray"}
-"ui.menu" = {fg = "crimson", bg = "medium-gray"}
-"ui.menu.selected" = {fg = "crimson", bg = "gold"}
-"ui.menu.scroll" = {fg = "crimson", bg = "gray"}
-"ui.selection" = {bg = "medium-gray"}
-"ui.virtual.wrap" = "light-yellow"
-"ui.virtual.inlay-hint" = {fg = "crimson", modifiers = ["italic", "bold"]}
-"warning" = {fg = "gold", bg = "dark-gray"}
-"error" = {fg = "scarlet", bg = "dark-gray"}
-"info" = {fg = "white", bg = "dark-gray"}
-"hint" = {fg = "forest-green", bg = "dark-gray"}
-"diagnostic" = {underline = {style = "line"}}
-"diagnostic.error" = {underline = {style = "curl", color = "scarlet"}}
-"diagnostic.warning" = {underline = {style = "curl", color = "gold"}}
-"diagnostic.info" = {underline = {style = "curl", color = "white"}}
-"diagnostic.hint" = {underline = {style = "curl", color = "forest-green"}}
-
-[palette]
-black = "#242424"
-blue = "#0000ff"
-crimson = "#880000"
-dark-gray = "#3b3b3b"
-dark-green = "#6a8759"
-forest-green = "#228b22"
-gray = "#808080"
-green = "#00ff00"
-gold = "#ffa500"
-light-orange = "#cc8242"
-light-yellow = "#ffc66d"
-medium-gray = "#656565"
-medium-orange = "#ff8800"
-orange = "#ff6600"
-purple = "#ff00ff"
-red = "#ff0000"
-rust = "#b7410e"
-scarlet = "#ff2400"
-white = "#ffffff"
+"ui.popup" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.popup.info" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.window" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.help" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.text" = { fg = "#cccccc" }
+"ui.text.info" = { fg = "#cccccc" }
+"ui.text.focus" = { fg = "#784f26" }
+"ui.text.inactive" = "#cccccc"
+"ui.virtual.ruler" = { bg = "#d45c00" }
+"ui.menu" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.menu.selected" = { fg = "#cccccc", bg = "#784f26" }
+"ui.menu.scroll" = { fg = "#cccccc", bg = "#1f1f1f" }
+"ui.selection" = { bg = "#784f26" }
+"ui.virtual.wrap" = "#ffc66d"
+"ui.virtual.inlay-hint" = { fg = "#cccccc", modifiers = ["italic", "bold"] }
+"warning" = { fg = "#ff942f", bg = "#1f1f1f" }
+"error" = { fg = "#e45454", bg = "#1f1f1f" }
+"info" = { fg = "#00b7e4", bg = "#1f1f1f" }
+"hint" = { fg = "#2faf64", bg = "#1f1f1f" }
+"diagnostic" = { underline = { style = "line" } }
+"diagnostic.error" = { underline = { style = "curl", color = "#e45454" } }
+"diagnostic.warning" = { underline = { style = "curl", color = "#ff942f" } }
+"diagnostic.info" = { underline = { style = "curl", color = "#00b7e4" } }
+"diagnostic.hint" = { underline = { style = "curl", color = "#2faf64" } }
