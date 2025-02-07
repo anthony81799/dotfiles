@@ -4,17 +4,23 @@ diagnostic-severity = "hint"
 
 [language-server.rust-analyzer.config]
 checkOnSave = { command = "clippy" }
+inlayHints.bindingModeHints.enable = false
+inlayHints.closingBraceHints.minLines = 10
+inlayHints.closureReturnTypeHints.enable = "with_block"
+inlayHints.discriminantHints.enable = "fieldless"
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+inlayHints.typeHints.hideClosureInitialization = false
 
 [language-server.rust-analyzer.config.cargo]
 features = "all"
 
-[language-server.sql-language-server]
-command = "sql-language-server"
-args = ["up", "--method", "stdio"]
-
 [[language]]
 name = "sql"
 language-servers = [ "sql-language-server" ]
+
+[language-server.sql-language-server]
+command = "sql-language-server"
+args = ["up", "--method", "stdio"]
 
 [[language]]
 name = "toml"
