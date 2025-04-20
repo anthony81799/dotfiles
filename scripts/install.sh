@@ -28,7 +28,7 @@ echo "Update /etc/zshenv to use .cofig/zsh."
 sudo sh -c 'echo '"'"'ZDOTDIR=$HOME/.config/zsh'"'"' >> /etc/zshenv'
 
 echo "Change default shell to ZSH."
-chsh -s $(which zsh)
+chsh -s /bin/zsh
 
 echo "Install Oh My Posh."
 if [ ! -d ~/.local/bin ]; then
