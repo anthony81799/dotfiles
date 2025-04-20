@@ -32,7 +32,7 @@ mkdir ~/repos
 git clone https://github.com/helix-editor/helix ~/repos/helix
 
 if $UPDATE_HELIX; then
-  ech "Updating helix and installing LSPs and debuggers."
+  echo "Updating helix and installing LSPs and debuggers."
   bash ~/scripts/update-helix.sh
   bash ~/scripts/helix-lsp.sh
 fi
