@@ -26,6 +26,7 @@ cargo install atuin bacon bat bottom cargo-update eza fd-find ripgrep sd tealdee
 cargo install --locked gitui
 cargo install --locked yazi-fm yazi-cli
 cargo install --locked zellij
+cargo install --locked dysk
 
 echo "Creating repos folder and cloning Helix"
 mkdir ~/repos
