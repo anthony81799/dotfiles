@@ -64,8 +64,14 @@ zinit snippet OMZP::sudo
 
 # Load completions
 autoload -Uz compinit && compinit
-
 zinit cdreplay -q
+
+# Docker completions (native)
+if command -v docker &>/dev/null; then
+  source <(docker completion zsh)
+else
+  echo "docker not in path"
+fi
 
 # Initialize theme
 eval "$(oh-my-posh init zsh --config ~/.config/zsh/theme.json)"
@@ -161,3 +167,5 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+. "$HOME/.local/share/../bin/env"
