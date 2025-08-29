@@ -117,7 +117,7 @@ alias gi='git init'
 alias gcl='git clone'
 alias ca='cargo add'
 alias ci='cargo install'
-alias cr='cargo remove'
+alias crm='cargo remove'
 alias cu='cargo uninstall'
 alias cr='cargo run'
 alias cb='cargo build'
@@ -160,6 +160,7 @@ function ya() {
   fi
   rm -f -- "$tmp"
 }
+
 # pnpm
 export PNPM_HOME="/home/amason/.local/share/pnpm"
 case ":$PATH:" in
@@ -169,3 +170,12 @@ esac
 # pnpm end
 
 . "$HOME/.local/share/../bin/env"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/amason/google-cloud-sdk/path.zsh.inc' ]; then . '/home/amason/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/amason/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/amason/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Turso
+export PATH="$PATH:/home/amason/.turso"
