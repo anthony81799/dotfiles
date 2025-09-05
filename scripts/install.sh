@@ -1,5 +1,35 @@
 #!/usr/bin/env bash
 
+# Parse arguments
+INSTALL_GO=false
+INSTALL_RUST=false
+while getopts "h-:r-:" opt; do
+  case $opt in
+  h)
+    echo "Usage: $0 [--help] [--install-go] [--install-rust]"
+    echo "Options:"
+    echo "--help, -h: Print this help message"
+    echo "--install-go, -g: Install Go toolchain and lazygit after regular installation"
+    echo "--install-rust, -r: Install Rust toolchain and packages after regular installation"
+    exit 0
+    ;;
+  g) INSTALL_GO=true ;;
+  r) INSTALL_RUST=true ;;
+  -) case $OPTARG in
+    help)
+      echo "Usage: $0 [--help] [--install-go] [--install-rust]"
+      echo "Options:"
+      echo "--help, -h: Print this help message"
+      echo "--install-go, -g: Install Go toolchain and lazygit after regular installation"
+      echo "--install-rust, -r: Install Rust toolchain and packages after regular installation"
+      exit 0
+      ;;
+    install-go) INSTALL_GO=true ;;
+    install-rust) INSTALL_RUST=true ;;
+    esac ;;
+  esac
+done
+
 echo "Installing package dependencies."
 sudo dnf install zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks -y
 
@@ -64,7 +94,17 @@ sudo systemctl enable --now docker
 sudo chmod 777 '.cache'
 sudo chown -R 1000:1000 "/home/amason/.cache/npm"
 
+if $INSTALL_GO; then
+  echo "Installing Go and lazygit"
+  bash ~/scripts/update-golang-version.sh
+  go install github.com/jesseduffield/lazygit@latest
+else
+  echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
+fi
+if $INSTALL_RUST; then
+  bash ~/scripts/rust.sh
+else
+  echo "To install Rust and cargo run ~/scripts/rust.sh"
+fi
 echo "The Installation is finished!"
-echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
-echo "To install Rust and cargo run ~/scripts/rust.sh"
 fastfetch
