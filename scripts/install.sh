@@ -100,7 +100,7 @@ sudo chown -R 1000:1000 "/home/amason/.cache/npm"
 
 if $INSTALL_GO; then
   echo "Installing Go and lazygit"
-  bash ~/scripts/update-golang-version.sh
+  bash ~/scripts/golang.sh
   go install github.com/jesseduffield/lazygit@latest
 else
   echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
