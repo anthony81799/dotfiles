@@ -62,15 +62,26 @@ zinit snippet OMZP::dnf
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 
-# Load completions
-autoload -Uz compinit && compinit
+# Initialize completions safely
+autoload -Uz compinit
+compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 zinit cdreplay -q
 
-# Docker completions (native)
-if command -v docker &>/dev/null; then
-  source <(docker completion zsh)
-else
-  echo "docker not in path"
+# Docker completions (only if docker actually runs successfully)
+if command -v docker &>/dev/null && docker info &>/dev/null; then
+  completion_output=$(docker completion zsh 2>/dev/null)
+  if [[ -n "$completion_output" ]]; then
+    source <(echo "$completion_output")
+  fi
+fi
+
+# Ensure Docker Compose completions too
+if command -v docker-compose &>/dev/null && docker-compose info &>/dev/null; then
+  # Safely load docker-compose completions
+  completion_output=$(docker-compose completion zsh 2>/dev/null)
+  if [[ -n "$completion_output" ]]; then
+    source <(echo "$completion_output")
+  fi
 fi
 
 # Initialize theme
@@ -169,7 +180,10 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-. "$HOME/.local/share/../bin/env"
+# load local env setup if needed
+if [ -f "$HOME/.local/bin/env" ]; then
+  source "$HOME/.local/bin/env"
+fi
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/amason/google-cloud-sdk/path.zsh.inc' ]; then . '/home/amason/google-cloud-sdk/path.zsh.inc'; fi

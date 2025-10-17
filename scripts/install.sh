@@ -3,7 +3,7 @@
 # Parse arguments
 INSTALL_GO=false
 INSTALL_RUST=false
-while getopts "h-:r-:" opt; do
+while getopts "h-:r-:g" opt; do
   case $opt in
   h)
     echo "Usage: $0 [--help] [--install-go] [--install-rust]"
@@ -13,8 +13,12 @@ while getopts "h-:r-:" opt; do
     echo "--install-rust, -r: Install Rust toolchain and packages after regular installation"
     exit 0
     ;;
-  g) INSTALL_GO=true ;;
-  r) INSTALL_RUST=true ;;
+  g)
+    INSTALL_GO=true
+    ;;
+  r)
+    INSTALL_RUST=true
+    ;;
   -) case $OPTARG in
     help)
       echo "Usage: $0 [--help] [--install-go] [--install-rust]"
@@ -31,7 +35,7 @@ while getopts "h-:r-:" opt; do
 done
 
 echo "Installing package dependencies."
-sudo dnf install zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks -y
+sudo dnf install zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget -y
 
 echo "Add RPMFusion."
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
