@@ -98,6 +98,9 @@ sudo systemctl enable --now docker
 sudo chmod 777 '.cache'
 sudo chown -R 1000:1000 "/home/amason/.cache/npm"
 
+echo "Install XDG Ninja"
+git clone https://github.com/b3nj5m1n/xdg-ninja ~/.local/share/xdg-ninja
+
 if $INSTALL_GO; then
   echo "Installing Go and lazygit"
   bash ~/scripts/golang.sh
