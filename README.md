@@ -9,5 +9,3 @@ This repository reqires assumes that the user is on Fedora Linux.
 To install this repo run the follow command in a terminal:
 
 ```bash <(curl -fsSL https://raw.githubusercontent.com/anthony81799/dotfiles/master/scripts/install.sh)```
-
-This will install the dotfiles and Go
