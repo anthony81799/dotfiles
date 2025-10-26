@@ -1,0 +1,1 @@
+/home/amason/.config/omadora/current/theme/neovim.lua
