@@ -2,7 +2,7 @@
 
 # Parse arguments
 INSTALL_GO=false
-INSTALL_RUST=false
+INSTALL_RUST=true
 while getopts "h-:r-:g" opt; do
   case $opt in
   h)
