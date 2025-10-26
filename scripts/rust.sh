@@ -1,64 +1,69 @@
 #!/usr/bin/env bash
+# ===============================================
+# Rust + Helix installer (gum-based version)
+# Similar UX and style to install.sh
+# ===============================================
 
-# Parse arguments
-UPDATE_HELIX=false
+# Ensure gum is installed
+if ! command -v gum &>/dev/null; then
+    echo "The 'gum' package is required but not installed. Installing it now..."
+    sudo dnf install gum -y
+fi
+
+# Default options
+INSTALL_RUST=false
 INSTALL_HELIX=false
-OVERRIDE_INSTALL=false
-while getopts "h-:u-:i-:o" opt; do
-  case $opt in
-  h)
-    echo "Usage: $0 [--help] [--update-helix] [--install-helix] [--overide-install]"
-    echo "Options:"
-    echo "--help, -h: Print this help message"
-    echo "--update-helix, -u: Update Helix editor install"
-    echo "--install-helix, -i: Install Helix editor"
-    echo "--override-install, -o: Override current Rust install and reinstall Rust and desired crates"
-    exit 0
-    ;;
-  i) INSTALL_HELIX=true ;;
-  u) UPDATE_HELIX=true ;;
-  o) OVERRIDE_INSTALL=true ;;
-  -) case $OPTARG in
-    help)
-      echo "Usage: $0 [--help] [--update-helix] [--install-helix] [--overide-install]"
-      echo "Options:"
-      echo "--help, -h: Print this help message"
-      echo "--update-helix, -u: Update Helix editor install"
-      echo "--install-helix, -i: Install Helix editor"
-      echo "--override-install, -o: Override current Rust install and reinstall Rust and desired crates"
-      exit 0
-      ;;
-    install-helix) INSTALL_HELIX=true ;;
-    update-helix) UPDATE_HELIX=true ;;
-    override-install) OVERRIDE_INSTALL=true ;;
-    esac ;;
-  esac
-done
+UPDATE_HELIX=false
+HELIXDIR="$HOME/.local/share/helix"
 
-# Check if Rust is installed
-if ! command -v cargo &>/dev/null || $OVERRIDE_INSTALL; then
-  echo "Installing Rust and desired crates."
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  # Install desired crates
-  cargo install atuin bacon bat bottom cargo-update eza fd-find ripgrep sd tealdeer topgrade wallust zoxide
-  # cargo install --locked gitui
-  cargo install --locked yazi-fm yazi-cli
-  cargo install --locked zellij
-  cargo install --locked dysk
-  cargo install --locked ast-grep
+# Step 1: Menu for Rust/Helix options
+CHOICES=$(gum choose --no-limit \
+    "Install or Reinstall Rust (rustup + crates)" \
+    "Install Helix Editor" \
+    "Update Helix Editor and install LSPs"
+)
+
+# Parse choices
+while IFS= read -r CHOICE; do
+    case $CHOICE in
+        "Install or Reinstall Rust (rustup + crates)") INSTALL_RUST=true ;;
+        "Install Helix Editor") INSTALL_HELIX=true ;;
+        "Update Helix Editor and install LSPs") UPDATE_HELIX=true ;;
+    esac
+done <<< "$CHOICES"
+
+# Step 2: Rust installation
+if [ "$INSTALL_RUST" = true ]; then
+    gum spin --title "Installing Rust and crates..." -- sleep 1
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+
+    gum spin --title "Installing Rust crates..." -- sleep 1
+    cargo install atuin bacon bat bottom cargo-update eza fd-find ripgrep sd tealdeer topgrade wallust zoxide
+    cargo install --locked yazi-fm yazi-cli
+    cargo install --locked zellij dysk ast-grep
 else
-  echo "Rust is already installed. Skipping Rust installation."
+    gum style --foreground 244 "Rust installation skipped."
 fi
 
-HELIXDIR=~/.local/share/helix
-if $INSTALL_HELIX; then
-  echo "Cloning Helix"
-  mkdir -p $HELIXDIR
-  git clone https://github.com/helix-editor/helix $HELIXDIR
+# Step 3: Helix installation
+if [ "$INSTALL_HELIX" = true ]; then
+    gum spin --title "Cloning Helix repository..." -- sleep 1
+    mkdir -p "$HELIXDIR"
+    if [ ! -d "$HELIXDIR/.git" ]; then
+        git clone https://github.com/helix-editor/helix "$HELIXDIR"
+    else
+        gum style --foreground 244 "Helix directory already exists. Skipping clone."
+    fi
 fi
 
-if $UPDATE_HELIX; then
-  echo "Updating helix and installing LSPs and debuggers."
-  bash ~/scripts/update-helix.sh -d $HELIXDIR
-  bash ~/scripts/helix-lsp.sh
+# Step 4: Helix update
+if [ "$UPDATE_HELIX" = true ]; then
+    gum spin --title "Updating Helix and installing LSPs..." -- sleep 1
+    bash ~/scripts/update-helix.sh -d "$HELIXDIR"
+    bash ~/scripts/helix-lsp.sh
 fi
+
+# Final message
+gum style --border normal --margin "1" --padding "1" \
+    --align center --foreground 212 "Rust + Helix installation complete!"
