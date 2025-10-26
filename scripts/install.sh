@@ -109,7 +109,7 @@ else
   echo "I also program in Go. See https://go.dev/doc/install for instructions on how to install Go."
 fi
 if $INSTALL_RUST; then
-  bash ~/scripts/rust.sh
+  bash ~/scripts/rust.sh -o
 else
   echo "To install Rust and cargo run ~/scripts/rust.sh"
 fi
