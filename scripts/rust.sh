@@ -3,28 +3,41 @@
 # Parse arguments
 UPDATE_HELIX=false
 INSTALL_HELIX=false
-while getopts "h-:u-:i" opt; do
+OVERRIDE_INSTALL=false
+while getopts "h-:u-:i-:o" opt; do
     case $opt in
         h)
-            echo "Usage: $0 [--help] [--update-helix]"
+            echo "Usage: $0 [--help] [--update-helix] [--install-helix] [--overide-install]"
+            echo "Options:"
+            echo "--help, -h: Print this help message"
+            echo "--update-helix, -u: Update Helix editor install"
+            echo "--install-helix, -i: Install Helix editor"
+            echo "--override-install, -o: Override current Rust install and reinstall Rust and desired crates"
             exit 0
         ;;
         i) INSTALL_HELIX=true ;;
         u) UPDATE_HELIX=true ;;
+        o) OVERRIDE_INSTALL=true ;;
         -) case $OPTARG in
                 help)
-                    echo "Usage: $0 [--help] [--update-helix]"
+                    echo "Usage: $0 [--help] [--update-helix] [--install-helix] [--overide-install]"
+                    echo "Options:"
+                    echo "--help, -h: Print this help message"
+                    echo "--update-helix, -u: Update Helix editor install"
+                    echo "--install-helix, -i: Install Helix editor"
+                    echo "--override-install, -o: Override current Rust install and reinstall Rust and desired crates"
                     exit 0
                 ;;
                 install-helix) INSTALL_HELIX=true ;;
                 update-helix) UPDATE_HELIX=true ;;
+                override-install) OVERRIDE_INSTALL=true ;;
         esac ;;
     esac
 done
 
 # Check if Rust is installed
-if ! command -v cargo &> /dev/null; then
-    echo "Rust is not installed. Installing Rust and desired crates."
+if ! command -v cargo &> /dev/null;  || $OVERRIDE_INSTALL then
+    echo "Installing Rust and desired crates."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     # Install desired crates
     cargo install atuin bacon bat bottom cargo-update eza fd-find ripgrep sd tealdeer topgrade wallust zoxide
