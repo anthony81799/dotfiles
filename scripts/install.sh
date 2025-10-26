@@ -44,7 +44,7 @@ sudo dnf update -y
 pip install neovim
 
 echo "Installing package group dependencies."
-sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Fonts" -y
+sudo dnf group install fonts c-development develoment-tools -y
 
 echo "Set alias for dotfiles repo."
 function config {
