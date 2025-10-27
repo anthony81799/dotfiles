@@ -67,7 +67,7 @@ zinit snippet OMZP::sudo
 
 # Initialize completions safely
 autoload -Uz compinit
-compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+compinit -u -d "${XDG_CACHE_HOME}/zsh/zcompdump"
 zinit cdreplay -q
 
 # Docker completions (only if docker actually runs successfully)

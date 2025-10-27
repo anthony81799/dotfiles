@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ===============================================
-# Dotfiles installer (gum-based version)
+# Dotfiles installer
 # ===============================================
 
 # Ensure gum is installed
-if ! command -v gum &> /dev/null; then
+if ! command -v gum &>/dev/null; then
     echo "The 'gum' package is required but not installed. Installing it now..."
     sudo dnf install gum -y
 fi
@@ -18,38 +18,40 @@ INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
 
 # Step 1: Main menu for installation options
-CHOICES=$(gum choose --no-limit \
-    "Install Go toolchain and lazygit" \
-    "Install Rust toolchain and crates" \
-    "Install Docker" \
-    "Install Node.js and npm" \
-    "Install XDG Ninja"
+CHOICES=$(
+    gum choose --no-limit \
+        "Install Go toolchain and lazygit" \
+        "Install Rust toolchain and crates" \
+        "Install Docker" \
+        "Install Node.js and npm" \
+        "Install XDG Ninja"
 )
 
 # Parse choices
 while IFS= read -r CHOICE; do
     case $CHOICE in
-        "Install Go toolchain and lazygit") INSTALL_GO=true ;;
-        "Install Rust toolchain and crates") INSTALL_RUST=true ;;
-        "Install Docker") INSTALL_DOCKER=true ;;
-        "Install Node.js and npm") INSTALL_NODE=true ;;
-        "Install XDG Ninja") INSTALL_XDG_NINJA=true ;;
+    "Install Go toolchain and lazygit") INSTALL_GO=true ;;
+    "Install Rust toolchain and crates") INSTALL_RUST=true ;;
+    "Install Docker") INSTALL_DOCKER=true ;;
+    "Install Node.js and npm") INSTALL_NODE=true ;;
+    "Install XDG Ninja") INSTALL_XDG_NINJA=true ;;
     esac
-done <<< "$CHOICES"
+done <<<"$CHOICES"
 
 # Step 2: Shell selection menu
-DEFAULT_SHELL=$(gum choose \
-    "/bin/zsh (ZSH)" \
-    "/bin/bash (Bash)" \
-    "/usr/bin/fish (Fish)" \
-    "Skip (Keep current shell)"
+DEFAULT_SHELL=$(
+    gum choose \
+        "/bin/zsh (ZSH)" \
+        "/bin/bash (Bash)" \
+        "/usr/bin/fish (Fish)" \
+        "Skip (Keep current shell)"
 )
 
 case $DEFAULT_SHELL in
-    "/bin/zsh (ZSH)") DEFAULT_SHELL="/bin/zsh" ;;
-    "/bin/bash (Bash)") DEFAULT_SHELL="/bin/bash" ;;
-    "/usr/bin/fish (Fish)") DEFAULT_SHELL="/usr/bin/fish" ;;
-    "Skip (Keep current shell)") DEFAULT_SHELL="" ;;  # Skip changing the shell
+"/bin/zsh (ZSH)") DEFAULT_SHELL="/bin/zsh" ;;
+"/bin/bash (Bash)") DEFAULT_SHELL="/bin/bash" ;;
+"/usr/bin/fish (Fish)") DEFAULT_SHELL="/usr/bin/fish" ;;
+"Skip (Keep current shell)") DEFAULT_SHELL="" ;; # Skip changing the shell
 esac
 
 # Step 3: Installation progress
@@ -59,7 +61,6 @@ sudo dnf install zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-
 gum spin --title "Adding RPMFusion..." -- sleep 2
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 sudo dnf update -y
-
 
 gum spin --title "Installing package group dependencies." -- sleep 2
 sudo dnf group install fonts c-development development-tools -y
@@ -92,14 +93,14 @@ if [[ -n "$GIT_NAME" && -n "$GIT_EMAIL" ]]; then
     git config --global user.name "$GIT_NAME"
     git config --global user.email "$GIT_EMAIL"
 else
-    gum confirm "Git name or email not provided. Skip Git configuration?" && echo "Skipping Git configuration."
+    gum style --foreground 244 "Skipping shell change."
+    gum confirm "Git name or email not provided. Skip Git configuration?" && gum style --foreground 244 "Skipping Git configuration."
 fi
 
 # Install Go if selected
 if [ "$INSTALL_GO" = true ]; then
     gum spin --title "Installing Go and lazygit..." -- sleep 2
     bash ~/scripts/golang.sh
-    go install github.com/jesseduffield/lazygit@latest
 fi
 
 # Install Rust if selected
@@ -141,17 +142,15 @@ if [ -n "$DEFAULT_SHELL" ]; then
     if [ "$DEFAULT_SHELL" == "/bin/zsh" ]; then
         gum spin --title "Update /etc/zshenv to use .config/zsh." -- sleep 2
         sudo sh -c 'echo "ZDOTDIR=$HOME/.config/zsh" >> /etc/zshenv'
-        gum spin --title "Install Oh My Posh." -- sleep 2
-        if [ ! -d ~/.local/bin ]; then
-            mkdir -p ~/.local/bin
-        fi
-        curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
+        bash ~/scripts/oh-my-posh.sh
     fi
     chsh -s "$DEFAULT_SHELL"
 else
-    echo "Skipping shell change."
+    gum style --foreground 244 "Skipping shell change."
 fi
 
 # Final message
-gum style --border normal --margin "1" --padding "1" --align center --foreground 212 "The installation is finished!"
+gum style --border normal --margin "1" --padding "1" \
+    --align center --foreground 212 "The installation is finished!"
+
 fastfetch

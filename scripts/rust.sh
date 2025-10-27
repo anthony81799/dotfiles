@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # ===============================================
-# Rust + Helix installer (gum-based version)
-# Similar UX and style to install.sh
+# Rust + Helix installer
 # ===============================================
 
 # Ensure gum is installed
@@ -14,23 +13,23 @@ fi
 INSTALL_RUST=false
 INSTALL_HELIX=false
 UPDATE_HELIX=false
-HELIXDIR="$HOME/.local/share/helix"
 
 # Step 1: Menu for Rust/Helix options
-CHOICES=$(gum choose --no-limit \
-    "Install or Reinstall Rust (rustup + crates)" \
-    "Install Helix Editor" \
-    "Update Helix Editor and install LSPs"
+CHOICES=$(
+    gum choose --no-limit \
+        "Install or Reinstall Rust (rustup + crates)" \
+        "Install Helix Editor" \
+        "Update Helix Editor and install LSPs"
 )
 
 # Parse choices
 while IFS= read -r CHOICE; do
     case $CHOICE in
-        "Install or Reinstall Rust (rustup + crates)") INSTALL_RUST=true ;;
-        "Install Helix Editor") INSTALL_HELIX=true ;;
-        "Update Helix Editor and install LSPs") UPDATE_HELIX=true ;;
+    "Install or Reinstall Rust (rustup + crates)") INSTALL_RUST=true ;;
+    "Install Helix Editor") INSTALL_HELIX=true ;;
+    "Update Helix Editor and install LSPs") UPDATE_HELIX=true ;;
     esac
-done <<< "$CHOICES"
+done <<<"$CHOICES"
 
 # Step 2: Rust installation
 if [ "$INSTALL_RUST" = true ]; then
@@ -47,21 +46,8 @@ else
 fi
 
 # Step 3: Helix installation
-if [ "$INSTALL_HELIX" = true ]; then
-    gum spin --title "Cloning Helix repository..." -- sleep 1
-    mkdir -p "$HELIXDIR"
-    if [ ! -d "$HELIXDIR/.git" ]; then
-        git clone https://github.com/helix-editor/helix "$HELIXDIR"
-    else
-        gum style --foreground 244 "Helix directory already exists. Skipping clone."
-    fi
-fi
-
-# Step 4: Helix update
-if [ "$UPDATE_HELIX" = true ]; then
-    gum spin --title "Updating Helix and installing LSPs..." -- sleep 1
-    bash ~/scripts/update-helix.sh -d "$HELIXDIR"
-    bash ~/scripts/helix-lsp.sh
+if [ "$INSTALL_HELIX" = true || "$UPDATE_HELIX" = true]; then
+    bash ~/scripts/helix.sh
 fi
 
 # Final message
