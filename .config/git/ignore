@@ -1,1 +1,18 @@
+# ignore files and directories gerated after dotfiles are applied
+.aws
+.azure
+.cache
 .cfg
+.config/docker
+.config/git/config
+.config/git/credentials
+.config/go/telemetry
+.dbclient
+.docker
+.dotnet
+.local
+.vscode-remote-containers
+.vscode-server
+node_modules
+package-lock.json
+package.json
