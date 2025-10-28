@@ -30,8 +30,7 @@ esac
 
 # Step 2: Run installations
 if [ "$INSTALL_DESKTOP" = true ]; then
-    # TODO: Write desktop installer!!!
-    # bash "${HOME}/install/desktop/install-desktop.sh"
+    bash "${HOME}/install/desktop/install-desktop.sh"
     INSTALL_TERMINAL=true
 fi
 
