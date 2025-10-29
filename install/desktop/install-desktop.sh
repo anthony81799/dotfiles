@@ -55,8 +55,8 @@ sudo dnf install -y \
     mesa-vulkan-drivers \
     mesa-vulkan-drivers.i686 \
     pipewire-alsa \
-    pipewire-jack \
-    libvulkan.i686 \
+    pipewire-jack-audio-connection-kit \
+    vulkan-loader \
     vulkan-tools || {
     warn_message "Some gaming dependencies failed to install. Continuing..."
 }

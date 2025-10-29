@@ -71,7 +71,6 @@ if [ "$INSTALL_RUST" = true ]; then
 
     if [ "${#FAILED_CRATES[@]}" -ne 0 ]; then
         warn_message "Some cargo installs failed: ${FAILED_CRATES[*]}"
-        echo "Check ${LOG} for details."
     else
         okay_message "All cargo installs completed."
     fi
