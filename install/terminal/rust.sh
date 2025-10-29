@@ -36,7 +36,17 @@ done <<<"$CHOICES"
 
 # Helper to ensure cargo in path after rustup
 ensure_cargo_env() {
-    if [ -f "${HOME}/.cargo/env" ]; then
+    export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+    export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+
+    # RUSTUP_HOME/env is where rustup puts the path setup script when RUSTUP_HOME is set
+    RUSTUP_ENV_FILE="${RUSTUP_HOME}/env"
+
+    if [ -f "$RUSTUP_ENV_FILE" ]; then
+        # shellcheck disable=SC1090
+        source "$RUSTUP_ENV_FILE"
+    # Fallback to the default path if RUSTUP_HOME wasn't set or environment is unexpected
+    elif [ -f "${HOME}/.cargo/env" ]; then
         # shellcheck disable=SC1090
         source "${HOME}/.cargo/env"
     fi
@@ -45,8 +55,14 @@ ensure_cargo_env() {
 # Step 2: Rust install
 if [ "$INSTALL_RUST" = true ]; then
     spinner "Installing Rust (rustup)..."
+
+    export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+    export CARGO_HOME="$XDG_DATA_HOME/cargo"
+    export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+
     # Install rustup non-interactively
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
     ensure_cargo_env
 
     spinner "Installing common Rust crates..."
