@@ -24,15 +24,16 @@ spinner "Optimizing DNF configuration for faster downloads..."
 DNF_CONFIG="/etc/dnf/dnf.conf"
 
 if [ -f "$DNF_CONFIG" ]; then
-    log "Updating $DNF_CONFIG to set max_parallel_downloads and enable fastestmirror."
+    log "Updating $DNF_CONFIG to set max_parallel_downloads and enable fastestmirror under [main]."
 
-    # Set to a high number for parallel downloads
+    # 1. Delete existing lines to prevent duplicates
     sudo sed -i '/^max_parallel_downloads=/d' "$DNF_CONFIG"
-    sudo sed -i '1i max_parallel_downloads=10' "$DNF_CONFIG"
-
-    # Enable the fastest mirror plugin
     sudo sed -i '/^fastestmirror=/d' "$DNF_CONFIG"
-    sudo sed -i '1i fastestmirror=True' "$DNF_CONFIG"
+
+    # 2. Insert new lines immediately after [main] using 'a' (append) command
+    # This ensures they are correctly placed within the [main] block.
+    sudo sed -i '/\[main\]/a max_parallel_downloads=10' "$DNF_CONFIG"
+    sudo sed -i '/\[main\]/a fastestmirror=True' "$DNF_CONFIG"
 
     okay_message "DNF optimized for faster downloads."
 else
