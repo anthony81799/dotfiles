@@ -49,7 +49,6 @@ spinner "Installing common Bazzite/Gaming features (Gamescope, Launchers, Contro
 sudo dnf install -y \
     gamescope \
     steam \
-    xone \
     xpad \
     steam-devices \
     mesa-vulkan-drivers \
