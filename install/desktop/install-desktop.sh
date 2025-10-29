@@ -16,16 +16,17 @@ ensure_gum
 
 spinner "Starting Hyprland and omadora installation..."
 
-# --- 1. Install Dependencies for Hyprland and omadora ---
-log "Installing required Wayland/build dependencies..."
+# --- 1. Install Core Dependencies ---
+log "Installing core Wayland/build dependencies and utilities..."
 
-# Hyprland and build dependencies for Wayland components
-spinner "Installing Wayland and build dependencies (Hyprland, uwsm, Meson, etc.)..." -- sudo dnf install -y \
-    git || {
-    fail_message "Failed to install required dependencies. Check $LOG_FILE for details."
+# Consolidate core dependencies: Hyprland build tools (Meson, Ninja), uwsm, sddm, grub2
+spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..." -- sudo dnf install -y \
+    git \
+    sddm || {
+    fail_message "Failed to install core dependencies. Check $LOG_FILE for details."
     exit 1
 }
-okay_message "Dependencies installed successfully."
+okay_message "Core dependencies installed successfully."
 
 # --- 2. Install omadora ---
 OMADORA_REPO="https://github.com/elpritchos/omadora.git"
@@ -44,58 +45,112 @@ else
 fi
 
 spinner "Building and installing omadora..."
-# Omadoara is built using Meson/Ninja, typical for Wayland projects
+
 bash "$OMADORA_DIR"/install.sh || {
     fail_message "Failed to build and install omadora. Check $LOG_FILE for details."
     exit 1
 }
+okay_message "omadora installed."
 
-okay_message "omadora installed to ${HOME}/.local/."
+# -------------------------------------------------------------
+# --- 3. NVIDIA Driver Installation ---
+# -------------------------------------------------------------
+spinner "Adding RPMFusion..."
+sudo dnf install -y \
+    "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+    "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
-# --- 3. Set up Hyprland for Automatic Login (via SDDM) ---
-# We will use SDDM, a common and robust display manager for Wayland, for auto-login.
+sudo dnf update -y
 
-spinner "Configuring SDDM for automatic login to Hyprland..."
+if gum confirm "Do you want to install NVIDIA drivers from RPMFusion?"; then
+    spinner "Installing NVIDIA drivers and Vulkan dependencies..."
 
-# Check if SDDM is installed and the service exists
-spinner "Installing automatic login dependencies (Hyprland, uwsm, Meson, etc.)..." -- sudo dnf install -y \
-    sddm || {
-    fail_message "Failed to install required dependencies. Check $LOG_FILE for details."
-    exit 1
+    # Core packages for dnf/akmod setup (Requires RPMFusion to be enabled)
+    sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda \
+        vulkan-loader vulkan-loader.i686 || {
+        fail_message "Failed to install NVIDIA drivers. Check $LOG_FILE for details."
+    }
+
+    okay_message "NVIDIA drivers installed. The kernel module will build on the next reboot."
+else
+    info_message "NVIDIA driver installation skipped."
+fi
+
+# -------------------------------------------------------------
+# --- 4. Install Bazzite Gaming Features ---
+# -------------------------------------------------------------
+spinner "Installing common Bazzite/Gaming features (Gamescope, Launchers, Controller support)..."
+
+# General gaming dependencies (gamescope, steam, controller support tools)
+sudo dnf install -y \
+    gamescope \
+    steam \
+    xone \
+    xpad \
+    steam-devices \
+    mesa-vulkan-drivers \
+    mesa-vulkan-drivers.i686 \
+    pipewire-alsa \
+    pipewire-jack \
+    libvulkan.i686 \
+    vulkan-tools || {
+    warn_message "Some gaming dependencies failed to install. Continuing..."
 }
-okay_message "Dependencies installed successfully."
+
+# Enable xone for Xbox controllers (requires a reboot)
+if has_cmd xone; then
+    sudo systemctl enable --now xone@"$USER" || true
+fi
+
+okay_message "Gaming features installed successfully."
+
+# -------------------------------------------------------------
+# --- 5. Nobara/Performance Tweaks ---
+# -------------------------------------------------------------
+spinner "Applying system performance and scheduling tweaks (like Nobara's modifications)..."
+
+# Install irqbalance for better CPU resource distribution
+sudo dnf install -y irqbalance
+sudo systemctl enable --now irqbalance
+
+# Apply common performance sysctl settings (requires root)
+log "Applying kernel sysctl tweaks for improved I/O and latency."
+sudo tee /etc/sysctl.d/99-performance-tweaks.conf >/dev/null <<EOF
+# Increase inotify limits for applications like VS Code, IDEs
+fs.inotify.max_user_watches = 524288
+# Reduce swappiness for better desktop responsiveness
+vm.swappiness = 10
+EOF
+
+# Load the new sysctl settings immediately
+sudo sysctl -p /etc/sysctl.d/99-performance-tweaks.conf || true
+
+okay_message "System performance tweaks applied. Full effect requires a reboot."
+
+# -------------------------------------------------------------
+# --- 6. Set up Hyprland for Automatic Login (via SDDM) ---
+# -------------------------------------------------------------
+spinner "Configuring SDDM for automatic login to Hyprland..."
 
 if has_cmd sddm && [ -f "/usr/lib/systemd/system/sddm.service" ]; then
 
-    # 3a. Ensure Hyprland session file exists (needed for SDDM to detect the session)
-    if [ ! -f "/usr/share/wayland-sessions/hyprland.desktop" ]; then
-        log "Creating basic hyprland.desktop session file."
-        sudo tee /usr/share/wayland-sessions/hyprland.desktop >/dev/null <<EOF
-[Desktop Entry]
-Name=Hyprland
-Comment=An experimental Wayland compositor
-Exec=Hyprland
-Type=Application
-EOF
-    fi
-
-    # 3b. Configure SDDM for automatic login
+    # Configure SDDM for automatic login
     log "Creating SDDM configuration file for autologin."
     USERNAME=$(whoami)
     sudo tee /etc/sddm.conf >/dev/null <<EOF
 [Autologin]
 User=$USERNAME
-Session=Hyprland
+# Use the uwsm-managed session
+Session=hyprland-uwsm.desktop
 
 [General]
-# If you are dual-booting or need a delay, uncomment and set a value
 # DisplayServerWait=3
 
 [Wayland]
 EnableHiDPI=true
 EOF
 
-    # 3c. Enable the SDDM service
+    # Enable the SDDM service
     spinner "Enabling SDDM service..."
     sudo systemctl enable sddm || {
         warn_message "Failed to enable sddm.service. You may need to start it manually."
@@ -106,4 +161,35 @@ else
     warn_message "SDDM or its service file not found. Automatic login not configured."
 fi
 
-finish "Desktop setup (omadora/Hyprland) complete! A reboot is required for auto-login to take effect."
+# -------------------------------------------------------------
+# --- 7. Skip GRUB Menu Prompt ---
+# -------------------------------------------------------------
+spinner "Configuring GRUB to skip the menu prompt (auto-select first entry)..."
+
+GRUB_CONFIG="/etc/default/grub"
+
+if [ -f "$GRUB_CONFIG" ]; then
+    log "Updating $GRUB_CONFIG: Setting GRUB_TIMEOUT=0 and GRUB_TIMEOUT_STYLE=hidden."
+
+    # Set the timeout to 0 (no delay)
+    sudo sed -i 's/^GRUB_TIMEOUT=[0-9]*$/GRUB_TIMEOUT=0/' "$GRUB_CONFIG"
+
+    # Hide the prompt entirely
+    if ! grep -q '^GRUB_TIMEOUT_STYLE=' "$GRUB_CONFIG"; then
+        sudo echo 'GRUB_TIMEOUT_STYLE=hidden' | sudo tee -a "$GRUB_CONFIG" >/dev/null
+    else
+        sudo sed -i 's/^GRUB_TIMEOUT_STYLE=.*$/GRUB_TIMEOUT_STYLE=hidden/' "$GRUB_CONFIG"
+    fi
+
+    # Apply changes
+    spinner "Applying new GRUB configuration..."
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg || {
+        fail_message "Failed to update GRUB configuration. Check $LOG_FILE for details."
+        warn_message "You may need to run 'sudo grub2-mkconfig -o /boot/grub2/grub.cfg' manually."
+    }
+    okay_message "GRUB configured to boot the first entry instantly."
+else
+    warn_message "GRUB configuration file ($GRUB_CONFIG) not found. Skipping auto-skip configuration."
+fi
+
+finish "Desktop setup (omadora/Hyprland) complete! A reboot is required for all changes to take full effect."

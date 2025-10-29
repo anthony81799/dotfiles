@@ -63,13 +63,6 @@ esac
 spinner "Installing dependencies..."
 sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish
 
-spinner "Adding RPMFusion..."
-sudo dnf install -y \
-    "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
-    "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
-
-sudo dnf update -y
-
 spinner "Installing package group dependencies..."
 sudo dnf group install -y fonts c-development development-tools
 
