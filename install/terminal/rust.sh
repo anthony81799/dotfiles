@@ -57,14 +57,14 @@ if [ "$INSTALL_RUST" = true ]; then
         "ripgrep" "sd" "tealdeer" "topgrade" "wallust" "zoxide"
     )
     for c in "${CRATES[@]}"; do
-        if ! cargo install "$c" || true; then
+        if ! cargo install "$c"; then
             FAILED_CRATES+=("$c")
         fi
     done
 
     # Some crates installed locked/with options
     for c in "yazi-fm" "yazi-cli" "zellij" "dysk" "ast-grep"; do
-        if ! cargo install --locked "$c" || true; then
+        if ! cargo install --locked "$c"; then
             FAILED_CRATES+=("$c")
         fi
     done
