@@ -66,16 +66,6 @@ sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf g
 spinner "Installing package group dependencies..."
 sudo dnf group install -y fonts c-development development-tools
 
-config() {
-    /usr/bin/git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
-}
-
-spinner "Cloning dotfiles repo..."
-git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
-
-spinner "Checking out dotfiles repo..."
-config checkout || true
-
 pip install neovim
 
 # Step 4: Git configuration
