@@ -5,23 +5,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-LOG_DIR="${HOME}/.local/logs"
-mkdir -p "$LOG_DIR"
+# Load shared library
+source "${HOME}/install/lib.sh"
 
-init_log() {
-    local log_file="$1"
-    # Close FD 6 if it's already open, then open the log file for appending on FD 6
-    exec 6>&- || true
-    exec 6>>"$log_file"
-}
 init_log "${LOG_DIR}/dotfiles-install.log"
 
-ensure_gum() {
-    if ! command -v gum &>/dev/null; then
-        echo "The 'gum' package is required but not installed. Installing it now..."
-        sudo dnf install -y gum
-    fi
-}
 ensure_gum
 
 # Variables for user choices
