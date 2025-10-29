@@ -24,16 +24,26 @@ spinner "Optimizing DNF configuration for faster downloads..."
 DNF_CONFIG="/etc/dnf/dnf.conf"
 
 if [ -f "$DNF_CONFIG" ]; then
-    log "Updating $DNF_CONFIG to set max_parallel_downloads and enable fastestmirror under [main]."
+    log "Updating $DNF_CONFIG under [main]."
 
     # 1. Delete existing lines to prevent duplicates
+    sudo sed -i '/^gpgcheck=/d' "$DNF_CONFIG"
+    sudo sed -i '/^installonly_limit=/d' "$DNF_CONFIG"
+    sudo sed -i '/^clean_requirements_on_remove=/d' "$DNF_CONFIG"
     sudo sed -i '/^max_parallel_downloads=/d' "$DNF_CONFIG"
     sudo sed -i '/^fastestmirror=/d' "$DNF_CONFIG"
+    sudo sed -i '/^skip_if_unavailable=/d' "$DNF_CONFIG"
+    sudo sed -i '/^defaultyes=/d' "$DNF_CONFIG"
 
     # 2. Insert new lines immediately after [main] using 'a' (append) command
     # This ensures they are correctly placed within the [main] block.
+    sudo sed -i '/\[main\]/a gpgcheck=0' "$DNF_CONFIG"
+    sudo sed -i '/\[main\]/a installonly_limit=3' "$DNF_CONFIG"
+    sudo sed -i '/\[main\]/a clean_requirements_on_remove=True' "$DNF_CONFIG"
     sudo sed -i '/\[main\]/a max_parallel_downloads=10' "$DNF_CONFIG"
     sudo sed -i '/\[main\]/a fastestmirror=True' "$DNF_CONFIG"
+    sudo sed -i '/\[main\]/a skip_if_unavailable=True' "$DNF_CONFIG"
+    sudo sed -i '/\[main\]/a defaultyes=True' "$DNF_CONFIG"
 
     okay_message "DNF optimized for faster downloads."
 else
