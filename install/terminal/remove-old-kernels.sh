@@ -43,7 +43,8 @@ if ! gum confirm "Proceed to remove the selected kernels?"; then
 fi
 
 # Remove with sudo and -y to avoid prompts
-spinner "Removing selected kernels..." -- sudo dnf remove -y "${SELECTED[@]}" || {
+spinner "Removing selected kernels..." --
+sudo dnf remove -y "${SELECTED[@]}" || {
     fail_message "Failed to remove some kernels. Check ${LOG} for details."
     exit 1
 }

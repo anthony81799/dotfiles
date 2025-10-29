@@ -9,7 +9,9 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
+if [ ! -d "$HOME/.cfg" ]; then
+    git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
+fi
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 config checkout
 
@@ -64,7 +66,8 @@ fi
 log "Installing core Wayland/build dependencies and utilities..."
 
 # Consolidate core dependencies: Hyprland build tools (Meson, Ninja), uwsm, sddm, grub2
-spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..." -- sudo dnf install -y \
+spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..."
+sudo dnf install -y \
     git \
     sddm || {
     fail_message "Failed to install core dependencies. Check $LOG_FILE for details."

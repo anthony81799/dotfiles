@@ -104,7 +104,8 @@ if [ "$INSTALL_HELIX" = true ] || [ "$UPDATE_HELIX" = true ]; then
 
     # Ensure git available
     if ! command -v git &>/dev/null; then
-        spinner "Installing git..." -- sudo dnf install -y git
+        spinner "Installing git..."
+        sudo dnf install -y git
     fi
 
     spinner "Running Helix setup script..."
