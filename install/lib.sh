@@ -67,25 +67,25 @@ style_message() {
 
 # Styled message variants
 info_message() {
-    local msg="$2"
+    local msg="$1"
     log "INFO: $msg"
     style_message 244 "$msg"
 }
 
 fail_message() {
-    local msg="$2"
+    local msg="$1"
     log "FAIL: $msg"
     style_message 196 "$msg"
 }
 
 okay_message() {
-    local msg="$2"
+    local msg="$1"
     log "OKAY: $msg"
     style_message 120 "$msg"
 }
 
 warn_message() {
-    local msg="$2"
+    local msg="$1"
     log "WARN: $msg"
     style_message 214 "$msg"
 }
