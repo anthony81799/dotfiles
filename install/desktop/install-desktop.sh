@@ -16,7 +16,33 @@ ensure_gum
 
 spinner "Starting Hyprland and omadora installation..."
 
-# --- 1. Install Core Dependencies ---
+# -------------------------------------------------------------
+# --- 1. DNF Performance Tweaks ---
+# -------------------------------------------------------------
+spinner "Optimizing DNF configuration for faster downloads..."
+
+DNF_CONFIG="/etc/dnf/dnf.conf"
+
+if [ -f "$DNF_CONFIG" ]; then
+    log "Updating $DNF_CONFIG to set max_parallel_downloads and enable fastestmirror."
+
+    # Set to a high number for parallel downloads
+    sudo sed -i '/^max_parallel_downloads=/d' "$DNF_CONFIG"
+    sudo sed -i '1i max_parallel_downloads=10' "$DNF_CONFIG"
+
+    # Enable the fastest mirror plugin
+    sudo sed -i '/^fastestmirror=/d' "$DNF_CONFIG"
+    sudo sed -i '1i fastestmirror=True' "$DNF_CONFIG"
+
+    okay_message "DNF optimized for faster downloads."
+else
+    warn_message "DNF configuration file ($DNF_CONFIG) not found. Skipping DNF optimization."
+fi
+
+# -------------------------------------------------------------
+# --- 2. Omadora Installation ---
+# -------------------------------------------------------------
+# --- 2a. Install Core Dependencies ---
 log "Installing core Wayland/build dependencies and utilities..."
 
 # Consolidate core dependencies: Hyprland build tools (Meson, Ninja), uwsm, sddm, grub2
@@ -28,7 +54,7 @@ spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..." -- 
 }
 okay_message "Core dependencies installed successfully."
 
-# --- 2. Install omadora ---
+# --- 2b. Install omadora ---
 OMADORA_REPO="https://github.com/elpritchos/omadora.git"
 OMADORA_DIR="${XDG_DATA_HOME}/omadora"
 
