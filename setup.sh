@@ -5,10 +5,17 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+config checkout
+
 # Load shared library and initialize logging
 source "${HOME}/install/lib.sh"
 
-# 💡 Logging setup: This ensures log messages go to a file (FD 6) and STDOUT/STDERR are free for gum.
 LOG_FILE="${LOG_DIR}/setup.log"
 init_log "$LOG_FILE"
 

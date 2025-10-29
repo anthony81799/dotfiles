@@ -8,7 +8,6 @@ IFS=$'\n\t'
 # Load shared library and initialize logging
 source "${HOME}/install/lib.sh"
 
-# 💡 Logging setup: This ensures log messages go to a file (FD 6) and STDOUT/STDERR are free for gum.
 LOG_FILE="${LOG_DIR}/desktop-install.log"
 init_log "$LOG_FILE"
 
