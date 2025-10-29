@@ -90,36 +90,51 @@ sudo sysctl -p /etc/sysctl.d/99-performance-tweaks.conf || true
 
 okay_message "System performance tweaks applied. Full effect requires a reboot."
 
-# -------------------------------------------------------------
+# -----------------------------------------------------------------
 # --- 4. Set up Hyprland for Automatic Login (via SDDM) ---
-# -------------------------------------------------------------
+# Replicates the omarchy robust autologin setup using config snippets.
+# -----------------------------------------------------------------
 spinner "Configuring SDDM for automatic login to Hyprland..."
 
 if has_cmd sddm && [ -f "/usr/lib/systemd/system/sddm.service" ]; then
 
-    # Configure SDDM for automatic login
-    log "Creating SDDM configuration file for autologin."
+    # Disable and mask GDM or other potential conflicts for robustness
+    if has_cmd gdm; then
+        log "Disabling and masking gdm.service to prevent conflict."
+        sudo systemctl disable gdm --now || true
+        sudo systemctl mask gdm || true
+    fi
+
+    # Configure SDDM for automatic login using the recommended snippet approach
+    log "Creating SDDM configuration snippet file for autologin: /etc/sddm.conf.d/autologin.conf"
+
+    # Ensure the snippet directory exists
+    sudo mkdir -p /etc/sddm.conf.d
+
     USERNAME=$(whoami)
-    sudo tee /etc/sddm.conf >/dev/null <<EOF
+
+    # Write the configuration to the snippet file
+    sudo tee /etc/sddm.conf.d/autologin.conf >/dev/null <<EOF
 [Autologin]
 User=$USERNAME
-# Use the uwsm-managed session
+# Use the uwsm-managed Hyprland session
 Session=hyprland-uwsm.desktop
-
-[General]
-# DisplayServerWait=3
 
 [Wayland]
 EnableHiDPI=true
+
+[General]
+# DisplayServerWait=3
 EOF
 
-    # Enable the SDDM service
-    spinner "Enabling SDDM service..."
-    sudo systemctl enable sddm || {
-        warn_message "Failed to enable sddm.service. You may need to start it manually."
+    # Ensure the main SDDM service is enabled and started
+    spinner "Enabling and starting SDDM service..."
+    sudo systemctl enable sddm --now || {
+        warn_message "Failed to enable sddm.service. You may need to check the logs and start it manually."
     }
 
     okay_message "SDDM configured for automatic login using the Hyprland session."
+
 else
     warn_message "SDDM or its service file not found. Automatic login not configured."
 fi
