@@ -10,7 +10,7 @@ eval "$(zellij setup --generate-auto-start zsh)"
 # --- Environment Variables ---
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-export GOROOT=/usr/local/go
+export GOROOT="/usr/local/go"
 export GOPATH="$XDG_DATA_HOME/go"
 export PATH="$PATH:$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin:$HOME/.config/emacs/bin:$HOME/winhome/AppData/Local/Programs/Microsoft\ VS\ Code/bin/:$HOME/.local/share/omadora/bin/"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"

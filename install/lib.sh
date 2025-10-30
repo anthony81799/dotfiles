@@ -6,6 +6,26 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# Set environment variables for XDG compliance
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export GOROOT="/usr/local/go"
+export GOPATH="$XDG_DATA_HOME/go"
+export PATH="$PATH:$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin:$HOME/.config/emacs/bin:$HOME/winhome/AppData/Local/Programs/Microsoft\ VS\ Code/bin/:$HOME/.local/share/omadora/bin/"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
+export MYSQL_HISTFILE="$XDG_DATA_HOME/mysql_history"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java"
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export AZURE_CONFIG_DIR="$XDG_DATA_HOME/azure"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export DOTNET_CLI_HOME="$XDG_DATA_HOME/dotnet"
+
 # Simple logging setup (optional)
 LOG_DIR="${HOME}/.local/logs"
 mkdir -p "$LOG_DIR"

@@ -16,7 +16,7 @@ eval "$(zellij setup --generate-auto-start bash)"
 # ==================================
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-export GOROOT=/usr/local/go
+export GOROOT="/usr/local/go"
 export GOPATH="$XDG_DATA_HOME/go"
 
 # Set the PATH variable.

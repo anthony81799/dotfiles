@@ -131,7 +131,7 @@ if [ -n "$DEFAULT_SHELL" ]; then
     spinner "Changing default shell to $DEFAULT_SHELL..."
     if [ "$DEFAULT_SHELL" == "/bin/zsh" ]; then
         spinner "Updating /etc/zshenv to use .config/zsh..."
-        sudo sh -c 'echo "ZDOTDIR=$HOME/.config/zsh" >> /etc/zshenv'
+        echo 'export ZDOTDIR="$HOME/.config/zsh"' >~/.zshenv
     fi
     if [ "$DEFAULT_SHELL" == "/bin/bash" ]; then
         spinner "Installing ble.sh for Bash enhancements..."
