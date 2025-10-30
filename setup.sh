@@ -12,7 +12,10 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 if [ ! -d "$HOME/.cfg" ]; then
     git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
 fi
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+config() {
+    /usr/bin/git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
+}
 config checkout
 
 # Load shared library and initialize logging
