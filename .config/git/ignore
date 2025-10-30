@@ -11,6 +11,7 @@
 .docker
 .dotnet
 .local
+.pki
 .vscode-remote-containers
 .vscode-server
 node_modules
