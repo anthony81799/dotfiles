@@ -130,7 +130,7 @@ fi
 if [ -n "$DEFAULT_SHELL" ]; then
     spinner "Changing default shell to $DEFAULT_SHELL..."
     if [ "$DEFAULT_SHELL" == "/bin/zsh" ]; then
-        spinner "Updating /etc/zshenv to use .config/zsh..."
+        spinner "Updating ~/.zshenv to use .config/zsh..."
         echo 'export ZDOTDIR="$HOME/.config/zsh"' >~/.zshenv
     fi
     if [ "$DEFAULT_SHELL" == "/bin/bash" ]; then
