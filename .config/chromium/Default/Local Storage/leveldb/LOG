@@ -1,2 +1,6 @@
-2025/10/25-22:58:56.057 5 Creating DB /home/amason/.config/chromium/Default/Local Storage/leveldb since it was missing.
-2025/10/25-22:58:56.538 5 Reusing MANIFEST /home/amason/.config/chromium/Default/Local Storage/leveldb/MANIFEST-000001
+2025/10/30-14:50:11.871 5 Reusing MANIFEST /home/amason/.config/chromium/Default/Local Storage/leveldb/MANIFEST-000001
+2025/10/30-14:50:11.891 5 Recovering log #3
+2025/10/30-14:50:11.932 5 Reusing old log /home/amason/.config/chromium/Default/Local Storage/leveldb/000003.log 
+2025/10/30-14:50:46.301 5 Level-0 table #5: started
+2025/10/30-14:50:46.352 5 Level-0 table #5: 36205 bytes OK
+2025/10/30-14:50:46.475 5 Delete type=0 #3

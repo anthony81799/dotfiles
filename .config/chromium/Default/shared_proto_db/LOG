@@ -1,2 +1,3 @@
-2025/10/25-22:58:57.768 cef Creating DB /home/amason/.config/chromium/Default/shared_proto_db since it was missing.
-2025/10/25-22:58:57.953 cef Reusing MANIFEST /home/amason/.config/chromium/Default/shared_proto_db/MANIFEST-000001
+2025/10/30-14:50:13.185 7801 Reusing MANIFEST /home/amason/.config/chromium/Default/shared_proto_db/MANIFEST-000001
+2025/10/30-14:50:13.186 7801 Recovering log #3
+2025/10/30-14:50:13.187 7801 Reusing old log /home/amason/.config/chromium/Default/shared_proto_db/000003.log 
