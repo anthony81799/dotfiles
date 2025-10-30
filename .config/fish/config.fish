@@ -29,6 +29,8 @@ set -gx DOTNET_CLI_TELEMETRY_OPTOUT 1
 set -gx AZURE_CONFIG_DIR "$XDG_DATA_HOME/azure"
 set -gx DOCKER_CONFIG "$XDG_CONFIG_HOME/docker"
 set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
+set -gx GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+set -gx XCOMPOSEFILE="$XDG_CONFIG_HOME/x11/xcompose"
 
 # Disable the Fish shell greeting message
 set -g fish_greeting

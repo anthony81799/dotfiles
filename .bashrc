@@ -31,6 +31,8 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export AZURE_CONFIG_DIR="$XDG_DATA_HOME/azure"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export DOTNET_CLI_HOME="$XDG_DATA_HOME/dotnet"
+export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+export XCOMPOSEFILE="$XDG_CONFIG_HOME/x11/xcompose"
 
 # Turso CLI path
 export PATH="$PATH:$HOME/.turso"
