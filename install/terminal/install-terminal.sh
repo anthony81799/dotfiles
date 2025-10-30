@@ -129,10 +129,6 @@ fi
 # Change default shell if selected
 if [ -n "$DEFAULT_SHELL" ]; then
     spinner "Changing default shell to $DEFAULT_SHELL..."
-    if [ "$DEFAULT_SHELL" == "/bin/zsh" ]; then
-        spinner "Updating ~/.zshenv to use .config/zsh..."
-        echo 'export ZDOTDIR="$HOME/.config/zsh"' >~/.zshenv
-    fi
     if [ "$DEFAULT_SHELL" == "/bin/bash" ]; then
         spinner "Installing ble.sh for Bash enhancements..."
         git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "${XDG_DATA_HOME}"/ble.sh
