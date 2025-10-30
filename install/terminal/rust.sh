@@ -15,22 +15,19 @@ ensure_gum
 # Defaults
 INSTALL_RUST=false
 INSTALL_HELIX=false
-UPDATE_HELIX=false
 HELIX_SCRIPT="${HOME}/install/terminal/helix.sh"
 
 # Step 1: menu
 CHOICES=$(
-    gum choose --no-limit \
+    gum choose \
         "Install or Reinstall Rust (rustup + crates)" \
-        "Install Helix Editor" \
-        "Update Helix Editor and install LSPs"
+        "Install / Update Helix Editor and install LSPs"
 )
 
 while IFS= read -r CHOICE; do
     case "$CHOICE" in
     "Install or Reinstall Rust (rustup + crates)") INSTALL_RUST=true ;;
-    "Install Helix Editor") INSTALL_HELIX=true ;;
-    "Update Helix Editor and install LSPs") UPDATE_HELIX=true ;;
+    "Install / Update Helix Editor and install LSPs") INSTALL_HELIX=true ;;
     esac
 done <<<"$CHOICES"
 
@@ -69,8 +66,8 @@ if [ "$INSTALL_RUST" = true ]; then
     # We want the script to continue if a specific crate fails; record failures.
     FAILED_CRATES=()
     CRATES=(
-        "atuin" "bacon" "bat" "bottom" "cargo-update" "eza" "fd-find"
-        "ripgrep" "sd" "tealdeer" "topgrade" "wallust" "zoxide"
+        "atuin" "bacon" "bat" "bluetui" "bottom" "cargo-update" "eza" "fd-find"
+        "impala" "ripgrep" "sd" "tealdeer" "topgrade" "wallust" "wiremix" "zoxide"
     )
     for c in "${CRATES[@]}"; do
         if ! cargo install "$c"; then
@@ -95,7 +92,7 @@ else
 fi
 
 # Step 3: Helix - call separate script (if requested)
-if [ "$INSTALL_HELIX" = true ] || [ "$UPDATE_HELIX" = true ]; then
+if [ "$INSTALL_HELIX" = true ]; then
     if [ ! -x "$HELIX_SCRIPT" ]; then
         fail_message "Helix script not found or not executable: ${HELIX_SCRIPT}"
         info_message "Please ensure helix.sh exists and is executable."
