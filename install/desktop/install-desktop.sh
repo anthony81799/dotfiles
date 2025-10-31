@@ -89,8 +89,36 @@ sudo sysctl -p /etc/sysctl.d/99-performance-tweaks.conf || true
 
 okay_message "System performance tweaks applied. Full effect requires a reboot."
 
+# ------------------------------------------------------------
+# --- 4. Btrfs Snapshot Setup (Snapper) ---
+# ------------------------------------------------------------
+spinner "Setting up Btrfs snapshots with Snapper..."
+
+# Check if the root filesystem is Btrfs
+if df -t btrfs / >/dev/null 2>&1; then
+    log "Btrfs root filesystem detected. Proceeding with snapper setup."
+
+    # 1. Create the default snapper configuration for the root filesystem
+    if ! sudo snapper -c root create-config /; then
+        warn_message "Failed to create default snapper configuration for /. Snapper setup may require manual intervention (e.g., if / is not a proper BTRFS subvolume)."
+    else
+        # 2. Enable snapper services
+        spinner "Enabling snapper timeline and cleanup timer services..."
+
+        # snapper-timeline.timer creates hourly snapshots
+        sudo systemctl enable --now snapper-timeline.timer || true
+
+        # snapper-cleanup.timer cleans up old snapshots according to config
+        sudo systemctl enable --now snapper-cleanup.timer || true
+
+        okay_message "Btrfs snapshots (Snapper) configured. Timers are now active."
+    fi
+else
+    info_message "Root filesystem is not Btrfs. Btrfs snapshot setup skipped."
+fi
+
 # -----------------------------------------------------------------
-# --- 4. Set up Hyprland for Automatic Login (via SDDM) ---
+# --- 5. Set up Hyprland for Automatic Login (via SDDM) ---
 # Replicates the omarchy robust autologin setup using config snippets.
 # -----------------------------------------------------------------
 spinner "Configuring SDDM for automatic login to Hyprland..."
@@ -139,7 +167,7 @@ else
 fi
 
 # -------------------------------------------------------------
-# --- 5. Skip GRUB Menu Prompt ---
+# --- 6. Skip GRUB Menu Prompt ---
 # -------------------------------------------------------------
 spinner "Configuring GRUB to skip the menu prompt (auto-select first entry)..."
 

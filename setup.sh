@@ -72,6 +72,8 @@ log "Installing core Wayland/build dependencies and utilities..."
 spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..."
 sudo dnf install -y \
     git \
+    snapper \
+    perl-Time-HiRes \
     sddm || {
     fail_message "Failed to install core dependencies. Check $LOG_FILE for details."
     exit 1
