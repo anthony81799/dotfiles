@@ -21,6 +21,7 @@ DEFAULT_SHELL=""
 INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
+INSTALL_NIX=false
 
 # Step 1: Main menu for installation options
 CHOICES=$(
@@ -29,7 +30,8 @@ CHOICES=$(
         "Install Rust toolchain and crates" \
         "Install Docker" \
         "Install Node.js and npm" \
-        "Install XDG Ninja"
+        "Install XDG Ninja" \
+        "Install Nix package manager"
 )
 
 # Parse choices
@@ -40,6 +42,7 @@ while IFS= read -r CHOICE; do
     "Install Docker") INSTALL_DOCKER=true ;;
     "Install Node.js and npm") INSTALL_NODE=true ;;
     "Install XDG Ninja") INSTALL_XDG_NINJA=true ;;
+    "Install Nix package manager") INSTALL_NIX=true ;;
     esac
 done <<<"$CHOICES"
 
@@ -124,6 +127,12 @@ fi
 if [ "$INSTALL_XDG_NINJA" = true ]; then
     spinner "Installing XDG Ninja..."
     git clone https://github.com/b3nj5m1n/xdg-ninja ~/.local/share/xdg-ninja
+fi
+
+# Install Nix if selected
+if [ "$INSTALL_NIX" = true ]; then
+    spinner "Installing Nix package manager..."
+    curl -L https://nixos.org/nix/install | sh -s -- --daemon
 fi
 
 # Change default shell if selected

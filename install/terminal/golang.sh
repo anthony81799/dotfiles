@@ -71,6 +71,7 @@ if [ "$INSTALL_GO" = true ]; then
     # Optional: install a few global Go tools
     go install github.com/jesseduffield/lazygit@latest
     go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    go install github.com/charmbracelet/glow/v2@latest
 
     okay_message "Go installation completed successfully."
 fi

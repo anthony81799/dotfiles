@@ -87,6 +87,14 @@ if [ "$INSTALL_RUST" = true ]; then
     else
         okay_message "All cargo installs completed."
     fi
+
+    if gum confirm "Do you want to install Helix?"; then
+        spinner "Installing Helix and LSPs..."
+
+        $INSTALL_HELIX=true
+    else
+        info_message "Helix installation skipped."
+    fi
 else
     info_message "Rust installation skipped."
 fi
