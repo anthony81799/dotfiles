@@ -12,31 +12,11 @@ init_log "${LOG_DIR}/dotfiles-install.log"
 
 ensure_gum
 
-# Variables for user choices
-INSTALL_DESKTOP=false
-INSTALL_TERMINAL=false
+banner "Installing dotfiles and configurations"
 
-# Step 1: Installation type menu
-INSTALL_TYPE=$(
-    gum choose \
-        "Full Desktop" \
-        "Terminal Only"
-)
+bash "${HOME}/install/desktop/install-desktop.sh"
 
-case "$INSTALL_TYPE" in
-"Full Desktop") INSTALL_DESKTOP=true ;;
-"Terminal Only") INSTALL_TERMINAL=true ;;
-esac
-
-# Step 2: Run installations
-if [ "$INSTALL_DESKTOP" = true ]; then
-    bash "${HOME}/install/desktop/install-desktop.sh"
-    INSTALL_TERMINAL=true
-fi
-
-if [ "$INSTALL_TERMINAL" = true ]; then
-    bash "${HOME}/install/terminal/install-terminal.sh"
-fi
+bash "${HOME}/install/terminal/install-terminal.sh"
 
 finish "The installation is finished!"
 
