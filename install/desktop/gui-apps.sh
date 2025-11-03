@@ -53,6 +53,15 @@ sudo dnf install -y brave-browser || {
 }
 okay_message "Brave Browser installed."
 
+# set Brave as default browser
+# The desktop file name for Brave is typically brave-browser.desktop
+spinner "Setting Brave Browser as the default web browser..."
+# Set the default handler for x-scheme-handler/http and x-scheme-handler/https
+xdg-settings set default-web-browser brave-browser.desktop || {
+    warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
+}
+okay_message "Attempted to set Brave Browser as default."
+
 # ------------------------------------------------------------
 # --- 4. Install Zed Editor (Flathub - Recommended) ---
 # ------------------------------------------------------------
@@ -70,14 +79,12 @@ else
 fi
 
 # ------------------------------------------------------------
-# --- 5. Set Brave as Default Browser ---
+# --- 5. Install Thunderbird Email Client (DNF/Official) ---
 # ------------------------------------------------------------
-# The desktop file name for Brave is typically brave-browser.desktop
-spinner "Setting Brave Browser as the default web browser..."
-# Set the default handler for x-scheme-handler/http and x-scheme-handler/https
-xdg-settings set default-web-browser brave-browser.desktop || {
-    warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
+spinner "Installing Thunderbird..."
+sudo dnf install -y thunderbird || {
+    warn_message "Failed to install thunderbird. Check $LOG_FILE for details."
 }
-okay_message "Attempted to set Brave Browser as default."
+okay_message "Thunderbird installed."
 
 finish "GUI Applications installation complete."
