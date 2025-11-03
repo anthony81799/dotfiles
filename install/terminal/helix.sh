@@ -12,6 +12,8 @@ init_log "${LOG_DIR}/helix-install.log"
 
 ensure_gum
 
+banner "Helix Editor"
+
 HELIXDIR="${HOME}/.local/share/helix"
 
 # Ensure required commands

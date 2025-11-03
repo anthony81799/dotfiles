@@ -26,7 +26,7 @@ init_log "$LOG_FILE"
 
 ensure_gum
 
-spinner "Starting Hyprland and omadora installation..."
+banner "Starting dotfiles setup and installation"
 
 # -------------------------------------------------------------
 # --- 1. DNF Performance Tweaks ---

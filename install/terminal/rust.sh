@@ -12,6 +12,8 @@ init_log "${LOG_DIR}/rust-install.log"
 
 ensure_gum
 
+banner "Installing Rust and Helix Editor"
+
 # Defaults
 INSTALL_RUST=false
 INSTALL_HELIX=false

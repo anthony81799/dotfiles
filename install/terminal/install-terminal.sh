@@ -12,12 +12,11 @@ init_log "${LOG_DIR}/terminal-install.log"
 
 ensure_gum
 
-spinner "Installing terminal utilities..."
+banner "Installing terminal utilities"
 
 # Variables for user choices
 INSTALL_GO=false
 INSTALL_RUST=false
-DEFAULT_SHELL=""
 INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
@@ -47,20 +46,7 @@ while IFS= read -r CHOICE; do
 done <<<"$CHOICES"
 
 # Step 2: Shell selection menu
-DEFAULT_SHELL=$(
-    gum choose \
-        "/bin/zsh (ZSH)" \
-        "/bin/bash (Bash)" \
-        "/usr/bin/fish (Fish)" \
-        "Skip (Keep current shell)"
-)
-
-case "$DEFAULT_SHELL" in
-"/bin/zsh (ZSH)") DEFAULT_SHELL="/bin/zsh" ;;
-"/bin/bash (Bash)") DEFAULT_SHELL="/bin/bash" ;;
-"/usr/bin/fish (Fish)") DEFAULT_SHELL="/usr/bin/fish" ;;
-"Skip (Keep current shell)") DEFAULT_SHELL="" ;; # Skip changing the shell
-esac
+bash ~/install/terminal/change-shell.sh
 
 # Step 3: Installation progress
 spinner "Installing dependencies..."
@@ -105,11 +91,7 @@ fi
 # Install Docker if selected
 if [ "$INSTALL_DOCKER" = true ]; then
     spinner "Installing Docker..."
-    sudo dnf remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine || true
-    sudo dnf install -y dnf-plugins-core
-    sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-    sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    sudo systemctl enable --now docker
+    bash ~/install/terminal/docker-services.sh
 fi
 
 # Install Node.js and npm if selected
@@ -134,20 +116,3 @@ if [ "$INSTALL_NIX" = true ]; then
     spinner "Installing Nix package manager..."
     curl -L https://nixos.org/nix/install | sh -s -- --daemon
 fi
-
-# Change default shell if selected
-if [ -n "$DEFAULT_SHELL" ]; then
-    spinner "Changing default shell to $DEFAULT_SHELL..."
-    if [ "$DEFAULT_SHELL" == "/bin/bash" ]; then
-        spinner "Installing ble.sh for Bash enhancements..."
-        git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "${XDG_DATA_HOME}"/ble.sh
-        cd "${XDG_DATA_HOME}"/ble.sh
-        make install
-    fi
-    bash ~/install/terminal/oh-my-posh.sh
-    chsh -s "$DEFAULT_SHELL"
-else
-    info_message "Skipping shell change."
-fi
-
-finish "The terminal installation is finished!"

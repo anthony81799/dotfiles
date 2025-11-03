@@ -12,6 +12,8 @@ init_log "${LOG_DIR}/go-install.log"
 
 ensure_gum
 
+banner "Installing or Updating Go Toolchain"
+
 # Default options
 INSTALL_GO=false
 UPDATE_GO=false
