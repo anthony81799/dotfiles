@@ -20,7 +20,6 @@ INSTALL_RUST=false
 INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
-INSTALL_NIX=false
 
 # Step 1: Main menu for installation options
 CHOICES=$(
@@ -29,8 +28,7 @@ CHOICES=$(
         "Install Rust toolchain and crates" \
         "Install Docker" \
         "Install Node.js and npm" \
-        "Install XDG Ninja" \
-        "Install Nix package manager"
+        "Install XDG Ninja"
 )
 
 # Parse choices
@@ -41,7 +39,6 @@ while IFS= read -r CHOICE; do
     "Install Docker") INSTALL_DOCKER=true ;;
     "Install Node.js and npm") INSTALL_NODE=true ;;
     "Install XDG Ninja") INSTALL_XDG_NINJA=true ;;
-    "Install Nix package manager") INSTALL_NIX=true ;;
     esac
 done <<<"$CHOICES"
 
@@ -50,7 +47,7 @@ bash ~/install/terminal/change-shell.sh
 
 # Step 3: Installation progress
 spinner "Installing dependencies..."
-sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish
+sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish flatpak
 
 spinner "Installing package group dependencies..."
 sudo dnf group install -y fonts c-development development-tools
@@ -109,10 +106,4 @@ fi
 if [ "$INSTALL_XDG_NINJA" = true ]; then
     spinner "Installing XDG Ninja..."
     git clone https://github.com/b3nj5m1n/xdg-ninja ~/.local/share/xdg-ninja
-fi
-
-# Install Nix if selected
-if [ "$INSTALL_NIX" = true ]; then
-    spinner "Installing Nix package manager..."
-    curl -L https://nixos.org/nix/install | sh -s -- --daemon
 fi
