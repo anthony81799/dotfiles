@@ -64,6 +64,7 @@ okay_message "Attempted to set Brave Browser as default."
 # ------------------------------------------------------------
 # --- 4. Install Zed Editor (Flathub - Recommended) ---
 # ------------------------------------------------------------
+sudo dnf install flatpak
 if has_cmd flatpak; then
     spinner "Installing Zed Editor via Flatpak..."
     # Ensure Flathub is enabled
