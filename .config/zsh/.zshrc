@@ -149,3 +149,14 @@ precmd_functions+=(precmd)
 
 # --- Oh My Posh theme ---
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.json)"
+
+# YAZELIX START v4 - Yazelix managed configuration (do not modify this comment)
+# delete this whole section to re-generate the config, if needed
+if [ -n "$IN_YAZELIX_SHELL" ]; then
+  source "$HOME/.config/yazelix/shells/zsh/yazelix_zsh_config.sh"
+fi
+# yzx command - always available for launching/managing yazelix
+yzx() {
+    nu -c "use ~/.config/yazelix/nushell/scripts/core/yazelix.nu *; yzx $*"
+}
+# YAZELIX END v4 - Yazelix managed configuration (do not modify this comment)

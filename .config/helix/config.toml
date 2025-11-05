@@ -45,11 +45,9 @@ backspace = {c = ":sh cargo clean", f = ":sh cargo fmt" }
 esc = ["collapse_selection", "keep_primary_selection"]
 
 # Yazelix keybinds
-[keys.normal]
 # Yazelix sidebar integration - reveal current file in Yazi sidebar
 A-y = ":sh nu ~/.config/yazelix/nushell/scripts/integrations/reveal_in_yazi.nu \"%{buffer_name}\""
 
-[keys.normal]
 # Navigation and movement
 "{" = "goto_prev_paragraph"
 "}" = "goto_next_paragraph"
