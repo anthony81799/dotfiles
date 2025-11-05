@@ -43,8 +43,7 @@ okay_message "VS Code installed."
 # ------------------------------------------------------------
 spinner "Installing Brave Browser repository..."
 sudo dnf install -y dnf-plugins-core
-sudo dnf config-manager addrepo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 
 spinner "Installing Brave Browser..."
 sudo dnf check-update >/dev/null # Refresh cache
