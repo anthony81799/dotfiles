@@ -23,7 +23,7 @@ fi
 config() {
     /usr/bin/git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
 }
-config checkout
+config checkout --force
 
 # Load shared library and initialize logging
 source "${HOME}/install/lib.sh"
