@@ -22,24 +22,10 @@ DOCKER_VOLUME_BASE="${XDG_DATA_HOME}/docker/volumes"
 USER_ID="$(id -u)"
 GROUP_ID="$(id -g)"
 
-# ------------------------------------------------------------
 # --- 1. Install Docker and Setup User Permissions ---
-# ------------------------------------------------------------
 if ! has_cmd docker; then
-    if gum confirm "Docker (moby-engine) is not installed. Install now?"; then
-        spinner "Installing Docker (moby-engine and moby-cli)..." -- sudo dnf install
-        sudo dnf remove -y docker \
-            docker-client \
-            docker-client-latest \
-            docker-common \
-            docker-latest \
-            docker-latest-logrotate \
-            docker-logrotate docker-selinux \
-            docker-engine-selinux \
-            docker-engine || {
-            fail_message "Failed to remove existing Docker installation."
-            exit 1
-        }
+    if gum confirm "Docker is not installed. Install now?"; then
+        spinner "Installing Docker..."
         sudo dnf install -y dnf-plugins-core
         sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
         sudo dnf install -y docker-ce \
@@ -77,14 +63,12 @@ spinner "Creating base directory for container volumes: $DOCKER_VOLUME_BASE..."
 mkdir -p "$DOCKER_VOLUME_BASE"
 sudo chown -R "$USER_ID":"$GROUP_ID" "$DOCKER_VOLUME_BASE"
 
-# ------------------------------------------------------------
 # --- 2. Setup Portainer (Container Management Dashboard) ---
-# ------------------------------------------------------------
 spinner "Setting up Portainer (Web UI on port 9000)..."
 
 docker volume create portainer_data &>/dev/null || true # Ensure the named volume exists
 
-docker run -d \
+sudo docker run -d \
     --name portainer \
     --restart unless-stopped \
     -p 9000:9000 \
@@ -94,16 +78,12 @@ docker run -d \
     warn_message "Failed to start Portainer."
 }
 
-okay_message "Portainer is running! Access the dashboard at http://localhost:9000"
-
-# ------------------------------------------------------------
 # --- 3. Setup Self-Hosted Applications ---
-# ------------------------------------------------------------
 info_message "Starting installation of self-hosted applications..."
 
 # --- i. SearxNG (Privacy-Respecting Metasearch Engine) ---
 spinner "Starting SearxNG (Web UI on port 8080)..."
-docker run -d \
+sudo docker run -d \
     --name searxng \
     --restart unless-stopped \
     -p 8080:8080 \
@@ -114,7 +94,7 @@ docker run -d \
 
 # --- ii. Syncthing (File Synchronization) ---
 spinner "Starting Syncthing (Web UI on port 8384)..."
-docker run -d \
+sudo docker run -d \
     --name syncthing \
     --restart unless-stopped \
     -p 8384:8384 \
@@ -130,7 +110,7 @@ docker run -d \
 
 # --- iii. Kopia (Cross-Platform Backup Tool) ---
 spinner "Starting Kopia Server (Web UI on port 5151)..."
-docker run -d \
+sudo docker run -d \
     --name kopia-server \
     --restart unless-stopped \
     -p 5151:5151 \
@@ -142,7 +122,7 @@ docker run -d \
 
 # --- iv. PairDrop (P2P Local File Transfer) ---
 spinner "Starting PairDrop (Web UI on port 3000)..."
-docker run -d \
+sudo docker run -d \
     --name pairdrop \
     --restart unless-stopped \
     -p 3000:3000 \
@@ -152,7 +132,7 @@ docker run -d \
 
 # --- v. Vaultwarden (Lightweight Bitwarden Server) ---
 spinner "Starting Vaultwarden (Web UI on port 3001)..."
-docker run -d \
+sudop docker run -d \
     --name vaultwarden \
     --restart unless-stopped \
     -p 3001:80 \
@@ -163,7 +143,7 @@ docker run -d \
 
 # --- vi. Budget-Board (Using LinuxServer's Budge for single-container simplicity) ---
 spinner "Starting Budget-Board (Budge) (Web UI on port 3002)..."
-docker run -d \
+sudo docker run -d \
     --name budge-board \
     --restart unless-stopped \
     -p 3002:3000 \

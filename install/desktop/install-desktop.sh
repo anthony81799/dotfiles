@@ -30,19 +30,19 @@ log "Running script: gaming-tweaks.sh"
 bash "${DESKTOP_SCRIPT_DIR}/gaming-tweaks.sh"
 
 # Step 3: Btrfs Snapshot Setup (Snapper)
-log "Running script: snapshots.sh"
-bash "${DESKTOP_SCRIPT_DIR}/snapshots.sh"
+# log "Running script: snapshots.sh"
+# bash "${DESKTOP_SCRIPT_DIR}/snapshots.sh"
 
 # STEP 4: Install GUI Applications
 log "Running script: gui-apps.sh"
 bash "${DESKTOP_SCRIPT_DIR}/gui-apps.sh"
 
 # Step 5: Setup SDDM Autologin
-log "Running script: autologin.sh"
-bash "${DESKTOP_SCRIPT_DIR}/autologin.sh"
+# log "Running script: autologin.sh"
+# bash "${DESKTOP_SCRIPT_DIR}/autologin.sh"
 
 # Step 6: Skip GRUB Menu Prompt
-log "Running script: grub.sh"
-bash "${DESKTOP_SCRIPT_DIR}/grub.sh"
+# log "Running script: grub.sh"
+# bash "${DESKTOP_SCRIPT_DIR}/grub.sh"
 
 finish "Desktop Environment installation complete. Please reboot for all changes (drivers, kernel modules, shell, GRUB) to take effect."

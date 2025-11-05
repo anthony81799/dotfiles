@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ===============================================
-# Desktop Environment (Hyprland) setup
+# Desktop Environment installer
 # ===============================================
 set -euo pipefail
 IFS=$'\n\t'
@@ -51,9 +51,7 @@ case "$INSTALL_TYPE" in
 "Terminal Only") INSTALL_TERMINAL=true ;;
 esac
 
-# -------------------------------------------------------------
 # --- 1. DNF Performance Tweaks ---
-# -------------------------------------------------------------
 spinner "Optimizing DNF configuration for faster downloads..."
 
 DNF_CONFIG="/etc/dnf/dnf.conf"
@@ -87,49 +85,8 @@ fi
 
 # Step 2: Run installations
 if [ "$INSTALL_DESKTOP" = true ]; then
-    # -------------------------------------------------------------
-    # --- 2. Omadora Installation ---
-    # -------------------------------------------------------------
-
-    banner "This is just the initail setup! If you desire a full desktop installation after the system restarts run ./install/install.sh."
-
-    # --- 2a. Install Core Dependencies ---
-    log "Installing core Wayland/build dependencies and utilities..."
-
-    # Consolidate core dependencies: Hyprland build tools (Meson, Ninja), uwsm, sddm, grub2
-    spinner "Installing core dependencies (Wayland, build tools, SDDM, GRUB)..."
-    sudo dnf install -y \
-        snapper \
-        perl-Time-HiRes \
-        sddm || {
-        fail_message "Failed to install core dependencies. Check $LOG_FILE for details."
-        exit 1
-    }
-    okay_message "Core dependencies installed successfully."
-
-    # --- 2b. Install omadora ---
-    OMADORA_REPO="https://github.com/elpritchos/omadora.git"
-    OMADORA_DIR="${XDG_DATA_HOME}/omadora"
-
-    log "Cloning and building omadora from $OMADORA_REPO"
-
-    if [ -d "$OMADORA_DIR" ]; then
-        spinner "Updating omadora repository..."
-        cd "$OMADORA_DIR" || exit 1
-        git pull --rebase
-    else
-        spinner "Cloning omadora repository..."
-        git clone "$OMADORA_REPO" "$OMADORA_DIR"
-        cd "$OMADORA_DIR" || exit 1
-    fi
-
-    spinner "Building and installing omadora..."
-
-    bash "$OMADORA_DIR"/install.sh || {
-        fail_message "Failed to build and install omadora. Check $LOG_FILE for details."
-        exit 1
-    }
-    okay_message "omadora installed."
+    bash "${HOME}/install/desktop/install-desktop.sh"
+    $INSTALL_TERMINAL=true
 fi
 
 if [ "$INSTALL_TERMINAL" = true ]; then

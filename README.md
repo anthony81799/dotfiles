@@ -19,13 +19,7 @@ The installer uses the interactive command-line tool `gum` to guide the user thr
 To install this repo run the follow command in a terminal:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/anthony81799/dotfiles/master/setup.sh)
-```
-
-Then after the machine restarts run:
-
-```bash
-./install/install.sh
+bash <(curl -fsSL https://raw.githubusercontent.com/anthony81799/dotfiles/master/install.sh)
 ```
 
 -----
@@ -36,17 +30,12 @@ The installation process is split into two main phases, with the "Full Desktop" 
 
 ### 1\. Full Desktop Environment Setup
 
-The desktop environment is centered around the **Hyprland** Wayland compositor, managed via the **omadora** project.
-
 | Step | Component | Description |
 | :--- | :--- | :--- |
+| **Files** | Configuration Copy | Copies or symlinks configuration files (dotfiles) from the install directory to their respective `XDG_CONFIG_HOME` paths. |
 | **Drivers** | NVIDIA/RPMFusion | Sets up **RPMFusion** repositories and offers optional installation of **NVIDIA drivers** and Vulkan support (`akmod-nvidia`, `vulkan-loader`). |
 | **Gaming/Perf**| Bazzite/Nobara Tweaks | Installs common gaming tools (`gamescope`, `steam`, Vulkan drivers, `xpad`) and applies performance-focused kernel tweaks (`irqbalance`, low `vm.swappiness`, high `fs.inotify.max_user_watches`). |
-| **omadora** | Hyprland Config | Clones and builds the **omadora** repository (which contains Hyprland dependencies and configurations) into `$HOME/.local/share/omadora`. |
-| **Files** | Configuration Copy | Copies or symlinks configuration files (dotfiles) from the install directory to their respective `XDG_CONFIG_HOME` paths. |
-| **Storage** | Snapper | Checks for a **Btrfs** root filesystem and offers to install and configure **Snapper** for automatic snapshot management. |
 | **GUI Apps** | Applications | Installs essential graphical applications: **Brave Browser** (set as default), **VS Code**, **Dolphin** file manager, and the **Zed Editor** (via Flatpak). |
-| **Boot** | SDDM & GRUB | Configures **SDDM** for automatic login to the Hyprland session and modifies **GRUB** to skip the boot menu prompt for instant startup. |
 
 -----
 
