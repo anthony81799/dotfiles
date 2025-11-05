@@ -163,3 +163,15 @@ PROMPT_COMMAND="osc7; precmd; $PROMPT_COMMAND"
 # Oh My Posh theme (MUST BE LAST)
 eval "$(oh-my-posh init bash --config ~/.config/oh-my-posh/theme.json)"
 [[ ! ${BLE_VERSION-} ]] || ble-attach
+
+
+# YAZELIX START v4 - Yazelix managed configuration (do not modify this comment)
+# delete this whole section to re-generate the config, if needed
+if [ -n "$IN_YAZELIX_SHELL" ]; then
+  source "$HOME/.config/yazelix/shells/bash/yazelix_bash_config.sh"
+fi
+# yzx command - always available for launching/managing yazelix
+yzx() {
+    nu -c "use ~/.config/yazelix/nushell/scripts/core/yazelix.nu *; yzx $*"
+}
+# YAZELIX END v4 - Yazelix managed configuration (do not modify this comment)
