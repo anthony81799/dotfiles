@@ -163,4 +163,3 @@ PROMPT_COMMAND="osc7; precmd; $PROMPT_COMMAND"
 # Oh My Posh theme (MUST BE LAST)
 eval "$(oh-my-posh init bash --config ~/.config/oh-my-posh/theme.json)"
 [[ ! ${BLE_VERSION-} ]] || ble-attach
-. "/home/amason/.local/share/cargo/env"
