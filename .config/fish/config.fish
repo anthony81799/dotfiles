@@ -122,6 +122,7 @@ end
 abbr config '/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 abbr nv nvim
 abbr omadora 'uwsm check may-start -v && uwsm start hyprland-uwsm.desktop'
+abbr df dysk
 
 # ==================================
 # Zoxide & Atuin

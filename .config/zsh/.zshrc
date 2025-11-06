@@ -100,6 +100,7 @@ alias wget='wget --hsts-file='"${XDG_DATA_HOME}"'/wget-hsts'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias nv='nvim'
 alias omadora='uwsm check may-start -v && uwsm start hyprland-uwsm.desktop'
+alias df='dysk'
 
 # --- Zoxide & Atuin ---
 eval "$(zoxide init zsh)"
