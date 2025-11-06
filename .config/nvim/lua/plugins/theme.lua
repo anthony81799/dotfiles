@@ -1,1 +1,10 @@
-/home/amason/.config/omadora/current/theme/neovim.lua
+return {
+	{
+		"ellisonleao/gruvbox.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("gruvbox")
+		end,
+	},
+}

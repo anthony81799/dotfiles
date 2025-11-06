@@ -47,7 +47,13 @@ bash ~/install/terminal/change-shell.sh
 
 # Step 3: Installation progress
 spinner "Installing dependencies..."
-sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish flatpak
+sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all neovim openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish flatpak kitty
+
+sudo dnf copr enable -y wezfurlong/wezterm-nightly
+sudo dnf install -y wezterm
+
+sudo dnf copr enable -y scottames/ghostty
+sudo dnf install -y ghostty
 
 spinner "Installing package group dependencies..."
 sudo dnf group install -y fonts c-development development-tools
