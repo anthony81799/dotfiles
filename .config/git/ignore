@@ -9,11 +9,15 @@
 .config/git/config
 .config/git/credentials
 .config/go/telemetry
+.config/nushell
+.config/yazelix
+.config/zsh/.zcompdump
 .dbclient
 .docker
 .dotnet
 .local
 .mozilla
+.nix-*
 .pki
 .var
 .vscode-remote-containers
