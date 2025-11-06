@@ -35,7 +35,7 @@ EOF
     # Enable SDDM service
     spinner "Enabling SDDM service..."
     sudo systemctl enable --now sddm.service || {
-        warn_message "Failed to enable sddm.service. You may need to start it manually."
+        fail_message "Failed to enable sddm.service. You may need to start it manually."
     }
 
     okay_message "SDDM configured for automatic login using the Hyprland session."

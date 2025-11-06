@@ -33,7 +33,6 @@ if ! has_cmd docker; then
             docker-buildx-plugin \
             docker-compose-plugin || {
             fail_message "Failed to install Docker dependencies."
-            return 1
         }
 
         spinner "Enabling and starting Docker service..."

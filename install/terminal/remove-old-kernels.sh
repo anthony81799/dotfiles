@@ -46,7 +46,6 @@ fi
 spinner "Removing selected kernels..." --
 sudo dnf remove -y "${SELECTED[@]}" || {
     fail_message "Failed to remove some kernels. Check ${LOG} for details."
-    return 1
 }
 
 finish "Kernel removal complete."

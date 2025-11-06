@@ -75,7 +75,7 @@ banner() {
 # Function: graceful exit message
 finish() {
     local msg="$1"
-    log "FINISH: $msg"
+    log "FINISH SUCCESS: $msg"
     gum style --border normal --margin "1" --padding "1" --align center --foreground 120 "$msg"
     exit 0
 }
@@ -98,6 +98,7 @@ fail_message() {
     local msg="$1"
     log "FAIL: $msg"
     style_message 196 "$msg"
+    exit 0
 }
 
 okay_message() {

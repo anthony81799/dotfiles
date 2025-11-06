@@ -28,7 +28,7 @@ DEFAULT_SHELL=$(
         "/bin/zsh (ZSH)" \
         "/bin/bash (Bash)" \
         "/usr/bin/fish (Fish)" \
-        "Skip (Keep current shell)"
+        "Keep current shell (Skip)"
 )
 
 # Parse choice
@@ -45,7 +45,6 @@ if ! has_cmd "$(basename "$TARGET_SHELL")"; then
     spinner "Installing $(basename "$TARGET_SHELL")..."
     sudo dnf install -y "$(basename "$TARGET_SHELL")" || {
         fail_message "Failed to install $(basename "$TARGET_SHELL"). Aborting."
-        return 1
     }
 fi
 

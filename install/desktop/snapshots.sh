@@ -24,15 +24,13 @@ fi
 if gum confirm "Do you want to install and configure Snapper for Btrfs snapshots?"; then
     spinner "Installing Snapper and dependencies..."
     sudo dnf install -y snapper snap-confine || {
-        warn_message "Failed to install Snapper. Skipping setup."
-        return 1
+        fail_message "Failed to install Snapper. Skipping setup."
     }
 
     spinner "Creating Snapper configuration for root partition..."
     # FIX: Removed the faulty 'subvol=/@' check. Snapper can configure / as long as it is BTRFS.
     sudo snapper -c root create-config / || {
         fail_message "Failed to create Snapper configuration for root. Check $LOG_FILE for details."
-        return 1
     }
 
     okay_message "Snapper installed and configuration 'root' created."
