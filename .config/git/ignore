@@ -1,6 +1,8 @@
 # ignore files and directories gerated after dotfiles are applied
 .aws
 .azure
+.bash_history
+.bash_logout
 .cache
 .cfg
 .config/docker
@@ -11,9 +13,19 @@
 .docker
 .dotnet
 .local
+.mozilla
 .pki
+.var
 .vscode-remote-containers
 .vscode-server
+Desktop
+Documents
+Downloads
+Music
+Pictures
+Public
+Templates
+Videos
 node_modules
 package-lock.json
 package.json

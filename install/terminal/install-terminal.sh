@@ -85,6 +85,17 @@ else
     info_message "Git name or email not provided. Skipping Git configuration."
 fi
 
+# Install Node.js and npm if selected
+if [ "$INSTALL_NODE" = true ]; then
+    spinner "Installing Node.js and npm..."
+    sudo dnf install -y nodejs-npm
+    sudo npm config set prefix="${XDG_DATA_HOME}/npm"
+    sudo npm config set cache="${XDG_CACHE_HOME}/npm"
+    sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
+    sudo chmod 777 '.cache'
+    sudo chown -R "$(id -u):$(id -g)" "${HOME}/.cache/npm" || true
+fi
+
 # Install Go if selected
 if [ "$INSTALL_GO" = true ]; then
     spinner "Installing Go and lazygit..."
@@ -101,17 +112,6 @@ fi
 if [ "$INSTALL_DOCKER" = true ]; then
     spinner "Installing Docker..."
     bash ~/install/terminal/docker-services.sh
-fi
-
-# Install Node.js and npm if selected
-if [ "$INSTALL_NODE" = true ]; then
-    spinner "Installing Node.js and npm..."
-    sudo dnf install -y nodejs-npm
-    sudo npm config set prefix="${XDG_DATA_HOME}/npm"
-    sudo npm config set cache="${XDG_CACHE_HOME}/npm"
-    sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
-    sudo chmod 777 '.cache'
-    sudo chown -R "$(id -u):$(id -g)" "${HOME}/.cache/npm" || true
 fi
 
 # Install XDG Ninja if selected
