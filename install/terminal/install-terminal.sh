@@ -61,12 +61,12 @@ sudo dnf group install -y fonts c-development development-tools
 pip install neovim
 
 # Step 4: Hostname configuration
-STATIC_HOSTNAME=$(gum input --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
+STATIC_HOSTNAME=$(gum input --prompt "Static Hostname > " --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
 if [[ -n "$STATIC_HOSTNAME" ]]; then
     spinner "Setting static hostname to '$STATIC_HOSTNAME'..."
     sudo hostnamectl set-hostname --static $STATIC_HOSTNAME
 fi
-PRETTY_HOSTNAME=$(gum input --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
+PRETTY_HOSTNAME=$(gum input --prompt "Pretty Hostname > " --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
 if [[ -n "$PRETTY_HOSTNAME" ]]; then
     spinner "Setting pretty hostname to '$PRETTY_HOSTNAME'..."
     sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
@@ -99,7 +99,7 @@ if [ "$INSTALL_NODE" = true ]; then
     sudo npm config set cache="${XDG_CACHE_HOME}/npm"
     sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
     sudo chmod 777 '.cache'
-    sudo chown -R "$(id -u):$(id -g)" "${HOME}/.cache/npm" || true
+    sudo chown -R "$(id -u):$(id -g)" "${HOME}/.cache/npm"
 fi
 
 # Install Go if selected

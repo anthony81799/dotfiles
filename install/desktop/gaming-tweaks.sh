@@ -15,6 +15,8 @@ ensure_gum
 
 banner "Gaming Features and Performance Tweaks"
 
+INSTALL_SUCCESS=true
+
 # -------------------------------------------------------------
 # --- 1. Install Bazzite Gaming Features ---
 # -------------------------------------------------------------
@@ -33,15 +35,18 @@ sudo dnf install -y \
     vulkan-loader \
     vulkan-tools || {
     warn_message "Some gaming dependencies failed to install. Continuing..."
+    INSTALL_SUCCESS=false
 }
 
 # Enable xone for Xbox controllers (requires a reboot)
 if has_cmd xone; then
     spinner "Enabling xone service for Xbox controllers..."
-    sudo systemctl enable --now xone@"$USER" || true
+    sudo systemctl enable --now xone@"$USER"
 fi
 
-okay_message "Gaming features installed successfully."
+if "$INSTALL_SUCCESS"; then
+    okay_message "Gaming features installed successfully."
+fi
 
 # -------------------------------------------------------------
 # --- 2. Nobara/Performance Tweaks ---
@@ -63,7 +68,7 @@ vm.swappiness = 10
 EOF
 
 # Load the new sysctl settings immediately
-sudo sysctl -p /etc/sysctl.d/99-performance-tweaks.conf || true
+sudo sysctl -p /etc/sysctl.d/99-performance-tweaks.conf
 
 okay_message "System performance tweaks applied. Full effect requires a reboot."
 

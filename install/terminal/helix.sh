@@ -39,7 +39,7 @@ else
     git checkout master
     git fetch --all --prune
     git pull --rebase
-    git submodule update --init --recursive || true
+    git submodule update --init --recursive
 fi
 
 # Build/install helix-term if present
@@ -47,7 +47,7 @@ if [ -d "$HELIXDIR/helix-term" ]; then
     spinner "Building helix-term..."
     cd "$HELIXDIR"
     # cargo install --path helix-term --locked may take time; continue on failure but log it
-    if ! cargo install --path helix-term --locked || true; then
+    if ! cargo install --path helix-term --locked; then
         warn_message "cargo install (helix-term) failed or already installed; continuing."
     fi
 fi
@@ -55,8 +55,8 @@ fi
 # Ensure hx CLI exists (may be installed as 'hx' by cargo)
 if command -v hx &>/dev/null; then
     spinner "Fetching/building Helix grammars..."
-    hx --grammar fetch || true
-    hx --grammar build || true
+    hx --grammar fetch
+    hx --grammar build
 else
     warn_message "hx binary not found; skipping grammar fetch/build."
 fi
@@ -91,55 +91,55 @@ while IFS= read -r CHOICE; do
     case "$CHOICE" in
     "Bash")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm i -g bash-language-server || true
+        npm i -g bash-language-server
         ;;
     "C/C++")
-        sudo dnf install -y clang || true
+        sudo dnf install -y clang
         ;;
     "CSS, HTML, JSON, JSONC, SCSS")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm i -g vscode-langservers-extracted || true
+        npm i -g vscode-langservers-extracted
         ;;
     "Docker, Docker Compose")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm install -g dockerfile-language-server-nodejs @microsoft/compose-language-service || true
+        npm install -g dockerfile-language-server-nodejs @microsoft/compose-language-service
         ;;
     "Go")
-        if ! has_cmd go; then sudo dnf install -y golang || true; fi
+        if ! has_cmd go; then sudo dnf install -y golang; fi
         if has_cmd go; then
-            go install golang.org/x/tools/gopls@latest || true
-            go install github.com/go-delve/delve/cmd/dlv@latest || true
-            go install golang.org/x/tools/cmd/goimports@latest || true
-            go install github.com/nametake/golangci-lint-langserver@latest || true
-            go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest || true
+            go install golang.org/x/tools/gopls@latest
+            go install github.com/go-delve/delve/cmd/dlv@latest
+            go install golang.org/x/tools/cmd/goimports@latest
+            go install github.com/nametake/golangci-lint-langserver@latest
+            go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
         fi
         ;;
     "GraphQL")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm i -g graphql-language-service-cli || true
+        npm i -g graphql-language-service-cli
         ;;
     "JavaScript, TypeScript")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm install -g typescript typescript-language-server || true
+        npm install -g typescript typescript-language-server
         ;;
     "Markdown")
-        if ! has_cmd cargo; then sudo dnf install -y cargo || true; fi
-        cargo install --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide || true
+        if ! has_cmd cargo; then sudo dnf install -y cargo; fi
+        cargo install --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
         ;;
     "Rust")
-        sudo dnf install -y lldb || true
+        sudo dnf install -y lldb
         ;;
     "SQL")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm i -g sql-language-server || true
+        npm i -g sql-language-server
         ;;
     "TOML")
-        if ! has_cmd cargo; then sudo dnf install -y cargo || true; fi
-        cargo install taplo-cli --locked --features lsp || true
+        if ! has_cmd cargo; then sudo dnf install -y cargo; fi
+        cargo install taplo-cli --locked --features lsp
         ;;
     "YAML")
         if ! has_cmd npm; then sudo dnf install -y npm; fi
-        npm i -g yaml-language-server@next || true
+        npm i -g yaml-language-server@next
         ;;
     esac
 done <<<"$CHOICES"

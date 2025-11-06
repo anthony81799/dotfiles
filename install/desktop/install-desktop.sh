@@ -45,4 +45,4 @@ bash "${DESKTOP_SCRIPT_DIR}/gui-apps.sh"
 # log "Running script: grub.sh"
 # bash "${DESKTOP_SCRIPT_DIR}/grub.sh"
 
-finish "Desktop Environment installation complete. Please reboot for all changes (drivers, kernel modules, shell, GRUB) to take effect."
+finish "Desktop Environment installation complete. Please reboot for all changes to take effect."

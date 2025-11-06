@@ -19,10 +19,11 @@ banner "GUI Applications Installation"
 # --- 1. Install Dolphin File Manager (DNF/Official) ---
 # ------------------------------------------------------------
 spinner "Installing Dolphin File Manager..."
-sudo dnf install -y dolphin || {
+if sudo dnf install -y dolphin; then
+    okay_message "Dolphin installed."
+else
     warn_message "Failed to install Dolphin. Check $LOG_FILE for details."
-}
-okay_message "Dolphin installed."
+fi
 
 # ------------------------------------------------------------
 # --- 2. Install VS Code (Official RPM/Repo) ---
@@ -33,10 +34,11 @@ sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.m
 
 spinner "Installing VS Code..."
 sudo dnf check-update >/dev/null # Refresh cache
-sudo dnf install -y code || {
+if sudo dnf install -y code; then
+    okay_message "VS Code installed."
+else
     warn_message "Failed to install VS Code. Check $LOG_FILE for details."
-}
-okay_message "VS Code installed."
+fi
 
 # ------------------------------------------------------------
 # --- 3. Install Brave Browser (Official RPM/Repo) ---
@@ -45,21 +47,24 @@ spinner "Installing Brave Browser repository..."
 sudo dnf install -y dnf-plugins-core
 sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 
+BRAVE_INSTALLED=false
 spinner "Installing Brave Browser..."
-sudo dnf check-update >/dev/null # Refresh cache
-sudo dnf install -y brave-browser || {
+if sudo dnf install -y brave-browser; then
+    BRAVE_INSTALLED=true
+    okay_message "Brave Browser installed."
+else
     warn_message "Failed to install Brave Browser. Check $LOG_FILE for details."
-}
-okay_message "Brave Browser installed."
+fi
 
-# set Brave as default browser
-# The desktop file name for Brave is typically brave-browser.desktop
-spinner "Setting Brave Browser as the default web browser..."
-# Set the default handler for x-scheme-handler/http and x-scheme-handler/https
-xdg-settings set default-web-browser brave-browser.desktop || {
-    warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
-}
-okay_message "Attempted to set Brave Browser as default."
+# Set as default only if installed successfully
+if [ "$BRAVE_INSTALLED" = true ]; then
+    # Set the default handler for x-scheme-handler/http and x-scheme-handler/https
+    if xdg-settings set default-web-browser brave-browser.desktop; then
+        okay_message "Brave Browser set as default web browser."
+    else
+        warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
+    fi
+fi
 
 # ------------------------------------------------------------
 # --- 4. Install Zed Editor (Flathub - Recommended) ---
@@ -67,12 +72,13 @@ okay_message "Attempted to set Brave Browser as default."
 if has_cmd flatpak; then
     spinner "Installing Zed Editor via Flatpak..."
     # Ensure Flathub is enabled
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     # Install Zed
-    flatpak install flathub dev.zed.Zed -y || {
+    if flatpak install flathub dev.zed.Zed -y; then
+        okay_message "Zed Editor (Flatpak) installed."
+    else
         warn_message "Failed to install Zed Editor via Flatpak. Check $LOG_FILE for details."
-    }
-    okay_message "Zed Editor (Flatpak) installed."
+    fi
 else
     warn_message "Flatpak not installed. Skipping Zed Editor installation. Install Flatpak/Zed manually."
 fi
@@ -81,9 +87,10 @@ fi
 # --- 5. Install Thunderbird Email Client (DNF/Official) ---
 # ------------------------------------------------------------
 spinner "Installing Thunderbird..."
-sudo dnf install -y thunderbird || {
+if sudo dnf install -y thunderbird; then
+    okay_message "Thunderbird installed."
+else
     warn_message "Failed to install thunderbird. Check $LOG_FILE for details."
-}
-okay_message "Thunderbird installed."
+fi
 
 finish "GUI Applications installation complete."
