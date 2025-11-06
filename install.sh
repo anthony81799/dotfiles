@@ -17,7 +17,7 @@ fi
 
 # Clone dotfiles repository as a bare repo if not already present
 if [ ! -d "$HOME/.cfg" ]; then
-    git clone --bare https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
+    git clone --bare --depth=1 https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"
 fi
 
 config() {
