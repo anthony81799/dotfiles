@@ -25,7 +25,7 @@ sudo dnf install -y \
     perl-Time-HiRes \
     sddm || {
     fail_message "Failed to install core dependencies. Check $LOG_FILE for details."
-    exit 1
+    return 1
 }
 okay_message "Core dependencies installed successfully."
 
@@ -37,19 +37,19 @@ log "Cloning and building omadora from $OMADORA_REPO"
 
 if [ -d "$OMADORA_DIR" ]; then
     spinner "Updating omadora repository..."
-    cd "$OMADORA_DIR" || exit 1
+    cd "$OMADORA_DIR" || return 1
     git pull --rebase
 else
     spinner "Cloning omadora repository..."
     git clone "$OMADORA_REPO" "$OMADORA_DIR"
-    cd "$OMADORA_DIR" || exit 1
+    cd "$OMADORA_DIR" || return 1
 fi
 
 spinner "Building and installing omadora..."
 
 bash "$OMADORA_DIR"/install.sh || {
     fail_message "Failed to build and install omadora. Check $LOG_FILE for details."
-    exit 1
+    return 1
 }
 
 finish "omadora installed!"

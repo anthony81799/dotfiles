@@ -106,7 +106,7 @@ if [ "$INSTALL_HELIX" = true ]; then
     if [ ! -x "$HELIX_SCRIPT" ]; then
         fail_message "Helix script not found or not executable: ${HELIX_SCRIPT}"
         info_message "Please ensure helix.sh exists and is executable."
-        exit 1
+        return 1
     fi
 
     # Ensure git available

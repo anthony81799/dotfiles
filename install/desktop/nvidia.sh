@@ -27,7 +27,7 @@ if gum confirm "Do you want to install NVIDIA drivers from RPMFusion?"; then
     sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda \
         vulkan-loader vulkan-loader.i686 || {
         fail_message "Failed to install NVIDIA drivers. Check $LOG_FILE for details."
-        exit 1
+        return 1
     }
 
     okay_message "NVIDIA drivers installed. The kernel module will build on the next reboot."

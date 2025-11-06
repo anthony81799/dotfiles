@@ -5,4 +5,4 @@
 - ~~investigate yazelix as terminal based development environment~~ (created install script. Haven't commited to using it.)
 - ~~Nix does not currently work with Selinux enabled~~ (Swithced to lix instead. Added to yazelix install script.)
 - ~~docker is installed but services fail to start~~
-- find a better to to exit scripts on failure ````exit 1``` causes the entire install process to stop
+- ~~find a better to to exit scripts on failure ````exit 1``` causes the entire install process to stop~~ (changed to return 1)

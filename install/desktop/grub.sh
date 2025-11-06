@@ -35,7 +35,7 @@ if [ -f "$GRUB_CONFIG" ]; then
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg || {
         fail_message "Failed to update GRUB configuration. Check $LOG_FILE for details."
         warn_message "You may need to run 'sudo grub2-mkconfig -o /boot/grub2/grub.cfg' manually."
-        exit 1
+        return 1
     }
     okay_message "GRUB configured to boot the first entry instantly."
 else

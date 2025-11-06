@@ -22,7 +22,7 @@ for cmd in git cargo; do
         warn_message "Command '$cmd' not found. Installing..."
         sudo dnf install -y "$cmd" || {
             fail_message "Failed to install $cmd. Please install it manually."
-            exit 1
+            return 1
         }
     fi
 done
@@ -36,7 +36,7 @@ if [ ! -d "$HELIXDIR/.git" ]; then
     git clone https://github.com/helix-editor/helix "$HELIXDIR"
 else
     spinner "Updating Helix repository..."
-    cd "$HELIXDIR" || exit 1
+    cd "$HELIXDIR" || return 1
     git checkout master
     git fetch --all --prune
     git pull --rebase
@@ -46,7 +46,7 @@ fi
 # Build/install helix-term if present
 if [ -d "$HELIXDIR/helix-term" ]; then
     spinner "Building helix-term..."
-    cd "$HELIXDIR" || exit 1
+    cd "$HELIXDIR" || return 1
     # cargo install --path helix-term --locked may take time; continue on failure but log it
     if ! cargo install --path helix-term --locked || true; then
         warn_message "cargo install (helix-term) failed or already installed; continuing."
@@ -63,7 +63,7 @@ else
 fi
 
 # Link runtime safely
-cd "$HELIXDIR" || exit 1
+cd "$HELIXDIR" || return 1
 if [ -d "runtime" ]; then
     # Use -sfn to force update of symlink atomically
     ln -sfn "$PWD/runtime" "${HOME}/.config/helix/runtime"

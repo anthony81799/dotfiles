@@ -17,7 +17,7 @@ mapfile -t OLD_KERNELS < <(dnf repoquery --installonly --latest-limit=-1 -q)
 
 if [ "${#OLD_KERNELS[@]}" -eq 0 ]; then
     info_message "No old kernels found."
-    exit 0
+    finish "Kernel removal complete."
 fi
 
 # Prompt user to select kernels to remove (multi-select)
@@ -28,7 +28,7 @@ done < <(gum choose --no-limit "${OLD_KERNELS[@]}")
 
 if [ "${#SELECTED[@]}" -eq 0 ]; then
     info_message "No kernels selected. Nothing to remove."
-    exit 0
+    finish "Kernel removal complete."
 fi
 
 # Confirm removal
@@ -39,14 +39,14 @@ done
 
 if ! gum confirm "Proceed to remove the selected kernels?"; then
     info_message "Aborted by user."
-    exit 0
+    finish "Kernel removal complete."
 fi
 
 # Remove with sudo and -y to avoid prompts
 spinner "Removing selected kernels..." --
 sudo dnf remove -y "${SELECTED[@]}" || {
     fail_message "Failed to remove some kernels. Check ${LOG} for details."
-    exit 1
+    return 1
 }
 
-finish "Removed selected kernels"
+finish "Kernel removal complete."

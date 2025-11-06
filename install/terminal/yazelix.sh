@@ -18,7 +18,7 @@ if ! has_cmd nix; then
     warn_message "Nix package manager not found. Installing..."
     curl -sSf -L https://install.lix.systems/lix | sh -s -- install || {
         fail_message "Failed to install Nix. Please install it manually."
-        exit 1
+        return 1
     }
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
@@ -26,7 +26,7 @@ fi
 spinner "Installing devenv CLI..."
 nix profile install github:cachix/devenv/latest || {
     fail_message "Failed to install devenv CLI. Please install it manually."
-    exit 1
+    return 1
 }
 
 spinner "Installing nushell..."

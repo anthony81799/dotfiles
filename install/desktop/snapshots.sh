@@ -18,24 +18,22 @@ banner "Snapper (Btrfs Snapshot) Setup"
 # Check if the root filesystem is Btrfs
 if ! findmnt -n -o FSTYPE / | grep -q 'btrfs'; then
     info_message "Root filesystem is not Btrfs. Skipping Snapper setup."
-    exit 0
+    finish "Snapper setup complete."
 fi
 
 if gum confirm "Do you want to install and configure Snapper for Btrfs snapshots?"; then
     spinner "Installing Snapper and dependencies..."
     sudo dnf install -y snapper snap-confine || {
         warn_message "Failed to install Snapper. Skipping setup."
-        exit 1
+        return 1
     }
 
     spinner "Creating Snapper configuration for root partition..."
-    # Ensure the mount point exists for Snapper to work
-    if ! sudo mount | grep -q 'subvol=/@'; then
-        warn_message "Could not verify subvolume mount structure (/@). Skipping Snapper config."
-        exit 1
-    fi
-
-    sudo snapper -c root create-config /
+    # FIX: Removed the faulty 'subvol=/@' check. Snapper can configure / as long as it is BTRFS.
+    sudo snapper -c root create-config / || {
+        fail_message "Failed to create Snapper configuration for root. Check $LOG_FILE for details."
+        return 1
+    }
 
     okay_message "Snapper installed and configuration 'root' created."
 else

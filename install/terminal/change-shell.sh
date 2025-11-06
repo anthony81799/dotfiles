@@ -45,7 +45,7 @@ if ! has_cmd "$(basename "$TARGET_SHELL")"; then
     spinner "Installing $(basename "$TARGET_SHELL")..."
     sudo dnf install -y "$(basename "$TARGET_SHELL")" || {
         fail_message "Failed to install $(basename "$TARGET_SHELL"). Aborting."
-        exit 1
+        return 1
     }
 fi
 

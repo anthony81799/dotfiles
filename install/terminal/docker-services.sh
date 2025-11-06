@@ -33,7 +33,7 @@ if ! has_cmd docker; then
             docker-buildx-plugin \
             docker-compose-plugin || {
             fail_message "Failed to install Docker dependencies."
-            exit 1
+            return 1
         }
 
         spinner "Enabling and starting Docker service..."
@@ -52,7 +52,7 @@ if ! has_cmd docker; then
         okay_message "Docker installed and service started. (A re-login is required to use 'docker' without 'sudo')."
     else
         info_message "Docker installation skipped. Cannot proceed with services setup."
-        exit 0
+        finish "Docker setup complete."
     fi
 else
     info_message "Docker is already installed. Proceeding to services setup."
