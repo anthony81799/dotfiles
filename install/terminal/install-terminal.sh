@@ -54,7 +54,19 @@ sudo dnf group install -y fonts c-development development-tools
 
 pip install neovim
 
-# Step 4: Git configuration
+# Step 4: Hostname configuration
+STATIC_HOSTNAME=$(gum input --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
+if [[ -n "$STATIC_HOSTNAME" ]]; then
+    spinner "Setting static hostname to '$STATIC_HOSTNAME'..."
+    sudo hostnamectl set-hostname --static $STATIC_HOSTNAME
+fi
+PRETTY_HOSTNAME=$(gum input --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
+if [[ -n "$PRETTY_HOSTNAME" ]]; then
+    spinner "Setting pretty hostname to '$PRETTY_HOSTNAME'..."
+    sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
+fi
+
+# Step 5: Git configuration
 GIT_NAME=$(gum input --placeholder "Enter your full name for Git")
 GIT_EMAIL=$(gum input --placeholder "Enter your email address for Git")
 
