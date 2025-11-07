@@ -13,7 +13,7 @@ init_log "${LOG_DIR}/change-shell.log"
 ensure_gum
 
 # --- Variables ---
-BASH_BLESH_DIR="${HOME}/.local/share/ble.sh"
+BASH_BLESH_DIR="${XDG_DATA_HOME}"/ble.sh
 OH_MY_POSH_SCRIPT="${HOME}/install/terminal/oh-my-posh.sh"
 
 banner "Default Shell Configuration"
@@ -57,13 +57,9 @@ spinner "Installing ble.sh for Bash enhancements..."
 
 # Check for existing installation to avoid errors
 if [ ! -d "$BASH_BLESH_DIR" ]; then
-    git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR" || {
-        warn_message "Failed to clone ble.sh. Bash enhancements will be limited."
-    }
+    git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR"
     cd "$BASH_BLESH_DIR"
-    make -C ble.sh install PREFIX=~/.local/share/ble.sh || {
-        warn_message "Failed to build ble.sh. Bash enhancements will be limited."
-    }
+    make install
 else
     info_message "ble.sh already cloned."
 fi
