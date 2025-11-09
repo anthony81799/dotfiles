@@ -93,4 +93,21 @@ else
     warn_message "Failed to install thunderbird. Check $LOG_FILE for details."
 fi
 
+# ------------------------------------------------------------
+# --- 5. Install LocalSend File Sharing (Flathub - Recommended) ---
+# ------------------------------------------------------------
+if has_cmd flatpak; then
+    spinner "Installing LocalSend via Flatpak..."
+    # Ensure Flathub is enabled
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    # Install Zed
+    if flatpak install flathub org.localsend.localsend_app -y; then
+        okay_message "LocalSend (Flatpak) installed."
+    else
+        warn_message "Failed to install LocalSend via Flatpak. Check $LOG_FILE for details."
+    fi
+else
+    warn_message "Flatpak not installed. Skipping LocalSend installation. Install Flatpak/Zed manually."
+fi
+
 finish "GUI Applications installation complete."

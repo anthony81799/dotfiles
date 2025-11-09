@@ -127,17 +127,6 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
     }
     warn_message "Kopia server started on port 5151. Initial setup password is 'your_secure_password'. PLEASE CHANGE IT IMMEDIATELY."
 
-    # --- v. PairDrop (File Transfer) ---
-    spinner "Starting PairDrop (Web UI on port 3000)..."
-    sudo docker run -d \
-        --name pairdrop \
-        --restart unless-stopped \
-        -p 3000:3000 \
-        ghcr.io/pairdrop/pairdrop:latest || {
-        warn_message "Failed to start PairDrop."
-        FAILED_SERVICES+=("PairDrop")
-    }
-
     # --- vi. Vaultwarden (Password Manager) ---
     spinner "Starting Vaultwarden (Web UI on port 3001)..."
     sudo docker run -d \
@@ -202,10 +191,6 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     if ! is_failed "Kopia"; then
         echo "Kopia (Backup):                  http://localhost:5151 (Web UI)"
-    fi
-
-    if ! is_failed "PairDrop"; then
-        echo "PairDrop (File Transfer):        http://localhost:3000"
     fi
 
     if ! is_failed "Vaultwarden"; then
