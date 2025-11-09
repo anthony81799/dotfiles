@@ -4,7 +4,7 @@
     "type": "file",
     "source": "~/.config/omadora/branding/about.txt",
     "color": {
-      "1": "green"
+      "1": "blue"
     },
     "padding": {
       "top": 2,
