@@ -7,11 +7,6 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 # ==================================
-# Start Zellij automatically
-# ==================================
-eval "$(zellij setup --generate-auto-start bash)"
-
-# ==================================
 # Environment Variables
 # ==================================
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
@@ -36,6 +31,11 @@ export XCOMPOSEFILE="$XDG_CONFIG_HOME/x11/xcompose"
 
 # Turso CLI path
 export PATH="$PATH:$HOME/.turso"
+
+# ==================================
+# Start Zellij automatically
+# ==================================
+eval "$(zellij setup --generate-auto-start bash)"
 
 # EDITOR selection based on SSH connection
 if [[ -n $SSH_CONNECTION ]]; then
