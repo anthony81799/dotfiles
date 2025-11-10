@@ -26,10 +26,6 @@ DESKTOP_SCRIPT_DIR="${HOME}/install/desktop"
 log "Running script: nvidia.sh"
 bash "${DESKTOP_SCRIPT_DIR}/nvidia.sh"
 
-# Gaming Features and Performance Tweaks
-log "Running script: gaming-tweaks.sh"
-bash "${DESKTOP_SCRIPT_DIR}/gaming-tweaks.sh"
-
 # Install GUI Applications
 log "Running script: gui-apps.sh"
 bash "${DESKTOP_SCRIPT_DIR}/gui-apps.sh"
