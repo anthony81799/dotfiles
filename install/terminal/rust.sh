@@ -93,7 +93,7 @@ if [ "$INSTALL_RUST" = true ]; then
     if gum confirm "Do you want to install Helix?"; then
         spinner "Installing Helix and LSPs..."
 
-        $INSTALL_HELIX=true
+        INSTALL_HELIX=true
     else
         info_message "Helix installation skipped."
     fi
