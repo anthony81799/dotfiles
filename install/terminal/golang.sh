@@ -59,7 +59,6 @@ if [ "$INSTALL_GO" = true ]; then
 
     GOLATESTURL="https://go.dev/VERSION?m=text"
     GOLATEST=$(curl -sL "$GOLATESTURL" | head -n1)
-    GOLATEST_PRETTY=${GOLATEST#"go"}
 
     wget "https://go.dev/dl/${GOLATEST}.linux-amd64.tar.gz"
     sudo tar -C /usr/local -xzf "${GOLATEST}.linux-amd64.tar.gz"
