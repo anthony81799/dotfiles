@@ -73,8 +73,8 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- i. Portainer (Container Dashboard) ---
     spinner "Starting Portainer (Web UI on port 9000)..."
-    sudo docker volume create portainer_data
-    sudo docker run -d -p 8000:8000 -p 9000:9000 --name portainer \
+    docker volume create portainer_data
+    docker run -d -p 8000:8000 -p 9000:9000 --name portainer \
         --restart always \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v portainer_data:/data \
@@ -85,7 +85,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- ii. SearxNG (Metasearch) ---
     spinner "Starting SearxNG (Web UI on port 8080)..."
-    sudo docker run -d \
+    docker run -d \
         --name searxng \
         --restart unless-stopped \
         -p 8080:8080 \
@@ -97,7 +97,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- iii. Syncthing (Sync) ---
     spinner "Starting Syncthing (Web UI on port 8384)..."
-    sudo docker run -d \
+    docker run -d \
         --name syncthing \
         --restart unless-stopped \
         -p 8384:8384 \
@@ -114,7 +114,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- iv. Kopia (Backup) ---
     spinner "Starting Kopia (Web UI on port 5151)..."
-    sudo docker run -d \
+    docker run -d \
         --name kopia-server \
         --restart unless-stopped \
         -p 5151:5151 \
@@ -129,7 +129,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- vi. Vaultwarden (Password Manager) ---
     spinner "Starting Vaultwarden (Web UI on port 3001)..."
-    sudo docker run -d \
+    docker run -d \
         --name vaultwarden \
         --restart unless-stopped \
         -p 3001:80 \
@@ -141,7 +141,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 
     # --- vii. Budget-Board (Budge) ---
     spinner "Starting Budget-Board (Budge) (Web UI on port 3002)..."
-    sudo docker run -d \
+    docker run -d \
         --name budge-board \
         --restart unless-stopped \
         -p 3002:3000 \
