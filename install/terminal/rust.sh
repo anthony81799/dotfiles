@@ -68,8 +68,8 @@ if [ "$INSTALL_RUST" = true ]; then
     # We want the script to continue if a specific crate fails; record failures.
     FAILED_CRATES=()
     CRATES=(
-        "atuin" "bacon" "bat" "bluetui" "bottom" "cargo-update" "eza" "fd-find"
-        "impala" "ripgrep" "sd" "tealdeer" "topgrade" "wallust" "wiremix" "zoxide"
+        "atuin" "bacon" "bat" "bottom" "cargo-update" "eza" "fd-find"
+        "ripgrep" "sd" "tealdeer" "topgrade" "wallust" "zoxide"
     )
     for c in "${CRATES[@]}"; do
         if ! cargo install "$c"; then
