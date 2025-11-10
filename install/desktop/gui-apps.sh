@@ -100,14 +100,31 @@ if has_cmd flatpak; then
     spinner "Installing LocalSend via Flatpak..."
     # Ensure Flathub is enabled
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    # Install Zed
+    # Install LocalSend
     if flatpak install flathub org.localsend.localsend_app -y; then
         okay_message "LocalSend (Flatpak) installed."
     else
         warn_message "Failed to install LocalSend via Flatpak. Check $LOG_FILE for details."
     fi
 else
-    warn_message "Flatpak not installed. Skipping LocalSend installation. Install Flatpak/Zed manually."
+    warn_message "Flatpak not installed. Skipping LocalSend installation. Install Flatpak/LocalSend manually."
+fi
+
+# ------------------------------------------------------------
+# --- 6. Install Discord (Flathub - Recommended) ---
+# ------------------------------------------------------------
+if has_cmd flatpak; then
+    spinner "Installing Discord via Flatpak..."
+    # Ensure Flathub is enabled
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    # Install Discord
+    if flatpak install flathub com.discordapp.Discord -y; then
+        okay_message "Discord (Flatpak) installed."
+    else
+        warn_message "Failed to install Discord via Flatpak. Check $LOG_FILE for details."
+    fi
+else
+    warn_message "Flatpak not installed. Skipping Discord installation. Install Flatpak/Discord manually."
 fi
 
 finish "GUI Applications installation complete."
