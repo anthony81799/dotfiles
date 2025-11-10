@@ -124,7 +124,7 @@ while IFS= read -r CHOICE; do
         ;;
     "Markdown")
         if ! has_cmd cargo; then sudo dnf install -y cargo; fi
-        cargo install --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
+        cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
         ;;
     "Rust")
         sudo dnf install -y lldb
