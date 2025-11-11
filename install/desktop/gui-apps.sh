@@ -67,21 +67,10 @@ if [ "$BRAVE_INSTALLED" = true ]; then
 fi
 
 # ------------------------------------------------------------
-# --- 4. Install Zed Editor (Flathub - Recommended) ---
+# --- 4. Install Zed Editor
 # ------------------------------------------------------------
-if has_cmd flatpak; then
-    spinner "Installing Zed Editor via Flatpak..."
-    # Ensure Flathub is enabled
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    # Install Zed
-    if flatpak install flathub dev.zed.Zed -y; then
-        okay_message "Zed Editor (Flatpak) installed."
-    else
-        warn_message "Failed to install Zed Editor via Flatpak. Check $LOG_FILE for details."
-    fi
-else
-    warn_message "Flatpak not installed. Skipping Zed Editor installation. Install Flatpak/Zed manually."
-fi
+spinner "Installing Zed Editor..."
+curl -f https://zed.dev/install.sh | sh
 
 # ------------------------------------------------------------
 # --- 5. Install Thunderbird Email Client (DNF/Official) ---
