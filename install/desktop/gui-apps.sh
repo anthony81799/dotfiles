@@ -26,21 +26,6 @@ else
 fi
 
 # ------------------------------------------------------------
-# --- 2. Install VS Code (Official RPM/Repo) ---
-# ------------------------------------------------------------
-spinner "Installing VS Code repository..."
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-
-spinner "Installing VS Code..."
-sudo dnf check-update >/dev/null # Refresh cache
-if sudo dnf install -y code; then
-    okay_message "VS Code installed."
-else
-    warn_message "Failed to install VS Code. Check $LOG_FILE for details."
-fi
-
-# ------------------------------------------------------------
 # --- 3. Install Brave Browser (Official RPM/Repo) ---
 # ------------------------------------------------------------
 spinner "Installing Brave Browser repository..."
@@ -65,12 +50,6 @@ if [ "$BRAVE_INSTALLED" = true ]; then
         warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
     fi
 fi
-
-# ------------------------------------------------------------
-# --- 4. Install Zed Editor
-# ------------------------------------------------------------
-spinner "Installing Zed Editor..."
-curl -f https://zed.dev/install.sh | sh
 
 # ------------------------------------------------------------
 # --- 5. Install Thunderbird Email Client (DNF/Official) ---
@@ -106,5 +85,7 @@ spinner "Installing Discord via Flatpak..."
 sudo dnf install -y discord || {
     warn_message "Failed to install Discord. Check $LOG_FILE for details."
 }
+
+bash ~/install/desktop/editor.sh
 
 finish "GUI Applications installation complete."
