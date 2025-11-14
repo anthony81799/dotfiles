@@ -100,20 +100,11 @@ else
 fi
 
 # ------------------------------------------------------------
-# --- 6. Install Discord (Flathub - Recommended) ---
+# --- 6. Install Discord (DNF - RPMFusion) ---
 # ------------------------------------------------------------
-if has_cmd flatpak; then
-    spinner "Installing Discord via Flatpak..."
-    # Ensure Flathub is enabled
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    # Install Discord
-    if flatpak install flathub com.discordapp.Discord -y; then
-        okay_message "Discord (Flatpak) installed."
-    else
-        warn_message "Failed to install Discord via Flatpak. Check $LOG_FILE for details."
-    fi
-else
-    warn_message "Flatpak not installed. Skipping Discord installation. Install Flatpak/Discord manually."
-fi
+spinner "Installing Discord via Flatpak..."
+sudo dnf install -y discord || {
+    warn_message "Failed to install Discord. Check $LOG_FILE for details."
+}
 
 finish "GUI Applications installation complete."

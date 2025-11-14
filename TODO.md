@@ -8,4 +8,5 @@
 - ~~find a better to to exit scripts on failure ```exit 1``` causes the entire install process to stop~~ (changed to fail_message with ```exit 0```)
 - move GUI editor installations to a separate script
 - give the user option to install the different Go tools
+- ~~remove flatpaks and replace with native distro packages where available~~ (installed discord left LocalSend as flatpak)
 - general speed up
