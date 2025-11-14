@@ -25,6 +25,7 @@ spinner "Checking available shells..."
 
 DEFAULT_SHELL=$(
     gum choose \
+        --header "Select your preferred default shell" \
         "/bin/zsh (ZSH)" \
         "/bin/bash (Bash)" \
         "/usr/bin/fish (Fish)" \

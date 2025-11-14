@@ -24,6 +24,7 @@ INSTALL_XDG_NINJA=false
 # Step 1: Main menu for installation options
 CHOICES=$(
     gum choose --no-limit \
+        --header "Select terminal components to install" \
         "Install Go toolchain and lazygit" \
         "Install Rust toolchain and crates" \
         "Install Docker" \

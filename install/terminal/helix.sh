@@ -72,6 +72,7 @@ spinner "Select languages to install LSPs..."
 
 CHOICES=$(
     gum choose --no-limit \
+        --header "Select languages to install LSPs for Helix" \
         "Bash" \
         "C/C++" \
         "CSS, HTML, JSON, JSONC, SCSS" \

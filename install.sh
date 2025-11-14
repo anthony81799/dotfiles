@@ -41,7 +41,7 @@ INSTALL_TERMINAL=false
 
 # Step 1: Installation type menu
 INSTALL_TYPE=$(
-    gum choose \
+    gum choose \ --header "Select installation type" \
         "Full Desktop" \
         "Terminal Only"
 )

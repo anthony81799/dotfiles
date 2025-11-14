@@ -22,6 +22,7 @@ HELIX_SCRIPT="${HOME}/install/terminal/helix.sh"
 # Step 1: menu
 CHOICES=$(
     gum choose \
+        --header "Select components to install" \
         "Install or Reinstall Rust (rustup + crates)" \
         "Install / Update Helix Editor and install LSPs"
 )

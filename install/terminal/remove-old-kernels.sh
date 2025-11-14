@@ -24,7 +24,7 @@ fi
 SELECTED=()
 while IFS= read -r CHOICE; do
     SELECTED+=("$CHOICE")
-done < <(gum choose --no-limit "${OLD_KERNELS[@]}")
+done < <(gum choose --no-limit --header "Select old kernels to remove" "${OLD_KERNELS[@]}")
 
 if [ "${#SELECTED[@]}" -eq 0 ]; then
     info_message "No kernels selected. Nothing to remove."

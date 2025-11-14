@@ -21,6 +21,7 @@ INSTALL_ZED=false
 # Step 1: Main menu for installation options
 CHOICES=$(
     gum choose --no-limit \
+        --header "Select editors to install" \
         "Install VS Code" \
         "Install Zed"
 )
