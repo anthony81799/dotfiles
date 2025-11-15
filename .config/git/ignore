@@ -35,6 +35,7 @@ package-lock.json
 package.json
 
 # files added by Fedora KDE
+.config/Code/
 .config/KDE/
 .config/PlasmaDiscoverUpdates
 .config/Trolltech.conf

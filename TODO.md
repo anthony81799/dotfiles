@@ -10,3 +10,6 @@
 - ~~give the user option to install the different Go tools~~
 - ~~remove flatpaks and replace with native distro packages where available~~ (installed discord left LocalSend as flatpak)
 - general speed up
+  - script executions
+  - ~~rust crate installation~~ (added cargo-binstall to install binaries directly)
+  - package installations
