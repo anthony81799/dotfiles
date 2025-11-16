@@ -23,14 +23,14 @@ HELIX_SCRIPT="${HOME}/install/terminal/helix.sh"
 CHOICES=$(
 	gum choose \
 		--header "Select components to install" \
-		"Install or Reinstall Rust (rustup + crates)" \
-		"Install / Update Helix Editor and install LSPs"
+		"Rust (rustup + crates)" \
+		"Helix (editor + LSPs)"
 )
 
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
-	"Install or Reinstall Rust (rustup + crates)") INSTALL_RUST=true ;;
-	"Install / Update Helix Editor and install LSPs") INSTALL_HELIX=true ;;
+	"Rust (rustup + crates)") INSTALL_RUST=true ;;
+	"Helix (editor + LSPs)") INSTALL_HELIX=true ;;
 	esac
 done <<<"$CHOICES"
 
@@ -65,11 +65,10 @@ if [ "$INSTALL_RUST" = true ]; then
 
 	ensure_cargo_env
 
-	spinner "Installing bargo binstall for fasrter Rust binary installs..."
-	brew install cargo-binstall
+	spinner "Installing cargo binstall for fasrter Rust binary installs..."
+	cargo install cargo-binstall
 
 	spinner "Installing common Rust crates..."
-	# We want the script to continue if a specific crate fails; record failures.
 	FAILED_CRATES=()
 	CRATES=(
 		"ast-grep" "atuin" "bacon" "bat" "bottom" "cargo-update" "dysk" "eza"
@@ -89,8 +88,7 @@ if [ "$INSTALL_RUST" = true ]; then
 	fi
 
 	if gum confirm "Do you want to install Helix?"; then
-		spinner "Installing Helix and LSPs..."
-
+		info_message "Helix installation selected."
 		INSTALL_HELIX=true
 	else
 		info_message "Helix installation skipped."

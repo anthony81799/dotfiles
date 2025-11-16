@@ -6,7 +6,7 @@
 - ~~Nix does not currently work with Selinux enabled~~ (Swithced to lix instead. Added to yazelix install script.)
 - ~~docker is installed but services fail to start~~
 - ~~find a better to to exit scripts on failure ```exit 1``` causes the entire install process to stop~~ (changed to fail_message with ```exit 0```)
-- ~~move GUI editor installations to a separate script~~ (created editor.sh)
+- ~~move editor installations to a separate scripts~~ (created desktop/editor.sh and terminal/editor.sh)
 - ~~give the user option to install the different Go tools~~
 - ~~remove flatpaks and replace with native distro packages where available~~ (installed discord left LocalSend as flatpak)
 - general speed up
