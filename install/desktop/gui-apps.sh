@@ -20,9 +20,9 @@ banner "GUI Applications Installation"
 # ------------------------------------------------------------
 spinner "Installing Dolphin File Manager..."
 if sudo dnf install -y dolphin; then
-    okay_message "Dolphin installed."
+	okay_message "Dolphin installed."
 else
-    warn_message "Failed to install Dolphin. Check $LOG_FILE for details."
+	warn_message "Failed to install Dolphin. Check $LOG_FILE for details."
 fi
 
 # ------------------------------------------------------------
@@ -35,20 +35,20 @@ sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-releas
 BRAVE_INSTALLED=false
 spinner "Installing Brave Browser..."
 if sudo dnf install -y brave-browser; then
-    BRAVE_INSTALLED=true
-    okay_message "Brave Browser installed."
+	BRAVE_INSTALLED=true
+	okay_message "Brave Browser installed."
 else
-    warn_message "Failed to install Brave Browser. Check $LOG_FILE for details."
+	warn_message "Failed to install Brave Browser. Check $LOG_FILE for details."
 fi
 
 # Set as default only if installed successfully
 if [ "$BRAVE_INSTALLED" = true ]; then
-    # Set the default handler for x-scheme-handler/http and x-scheme-handler/https
-    if xdg-settings set default-web-browser brave-browser.desktop; then
-        okay_message "Brave Browser set as default web browser."
-    else
-        warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
-    fi
+	# Set the default handler for x-scheme-handler/http and x-scheme-handler/https
+	if xdg-settings set default-web-browser brave-browser.desktop; then
+		okay_message "Brave Browser set as default web browser."
+	else
+		warn_message "Failed to set Brave Browser as default using xdg-settings. This may require an active graphical session or manual setting."
+	fi
 fi
 
 # ------------------------------------------------------------
@@ -56,26 +56,26 @@ fi
 # ------------------------------------------------------------
 spinner "Installing Thunderbird..."
 if sudo dnf install -y thunderbird; then
-    okay_message "Thunderbird installed."
+	okay_message "Thunderbird installed."
 else
-    warn_message "Failed to install thunderbird. Check $LOG_FILE for details."
+	warn_message "Failed to install thunderbird. Check $LOG_FILE for details."
 fi
 
 # ------------------------------------------------------------
 # --- 5. Install LocalSend File Sharing (Flathub - Recommended) ---
 # ------------------------------------------------------------
 if has_cmd flatpak; then
-    spinner "Installing LocalSend via Flatpak..."
-    # Ensure Flathub is enabled
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    # Install LocalSend
-    if flatpak install flathub org.localsend.localsend_app -y; then
-        okay_message "LocalSend (Flatpak) installed."
-    else
-        warn_message "Failed to install LocalSend via Flatpak. Check $LOG_FILE for details."
-    fi
+	spinner "Installing LocalSend via Flatpak..."
+	# Ensure Flathub is enabled
+	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+	# Install LocalSend
+	if flatpak install flathub org.localsend.localsend_app -y; then
+		okay_message "LocalSend (Flatpak) installed."
+	else
+		warn_message "Failed to install LocalSend via Flatpak. Check $LOG_FILE for details."
+	fi
 else
-    warn_message "Flatpak not installed. Skipping LocalSend installation. Install Flatpak/LocalSend manually."
+	warn_message "Flatpak not installed. Skipping LocalSend installation. Install Flatpak/LocalSend manually."
 fi
 
 # ------------------------------------------------------------
@@ -83,9 +83,11 @@ fi
 # ------------------------------------------------------------
 spinner "Installing Discord via Flatpak..."
 sudo dnf install -y discord || {
-    warn_message "Failed to install Discord. Check $LOG_FILE for details."
+	warn_message "Failed to install Discord. Check $LOG_FILE for details."
 }
 
 bash ~/install/desktop/editor.sh
+
+bash ~/install/desktop/terminal-emulator.sh
 
 finish "GUI Applications installation complete."

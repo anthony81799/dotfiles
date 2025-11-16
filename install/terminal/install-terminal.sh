@@ -5,7 +5,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# Load shared library
 source "${HOME}/install/lib.sh"
 
 init_log "${LOG_DIR}/terminal-install.log"
@@ -14,14 +13,50 @@ ensure_gum
 
 banner "Installing terminal utilities"
 
-# Variables for user choices
 INSTALL_GO=false
 INSTALL_RUST=false
 INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
 
-# Step 1: Main menu for installation options
+configure_git() {
+	local GIT_NAME="$1"
+	local GIT_EMAIL="$2"
+
+	if [[ -n "$GIT_NAME" && -n "$GIT_EMAIL" ]]; then
+		spinner "Configuring Git..."
+		git config --global alias.co checkout
+		git config --global alias.br branch
+		git config --global alias.ci commit
+		git config --global alias.st status
+		git config --global pull.rebase true
+		git config --global init.defaultBranch master
+		git config --global user.name "$GIT_NAME"
+		git config --global user.email "$GIT_EMAIL"
+		okay_message "Git configured."
+	else
+		info_message "Git name or email not provided. Skipping Git configuration."
+	fi
+}
+
+install_node() {
+	spinner "Installing Node.js and npm..."
+	sudo dnf install -y nodejs-npm || {
+		fail_message "Failed to install nodejs-npm via DNF."
+		return 1
+	}
+
+	spinner "Configuring npm for XDG Base Directory structure..."
+	sudo npm config set prefix="${XDG_DATA_HOME}/npm"
+	sudo npm config set cache="${XDG_CACHE_HOME}/npm"
+	sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
+
+	mkdir -p "${XDG_CACHE_HOME}/npm"
+	sudo chown -R "$(id -u):$(id -g)" "${XDG_CACHE_HOME}/npm" || true
+
+	okay_message "Node.js and npm installed and configured for XDG."
+}
+
 CHOICES=$(
 	gum choose --no-limit \
 		--header "Select terminal components to install" \
@@ -32,7 +67,6 @@ CHOICES=$(
 		"XDG Ninja"
 )
 
-# Parse choices
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
 	"Go toolchain and lazygit") INSTALL_GO=true ;;
@@ -43,18 +77,17 @@ while IFS= read -r CHOICE; do
 	esac
 done <<<"$CHOICES"
 
-# Step 2: Shell selection menu
 bash ~/install/terminal/change-shell.sh
 
-# Step 3: Installation progress
-spinner "Installing dependencies..."
-sudo dnf install -y zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng zlib-ng-devel oniguruma-devel luarocks wget fish flatpak kitty
-
-sudo dnf copr enable -y wezfurlong/wezterm-nightly
-sudo dnf install -y wezterm
-
-sudo dnf copr enable -y scottames/ghostty
-sudo dnf install -y ghostty
+spinner "Installing core DNF dependencies..."
+sudo dnf install -y \
+	zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf tmux lsd \
+	neofetch man-db man-pages-ja-less man-pages-ja man-pages-zh-CN-less \
+	unzip || {
+	fail_message "Failed to install core DNF dependencies."
+	finish "Terminal utility setup failed."
+}
+okay_message "Core DNF dependencies installed."
 
 spinner "Installing package group dependencies..."
 sudo dnf group install -y fonts c-development development-tools
@@ -71,56 +104,37 @@ if [[ -n "$PRETTY_HOSTNAME" ]]; then
 	sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
 fi
 
-# Step 5: Git configuration
-GIT_NAME=$(gum input --placeholder "Enter your full name for Git")
-GIT_EMAIL=$(gum input --placeholder "Enter your email address for Git")
+GIT_NAME=$(gum input --placeholder "Enter your Git Name (e.g., Jane Doe)")
+GIT_EMAIL=$(gum input --placeholder "Enter your Git Email (e.g., jane@example.com)")
+configure_git "$GIT_NAME" "$GIT_EMAIL"
 
-# Configure Git if both name and email are provided
-if [[ -n "$GIT_NAME" && -n "$GIT_EMAIL" ]]; then
-	spinner "Configuring Git..."
-	git config --global alias.co checkout
-	git config --global alias.br branch
-	git config --global alias.ci commit
-	git config --global alias.st status
-	git config --global pull.rebase true
-	git config --global init.defaultBranch master
-	git config --global user.name "$GIT_NAME"
-	git config --global user.email "$GIT_EMAIL"
-else
-	info_message "Git name or email not provided. Skipping Git configuration."
-fi
-
-# Install Node.js and npm if selected
 if [ "$INSTALL_NODE" = true ]; then
-	spinner "Installing Node.js and npm..."
-	sudo dnf install -y nodejs-npm
-	sudo npm config set prefix="${XDG_DATA_HOME}/npm"
-	sudo npm config set cache="${XDG_CACHE_HOME}/npm"
-	sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
-	sudo chmod 777 '.cache'
-	sudo chown -R "$(id -u):$(id -g)" "${HOME}/.cache/npm"
+	install_node
 fi
 
-# Install Go if selected
 if [ "$INSTALL_GO" = true ]; then
-	spinner "Installing Go and lazygit..."
 	bash ~/install/terminal/golang.sh
 fi
 
-# Install Rust if selected
 if [ "$INSTALL_RUST" = true ]; then
-	spinner "Installing Rust..."
 	bash ~/install/terminal/rust.sh
 fi
 
-# Install Docker if selected
 if [ "$INSTALL_DOCKER" = true ]; then
-	spinner "Installing Docker..."
 	bash ~/install/terminal/docker-services.sh
 fi
 
-# Install XDG Ninja if selected
 if [ "$INSTALL_XDG_NINJA" = true ]; then
 	spinner "Installing XDG Ninja..."
-	git clone https://github.com/b3nj5m1n/xdg-ninja ~/.local/share/xdg-ninja
+	XDG_NINJA_DIR="${HOME}/.local/share/xdg-ninja"
+	if [ -d "$XDG_NINJA_DIR" ]; then
+		info_message "XDG Ninja already cloned. Skipping clone."
+	else
+		git clone --depth 1 https://github.com/b3nj5m1n/xdg-ninja "$XDG_NINJA_DIR" || {
+			fail_message "Failed to clone XDG Ninja."
+		}
+	fi
+	okay_message "XDG Ninja setup complete."
 fi
+
+finish "Terminal utility setup complete!"
