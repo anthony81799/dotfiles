@@ -103,6 +103,9 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias nv='nvim'
 alias omadora='uwsm check may-start -v && uwsm start hyprland-uwsm.desktop'
 alias df='dysk'
+alias du='dust'
+alias ps='procs'
+alias tree='broot'
 
 # ==================================
 # Zoxide & Atuin
