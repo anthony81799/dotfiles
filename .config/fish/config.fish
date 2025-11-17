@@ -1,25 +1,14 @@
-# ==================================
-# XDG Directories
-# ==================================
-# Fish uses 'set -gx' for global, exported environment variables
+# --- XDG Directories ---
 set -gx XDG_DATA_HOME (string replace --regex '^$' $HOME/.local/share $XDG_DATA_HOME)
 set -gx XDG_CONFIG_HOME (string replace --regex '^$' $HOME/.config $XDG_CONFIG_HOME)
 set -gx XDG_CACHE_HOME (string replace --regex '^$' $HOME/.cache $XDG_CACHE_HOME)
 set -gx XDG_STATE_HOME (string replace --regex '^$' $HOME/.local/state $XDG_STATE_HOME)
 
-# ==================================
-# Start Zellij automatically
-# ==================================
-zellij setup --generate-auto-start fish | source
-
-# ==================================
-# Environment Variables
-# ==================================
+# --- Environment variables ---
 set -gx CARGO_HOME "$XDG_DATA_HOME/cargo"
 set -gx RUSTUP_HOME "$XDG_DATA_HOME/rustup"
 set -gx GOROOT /usr/local/go
 set -gx GOPATH "$XDG_DATA_HOME/go"
-
 set -gx GTK2_RC_FILES "$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 set -gx LESSHISTFILE "$XDG_STATE_HOME/less/history"
 set -gx MYSQL_HISTFILE "$XDG_DATA_HOME/mysql_history"
@@ -32,27 +21,7 @@ set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
 set -gx GIT_CONFIG_GLOBAL "$XDG_CONFIG_HOME/git/config"
 set -gx XCOMPOSEFILE "$XDG_CONFIG_HOME/x11/xcompose"
 
-# Disable the Fish shell greeting message
-set -g fish_greeting
-
-# Set color for command validation
-set -g fish_color_command green
-
-# EDITOR selection based on SSH connection
-if test -n "$SSH_CONNECTION"
-    set -gx EDITOR vim
-else
-    set -gx EDITOR nvim
-end
-
-# PNPM configuration
-set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-fish_add_path "$PNPM_HOME"
-
-# ==================================
-# Path Management
-# ==================================
-# Use fish_add_path to manage PATH components easily and avoid duplicates
+# --- Path Management ---
 fish_add_path \
     $HOME/bin \
     /usr/local/bin \
@@ -64,18 +33,28 @@ fish_add_path \
     $XDG_DATA_HOME/npm/bin \
     $HOME/.config/emacs/bin \
     "$HOME/winhome/AppData/Local/Programs/Microsoft VS Code/bin/" \
-    "$HOME/.local/share/omadora/bin/" \
-    $PNPM_HOME \
-    $HOME/.turso
+    "$HOME/.local/share/omadora/bin/"
 
-# ==================================
-# History
-# ==================================
-set -gx fish_history_file "$XDG_STATE_HOME/zsh/history"
+# --- Start Zellij automatically ---
+zellij setup --generate-auto-start fish | source
 
-# ==================================
-# Aliases (using 'abbr' for simple substitutions and 'function' for wrappers)
-# ==================================
+# --- Disable the Fish shell greeting message ---
+set -g fish_greeting
+
+# --- Set color for command validation ---
+set -g fish_color_command green
+
+# --- EDITOR selection based on SSH connection ---
+if test -n "$SSH_CONNECTION"
+    set -gx EDITOR vim
+else
+    set -gx EDITOR nvim
+end
+
+# --- History ---
+set -gx fish_history_file "$XDG_STATE_HOME/fish/history"
+
+# --- Aliases ---
 abbr ls 'eza --color=always --icons=always --group-directories-first'
 abbr l 'eza --color=always --icons=always --group-directories-first -alF'
 abbr tree 'eza --color=always --icons=always --tree'
@@ -124,15 +103,11 @@ abbr nv nvim
 abbr omadora 'uwsm check may-start -v && uwsm start hyprland-uwsm.desktop'
 abbr df dysk
 
-# ==================================
-# Zoxide & Atuin
-# ==================================
+# --- Zoxide & Atuin ---
 zoxide init fish | source
 atuin init fish | source
 
-# ==================================
-# Yazi wrapper
-# ==================================
+# --- Yazi wrapper ---
 function ya
     set tmp (mktemp -t 'yazi-cwd.XXXXX')
     yazi $argv --cwd-file="$tmp"
@@ -145,62 +120,34 @@ function ya
     rm -f -- "$tmp"
 end
 
-# ==================================
-# FZF Completion (fzf-tab replacement)
-# ==================================
+# -- FZF Tab Completion ---
 if type -q fzf
-    # fzf --fish outputs the necessary key-bindings and completion code
     fzf --fish | source
 end
 
-# ==================================
-# OSC7 / Prompt Signaling
-# ==================================
-# Function to send OSC7 CWD signal (runs on directory change)
-function osc7 --on-variable PWD
-    set -l uri (printf 'file://%s%s' $HOSTNAME (string replace -a -r '/' '%2F' $PWD))
-    printf '\e]7;%s\a' "$uri"
-end
-
-# Function to send OSC 133;A (start-of-prompt) signal (runs before prompt)
-function precmd --on-event fish_prompt
-    printf '\e]133;A\a'
-end
-
-# ==================================
-# Hooks and Completions
-# ==================================
-
-# --- Local environment ---
-if test -f "$HOME/.local/bin/env"
-    source "$HOME/.local/bin/env"
-end
-
-# --- Google Cloud SDK ---
-if test -f "$HOME/google-cloud-sdk/path.fish.inc"
-    source "$HOME/google-cloud-sdk/path.fish.inc"
-end
-if test -f "$HOME/google-cloud-sdk/completion.fish.inc"
-    source "$HOME/google-cloud-sdk/completion.fish.inc"
-end
-
-# --- Docker/Docker-Compose Completions ---
+# --- Docker completions ---
 if type -q docker
-    # Source Docker V2 completion
     if docker completion fish &>/dev/null
         docker completion fish | source
     end
 end
 if type -q docker-compose
-    # Source Docker Compose V1 completion
     if docker-compose completion fish &>/dev/null
         docker-compose completion fish | source
     end
 end
 
-# ==================================
-# Oh My Posh theme (MUST BE LAST)
-# ==================================
+# --- OSC7 / precmd ---
+function osc7 --on-variable PWD
+    set -l uri (printf 'file://%s%s' $HOSTNAME (string replace -a -r '/' '%2F' $PWD))
+    printf '\e]7;%s\a' "$uri"
+end
+
+function precmd --on-event fish_prompt
+    printf '\e]133;A\a'
+end
+
+# --- Oh My Posh theme  ---
 oh-my-posh init fish --config ~/.config/oh-my-posh/theme.json | source
 
 # YAZELIX START v4 - Yazelix managed configuration (do not modify this comment)
