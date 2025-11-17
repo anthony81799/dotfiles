@@ -18,7 +18,49 @@ banner "Terminal Editor Installation"
 INSTALL_NEOVIM=false
 INSTALL_HELIX=false
 
-# Step 1: Main menu for installation options
+# --- Functions ---
+install_neovim() {
+	banner "Neovim Installation"
+
+	spinner "Installing Neovim via DNF..."
+	sudo dnf install -y neovim || {
+		fail_message "Failed to install Neovim via DNF. Check $LOG_FILE for details."
+	}
+
+	# 2. Install optional Python client (for providers)
+	if has_cmd pip; then
+		spinner "Installing Python Neovim client (pip install neovim)..."
+		pip install --break-system-packages neovim || {
+			warn_message "Failed to install Python Neovim client. Proceeding."
+		}
+	else
+		info_message "pip not found. Skipping Python Neovim client install."
+	fi
+
+	# 3. Install optional Node.js client (for providers/LSPs)
+	if has_cmd npm; then
+		spinner "Installing Node.js Neovim client (npm install -g neovim)..."
+		sudo npm install -g neovim || {
+			warn_message "Failed to install Node.js Neovim client. Proceeding."
+		}
+	else
+		info_message "npm not found. Skipping Node.js Neovim client install."
+	fi
+
+	okay_message "Neovim installed and clients configured."
+}
+
+install_helix() {
+	banner "Helix Editor Installation"
+
+	spinner "Running Helix installation script: ~/install/terminal/helix.sh"
+	bash "${HOME}/install/terminal/helix.sh" || {
+		fail_message "Helix installation script failed. Check $LOG_FILE for details."
+	}
+	okay_message "Helix installed successfully."
+}
+
+# --- Step 1: Main menu for installation options ---
 CHOICES=$(
 	gum choose --no-limit \
 		--header "Select editors to install" \
@@ -26,7 +68,6 @@ CHOICES=$(
 		"Helix"
 )
 
-# Parse choices
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
 	"Neovim") INSTALL_NEOVIM=true ;;
@@ -34,18 +75,13 @@ while IFS= read -r CHOICE; do
 	esac
 done <<<"$CHOICES"
 
+# --- Step 2: Execution ---
 if [ "$INSTALL_NEOVIM" = true ]; then
-	spinner "Installing Neovim..."
-	if sudo dnf install -y neovim; then
-		pip install neovim
-		npm instll -g neovim
-		okay_message "Neovim installed."
-	else
-		warn_message "Failed to install Neovim. Check $LOG_FILE for details."
-	fi
+	install_neovim
 fi
 
 if [ "$INSTALL_HELIX" = true ]; then
-	spinner "Installing Helix..."
-	bash ~/install/terminal/helix.sh
+	install_helix
 fi
+
+finish "Terminal editor setup complete."

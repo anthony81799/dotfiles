@@ -16,7 +16,6 @@ banner "Helix Editor"
 
 HELIXDIR="${HOME}/.local/share/helix"
 
-# Ensure required commands
 for cmd in git cargo; do
 	if ! command -v "$cmd" &>/dev/null; then
 		warn_message "Command '$cmd' not found. Installing..."
@@ -28,7 +27,6 @@ done
 
 spinner "Installing/Updating Helix and LSPs..."
 
-# Clone or update helix
 mkdir -p "$HELIXDIR"
 if [ ! -d "$HELIXDIR/.git" ]; then
 	spinner "Cloning Helix repository..."
@@ -42,17 +40,14 @@ else
 	git submodule update --init --recursive
 fi
 
-# Build/install helix-term if present
 if [ -d "$HELIXDIR/helix-term" ]; then
 	spinner "Building helix-term..."
 	cd "$HELIXDIR"
-	# cargo install --path helix-term --locked may take time; continue on failure but log it
 	if ! cargo install --path helix-term --locked; then
 		warn_message "cargo install (helix-term) failed or already installed; continuing."
 	fi
 fi
 
-# Ensure hx CLI exists (may be installed as 'hx' by cargo)
 if command -v hx &>/dev/null; then
 	spinner "Fetching/building Helix grammars..."
 	hx --grammar fetch
@@ -61,10 +56,8 @@ else
 	warn_message "hx binary not found; skipping grammar fetch/build."
 fi
 
-# Link runtime safely
 cd "$HELIXDIR"
 if [ -d "runtime" ]; then
-	# Use -sfn to force update of symlink atomically
 	ln -sfn "$PWD/runtime" "${HOME}/.config/helix/runtime"
 fi
 
@@ -87,60 +80,91 @@ CHOICES=$(
 		"YAML"
 )
 
-# Installers: check and install package managers only when needed
+DNF_LSP_DEPS=()
+declare -A NEEDED_PKG_CHECK=(["npm"]=false ["clang"]=false ["golang"]=false ["lldb"]=false)
+
+# First pass: identify and collect all DNF dependencies
+while IFS= read -r CHOICE; do
+	case "$CHOICE" in
+	"Bash" | "CSS, HTML, JSON, JSONC, SCSS" | "Docker, Docker Compose" | "GraphQL" | "JavaScript, TypeScript" | "SQL" | "YAML")
+		if [ "${NEEDED_PKG_CHECK["npm"]}" = false ] && ! has_cmd npm; then
+			DNF_LSP_DEPS+=("npm")
+			NEEDED_PKG_CHECK["npm"]=true
+		fi
+		;;
+	"C/C++")
+		if [ "${NEEDED_PKG_CHECK["clang"]}" = false ] && ! has_cmd clang; then
+			DNF_LSP_DEPS+=("clang")
+			NEEDED_PKG_CHECK["clang"]=true
+		fi
+		;;
+	"Go")
+		if [ "${NEEDED_PKG_CHECK["golang"]}" = false ] && ! has_cmd go; then
+			DNF_LSP_DEPS+=("golang")
+			NEEDED_PKG_CHECK["golang"]=true
+		fi
+		;;
+	"Rust")
+		if [ "${NEEDED_PKG_CHECK["lldb"]}" = false ] && ! has_cmd lldb; then
+			DNF_LSP_DEPS+=("lldb")
+			NEEDED_PKG_CHECK["lldb"]=true
+		fi
+		;;
+	esac
+done <<<"$CHOICES"
+
+if [ ${#DNF_LSP_DEPS[@]} -gt 0 ]; then
+	spinner "Installing consolidated DNF dependencies for LSPs: ${DNF_LSP_DEPS[*]}..."
+	sudo dnf install -y "${DNF_LSP_DEPS[@]}" || warn_message "Failed to install some DNF LSP dependencies. Continuing with LSP installs."
+fi
+
+spinner "Starting individual LSP installations..."
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
 	"Bash")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm i -g bash-language-server
+		npm i -g bash-language-server || true
 		;;
 	"C/C++")
-		sudo dnf install -y clang
+		info_message "C/C++ dependencies (clang) installation attempted."
 		;;
 	"CSS, HTML, JSON, JSONC, SCSS")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm i -g vscode-langservers-extracted
+		npm i -g vscode-langservers-extracted || true
 		;;
 	"Docker, Docker Compose")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm install -g dockerfile-language-server-nodejs @microsoft/compose-language-service
+		npm install -g dockerfile-language-server-nodejs @microsoft/compose-language-service || true
 		;;
 	"Go")
-		if ! has_cmd go; then sudo dnf install -y golang; fi
 		if has_cmd go; then
-			go install golang.org/x/tools/gopls@latest
-			go install github.com/go-delve/delve/cmd/dlv@latest
-			go install golang.org/x/tools/cmd/goimports@latest
-			go install github.com/nametake/golangci-lint-langserver@latest
-			go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+			go install golang.org/x/tools/gopls@latest || true
+			go install github.com/go-delve/delve/cmd/dlv@latest || true
+			go install golang.org/x/tools/cmd/goimports@latest || true
+			go install github.com/nametake/golangci-lint-langserver@latest || true
+			go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest || true
+			info_message "Go LSPs installation attempted."
+		else
+			warn_message "Go LSPs selected, but 'go' command not found after dependency install. Skipping Go tools."
 		fi
 		;;
 	"GraphQL")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm i -g graphql-language-service-cli
+		npm i -g graphql-language-service-cli || true
 		;;
 	"JavaScript, TypeScript")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm install -g typescript typescript-language-server
+		npm install -g typescript typescript-language-server || true
 		;;
 	"Markdown")
-		if ! has_cmd cargo; then sudo dnf install -y cargo; fi
-		cargo binstall --no-confirm --git 'https://github.com/feel-ix-343/markdown-oxide' markdown-oxide
+		cargo binstall --no-confirm --git 'https://github.com/feel-ix-343/markdown-oxide' markdown-oxide || true
 		;;
 	"Rust")
-		sudo dnf install -y lldb
+		info_message "Rust dependencies (lldb) installation attempted."
 		;;
 	"SQL")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm i -g sql-language-server
+		npm i -g sql-language-server || true
 		;;
 	"TOML")
-		if ! has_cmd cargo; then sudo dnf install -y cargo; fi
-		cargo binstall --no-confirm taplo-cli
+		cargo binstall --no-confirm taplo-cli || true
 		;;
 	"YAML")
-		if ! has_cmd npm; then sudo dnf install -y npm; fi
-		npm i -g yaml-language-server@next
+		npm i -g yaml-language-server@next || true
 		;;
 	esac
 done <<<"$CHOICES"

@@ -14,7 +14,6 @@ ensure_gum
 banner "Installing terminal utilities"
 
 INSTALL_GO=false
-INSTALL_RUST=false
 INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
@@ -61,7 +60,6 @@ CHOICES=$(
 	gum choose --no-limit \
 		--header "Select terminal components to install" \
 		"Go toolchain and lazygit" \
-		"Rust toolchain and crates" \
 		"Docker" \
 		"Node.js and npm" \
 		"XDG Ninja"
@@ -70,7 +68,6 @@ CHOICES=$(
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
 	"Go toolchain and lazygit") INSTALL_GO=true ;;
-	"Rust toolchain and crates") INSTALL_RUST=true ;;
 	"Docker") INSTALL_DOCKER=true ;;
 	"Node.js and npm") INSTALL_NODE=true ;;
 	"XDG Ninja") INSTALL_XDG_NINJA=true ;;
@@ -116,9 +113,8 @@ if [ "$INSTALL_GO" = true ]; then
 	bash ~/install/terminal/golang.sh
 fi
 
-if [ "$INSTALL_RUST" = true ]; then
-	bash ~/install/terminal/rust.sh
-fi
+bash ~/install/terminal/rust.sh
+bash ~/install/terminal/editor.sh
 
 if [ "$INSTALL_DOCKER" = true ]; then
 	bash ~/install/terminal/docker-services.sh
