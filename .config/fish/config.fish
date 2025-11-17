@@ -149,14 +149,3 @@ end
 
 # --- Oh My Posh theme  ---
 oh-my-posh init fish --config ~/.config/oh-my-posh/theme.json | source
-
-# YAZELIX START v4 - Yazelix managed configuration (do not modify this comment)
-# delete this whole section to re-generate the config, if needed
-if test -n "$IN_YAZELIX_SHELL"
-    source "$HOME/.config/yazelix/shells/fish/yazelix_fish_config.sh"
-end
-# yzx command - always available for launching/managing yazelix
-function yzx
-    nu -c "use ~/.config/yazelix/nushell/scripts/core/yazelix.nu *; yzx $argv"
-end
-# YAZELIX END v4 - Yazelix managed configuration (do not modify this comment)
