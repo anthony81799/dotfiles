@@ -11,6 +11,6 @@
 - ~~remove flatpaks and replace with native distro packages where available~~ (installed discord left LocalSend as flatpak)
 - ~~split terminal emulator installations into separate script~~ (added install/desktop/terminal-emulator.sh)
 - general speed up
-  - script executions
+  - ~~script executions~~
   - ~~rust crate installation~~ (added cargo-binstall to install binaries directly)
-  - package installations
+  - ~~package installations~~
