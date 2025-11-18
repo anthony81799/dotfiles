@@ -30,14 +30,9 @@ if [[ "$TERMINAL_CHOICE" == "Skip (Do not install a terminal emulator)" ]]; then
 	finish "Terminal emulator setup complete."
 fi
 
-# Extract the base name for case statement
 TERMINAL_NAME=$(echo "$TERMINAL_CHOICE" | awk '{print $1}')
 
-# Ensure local bin directory exists for binary installations
-mkdir -p "${HOME}/.local/bin"
-
 # --- 2. Installation Logic ---
-
 case "$TERMINAL_NAME" in
 "Alacritty")
 	spinner "Installing Alacritty..."
@@ -53,7 +48,6 @@ case "$TERMINAL_NAME" in
 	}
 	okay_message "Kitty installed."
 	;;
-
 "WezTerm")
 	spinner "Installing WezTerm..."
 	sudo dnf copr enable -y wezfurlong/wezterm-nightly
@@ -62,7 +56,6 @@ case "$TERMINAL_NAME" in
 	}
 	okay_message "WezTerm installed."
 	;;
-
 "Ghostty")
 	sudo dnf copr enable -y scottames/ghostty
 	sudo dnf install -y ghostty || {
@@ -70,9 +63,7 @@ case "$TERMINAL_NAME" in
 	}
 	okay_message "Ghostty installed."
 	;;
-
 *)
-	# Should not happen if gum choose is used correctly, but good for safety
 	fail_message "Invalid selection: $TERMINAL_CHOICE"
 	;;
 esac
