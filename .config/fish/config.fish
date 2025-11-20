@@ -102,6 +102,25 @@ abbr config '/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 abbr nv nvim
 abbr omadora 'uwsm check may-start -v && uwsm start hyprland-uwsm.desktop'
 abbr df dysk
+abbr ga 'git add'
+abrr gap 'ga --patch'
+abrr gb 'git branch'
+abrr gba 'gb --all'
+abrr gc 'git commit'
+abrr gca 'gc --amend --no-edit'
+abrr gce 'gc --amend'
+abrr gco 'git checkout'
+abrr gcl 'git clone --recursive'
+abrr gd 'git diff --output-indicator-new=" " --output-indicator-old=" "'
+abrr gds 'gd --staged'
+abrr gi 'git init'
+abrr gl 'git log --graph --all --pretty=format:"%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n"'
+abrr gm 'git merge'
+abrr gn 'git checkout -b' # new branch
+abrr gp 'git push'
+abrr gr 'git reset'
+abrr gs 'git status --short'
+abrr gu 'git pull'
 
 # --- Zoxide & Atuin ---
 zoxide init fish | source

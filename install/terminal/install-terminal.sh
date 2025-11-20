@@ -18,26 +18,6 @@ INSTALL_DOCKER=false
 INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
 
-configure_git() {
-	local GIT_NAME="$1"
-	local GIT_EMAIL="$2"
-
-	if [[ -n "$GIT_NAME" && -n "$GIT_EMAIL" ]]; then
-		spinner "Configuring Git..."
-		git config --global alias.co checkout
-		git config --global alias.br branch
-		git config --global alias.ci commit
-		git config --global alias.st status
-		git config --global pull.rebase true
-		git config --global init.defaultBranch master
-		git config --global user.name "$GIT_NAME"
-		git config --global user.email "$GIT_EMAIL"
-		okay_message "Git configured."
-	else
-		info_message "Git name or email not provided. Skipping Git configuration."
-	fi
-}
-
 install_node() {
 	spinner "Installing Node.js and npm..."
 	sudo dnf install -y nodejs-npm || {
@@ -101,9 +81,7 @@ if [[ -n "$PRETTY_HOSTNAME" ]]; then
 	sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
 fi
 
-GIT_NAME=$(gum input --placeholder "Enter your Git Name (e.g., Jane Doe)")
-GIT_EMAIL=$(gum input --placeholder "Enter your Git Email (e.g., jane@example.com)")
-configure_git "$GIT_NAME" "$GIT_EMAIL"
+bash ~/install/terminal/git.sh
 
 if [ "$INSTALL_NODE" = true ]; then
 	install_node
