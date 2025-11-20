@@ -76,9 +76,9 @@ fi
 spinner "Installing common Rust crates..."
 FAILED_CRATES=()
 CRATES=(
-	"ast-grep" "atuin" "bacon" "bat" "bottom" "broot" "cargo-update" "du-dust"
-	"dysk" "eza" "fd-find" "git-delta" "hyperfine" "procs" "ripgrep" "sd" "tealdeer"
-	"topgrade" "xplr" "zellij" "zoxide"
+	"ast-grep" "atuin" "bacon" "bat" "bottom" "broot" "cargo-info" "cargo-update"
+	"du-dust" "dysk" "eza" "fd-find" "git-delta" "hyperfine" "procs" "ripgrep"
+	"rusty-man" "sd" "tealdeer" "tokei" "topgrade" "xplr" "zellij" "zoxide"
 )
 
 for c in "${CRATES[@]}"; do
