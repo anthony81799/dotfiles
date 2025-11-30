@@ -18,7 +18,6 @@ banner "Installing or Updating Go Toolchain"
 # Default options
 INSTALL_GO=false
 UPDATE_GO=false
-SKIPPED=false
 
 # --- Functions ---
 install_go_binary() {
@@ -91,7 +90,8 @@ install_go_tools() {
 		"golangci-lint (Fast Go Linter)"
 	)
 
-	local INSTALL_CHOICES=$(
+	local INSTALL_CHOICES
+	INSTALL_CHOICES=$(
 		gum choose --no-limit \
 			--header "Select optional Go tools to install (Go version: $(go version | awk '{print $3}'))" \
 			"${GO_TOOLS[@]}" ||
@@ -140,14 +140,12 @@ CHOICE=$(
 	gum choose \
 		--header "Select Go installation option" \
 		"Install Go" \
-		"Update existing Go installation" \
-		"Skip (Do nothing)"
+		"Update existing Go installation"
 )
 
 case "$CHOICE" in
 "Install Go") INSTALL_GO=true ;;
 "Update existing Go installation") UPDATE_GO=true ;;
-"Skip (Do nothing)") SKIPPED=true ;;
 esac
 
 # Step 2: Determine actual course of action (Install/Update/Reinstall)

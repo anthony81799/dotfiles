@@ -17,11 +17,9 @@ banner "GUI Editor Installation"
 
 # --- 1. Dependency Checks ---
 # Ensure essential system utilities are present
-for cmd in curl; do
-	if ! has_cmd "$cmd"; then
-		fail_message "Required command '$cmd' not found. Aborting."
-	fi
-done
+if ! has_cmd curl; then
+	fail_message "Required command 'curl' not found. Aborting."
+fi
 
 INSTALL_CODE=false
 INSTALL_ZED=false

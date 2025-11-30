@@ -73,7 +73,7 @@ sudo dnf group install -y fonts c-development development-tools
 STATIC_HOSTNAME=$(gum input --prompt "Static Hostname > " --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
 if [[ -n "$STATIC_HOSTNAME" ]]; then
 	spinner "Setting static hostname to '$STATIC_HOSTNAME'..."
-	sudo hostnamectl set-hostname --static $STATIC_HOSTNAME
+	sudo hostnamectl set-hostname --static "$STATIC_HOSTNAME"
 fi
 PRETTY_HOSTNAME=$(gum input --prompt "Pretty Hostname > " --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
 if [[ -n "$PRETTY_HOSTNAME" ]]; then
