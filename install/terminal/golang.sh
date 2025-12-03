@@ -40,7 +40,8 @@ install_go_binary() {
     fail_message "Failed to download Go archive."
   }
 
-  spinner "Extracting Go archive to /usr/local/..." -- sudo tar -C /usr/local -xzf "$ARCHIVE" || {
+  spinner "Extracting Go archive to /usr/local/..."
+  sudo tar -C /usr/local -xzf "$ARCHIVE" || {
     rm -f "$ARCHIVE"
     fail_message "Failed to extract Go archive."
   }
