@@ -58,9 +58,10 @@ bash ~/install/terminal/change-shell.sh
 
 spinner "Installing core DNF dependencies..."
 sudo dnf install -y \
-	zsh autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf tmux lsd \
-	neofetch man-db man-pages-ja-less man-pages-ja man-pages-zh-CN-less \
-	unzip || {
+	autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel \
+	python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng \
+	zlib-ng-devel oniguruma-devel luarocks \
+	wget || {
 	fail_message "Failed to install core DNF dependencies."
 	finish "Terminal utility setup failed."
 }
