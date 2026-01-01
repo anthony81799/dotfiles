@@ -31,8 +31,8 @@ Public
 Templates
 Videos
 node_modules
-package-lock.json
-package.json
+~/package-lock.json
+~/package.json
 
 # files added by Fedora KDE
 .config/Code/
