@@ -22,6 +22,7 @@ if ! has_cmd curl; then
 fi
 
 INSTALL_CODE=false
+INSTALL_CODIUM=false
 INSTALL_ZED=false
 
 # --- 2. Menu Selection ---
@@ -29,12 +30,13 @@ CHOICES=$(
 	gum choose --no-limit \
 		--header "Select editors to install" \
 		"VS Code" \
+		"VSCodium" \
 		"Zed"
 )
 
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
-	"VS Code") INSTALL_CODE=true ;;
+	"VS Code") INSTALL_CODIUM=true ;;
 	"Zed") INSTALL_ZED=true ;;
 	esac
 done <<<"$CHOICES"
@@ -58,7 +60,6 @@ if [ "$INSTALL_CODE" = true ]; then
 			okay_message "VS Code repository configured."
 		else
 			fail_message "Failed to create VS Code repository file: $VSCODE_REPO_FILE. Aborting VS Code install."
-			# Continue to Zed if selected, otherwise script continues to finish.
 		fi
 	else
 		info_message "VS Code repository already configured: $VSCODE_REPO_FILE."
@@ -76,8 +77,39 @@ if [ "$INSTALL_CODE" = true ]; then
 		fi
 	fi
 fi
+# --- 4. VSCodium Installation ---
+if [ "$INSTALL_CODIUM" = true ]; then
+	info_message "Starting VSCodium installation..."
 
-# --- 4. Zed Editor Installation ---
+	VSCODIUM_REPO_FILE="/etc/yum.repos.d/vscodium.repo"
+
+	if [ ! -f "$VSCODIUM_REPO_FILE" ]; then
+		spinner "Adding VSCodium repository..."
+
+		REPO_CONTENT="[gitlab.com_paulcarroty_vscodium_repo]\nname=gitlab.com_paulcarroty_vscodium_repo\nbaseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg\nmetadata_expire=1h"
+		if echo -e "$REPO_CONTENT" | sudo tee "$VSCODIUM_REPO_FILE" >/dev/null; then
+			okay_message "VSCodium repository configured."
+		else
+			fail_message "Failed to create VSCodium repository file: $VSCODIUM_REPO_FILE. Aborting VSCodium install."
+		fi
+	else
+		info_message "VSCodium repository already configured: $VSCODIUM_REPO_FILE."
+	fi
+
+	if has_cmd codium; then
+		info_message "VSCodium already installed. Skipping package installation."
+	else
+		spinner "Installing VSCodium package ('codium')..."
+		sudo dnf clean all >/dev/null
+		if sudo dnf install -y codium; then
+			okay_message "VSCodium installed successfully."
+		else
+			fail_message "Failed to install VSCodium package. Check $LOG_FILE for details."
+		fi
+	fi
+fi
+
+# --- 5. Zed Editor Installation ---
 if [ "$INSTALL_ZED" = true ]; then
 	info_message "Starting Zed Editor installation..."
 
