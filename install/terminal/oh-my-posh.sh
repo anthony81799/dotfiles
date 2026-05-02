@@ -8,7 +8,8 @@ IFS=$'\n\t'
 # Load shared library
 source "${HOME}/install/lib.sh"
 
-init_log "${LOG_DIR}/oh-my-posh-install.log"
+LOG_FILE="${LOG_DIR}/oh-my-posh-install.log"
+init_log "$LOG_FILE"
 
 ensure_gum
 
@@ -24,17 +25,22 @@ fi
 
 # --- 2. Setup Directory ---
 if [ ! -d "${HOME}/.local/bin" ]; then
-	spinner "Creating local bin directory: ${HOME}/.local/bin"
-	mkdir -p "${HOME}/.local/bin"
+	spinner "Creating local bin directory: ${HOME}/.local/bin" mkdir -p "${HOME}/.local/bin"
 fi
 
 # --- 3. Install/Update Oh My Posh (Robust Execution) ---
-spinner "Installing or Updating Oh My Posh to ${HOME}/.local/bin..."
+info_message "Installing or Updating Oh My Posh to ${HOME}/.local/bin..."
 
-if curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "${HOME}/.local/bin"; then
+if curl -fsSL https://ohmyposh.dev/install.sh | bash -s -- -d "${HOME}/.local/bin"; then
 	okay_message "Oh My Posh installed/updated successfully."
 else
 	fail_message "Oh My Posh installation failed. Check the log for details."
+fi
+
+if has_cmd oh-my-posh; then
+    okay_message "Oh My Posh installed: $(oh-my-posh --version)"
+else
+    warn_message "oh-my-posh binary not found after install. Check $LOG_DIR/oh-my-posh-install.log"
 fi
 
 finish "Oh My Posh installation complete!"

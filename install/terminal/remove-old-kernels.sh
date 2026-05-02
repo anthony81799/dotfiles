@@ -8,12 +8,15 @@ IFS=$'\n\t'
 # Load shared library
 source "${HOME}/install/lib.sh"
 
+LOG_FILE="${LOG_DIR}/remove-old-kernels.log"
+init_log "$LOG_FILE"
+
 ensure_gum
 
 banner "Old Kernel Removal Utility"
 
 # --- 1. Query Old Kernels ---
-spinner "Querying for old kernels to remove..."
+info_message "Querying for old kernels to remove..."
 mapfile -t OLD_KERNELS < <(dnf repoquery --installonly --latest-limit=-1 -q)
 
 if [ "${#OLD_KERNELS[@]}" -eq 0 ]; then
@@ -36,8 +39,8 @@ fi
 
 # --- 3. Confirmation and Removal ---
 warn_message "The following ${#SELECTED[@]} kernels will be removed:"
-for k in "${SELECTED[@]}"; do
-	echo "  - $k"
+for kernel in "${SELECTED[@]}"; do
+	echo "  - $kernel"
 done
 
 if ! gum confirm "Proceed to remove the selected kernels?"; then
@@ -45,7 +48,7 @@ if ! gum confirm "Proceed to remove the selected kernels?"; then
 	finish "Kernel removal complete."
 fi
 
-spinner "Removing selected kernels..."
+info_message "Removing selected kernels..."
 if sudo dnf remove -y "${SELECTED[@]}"; then
 	okay_message "Successfully removed ${#SELECTED[@]} kernels."
 else

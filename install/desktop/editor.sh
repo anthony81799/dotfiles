@@ -36,7 +36,8 @@ CHOICES=$(
 
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
-	"VS Code") INSTALL_CODIUM=true ;;
+	"VS Code") INSTALL_CODE=true ;;
+	"VSCodium") INSTALL_CODIUM=true ;;
 	"Zed") INSTALL_ZED=true ;;
 	esac
 done <<<"$CHOICES"
@@ -48,19 +49,21 @@ if [ "$INSTALL_CODE" = true ]; then
 	VSCODE_REPO_FILE="/etc/yum.repos.d/vscode.repo"
 
 	if [ ! -f "$VSCODE_REPO_FILE" ]; then
-		spinner "Adding VS Code repository (GPG key and repo file)..."
+		info_message "Adding VS Code repository (GPG key and repo file)..."
 
 		log "Importing Microsoft GPG key..."
 		if ! sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc; then
 			warn_message "Failed to import Microsoft GPG key. Installation may fail."
 		fi
 
-		REPO_CONTENT="[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc"
-		if echo -e "$REPO_CONTENT" | sudo tee "$VSCODE_REPO_FILE" >/dev/null; then
-			okay_message "VS Code repository configured."
-		else
-			fail_message "Failed to create VS Code repository file: $VSCODE_REPO_FILE. Aborting VS Code install."
-		fi
+		sudo tee "$VSCODE_REPO_FILE" >/dev/null <<-EOF
+		[code]
+		name=Visual Studio Code
+		baseurl=https://packages.microsoft.com/yumrepos/vscode
+		enabled=1
+		gpgcheck=1
+		gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+		EOF
 	else
 		info_message "VS Code repository already configured: $VSCODE_REPO_FILE."
 	fi
@@ -68,8 +71,7 @@ if [ "$INSTALL_CODE" = true ]; then
 	if has_cmd code; then
 		info_message "VS Code already installed. Skipping package installation."
 	else
-		spinner "Installing VS Code package ('code')..."
-		sudo dnf clean all >/dev/null
+		info_message "Installing VS Code package ('code')..."
 		if sudo dnf install -y code; then
 			okay_message "VS Code installed successfully."
 		else
@@ -84,14 +86,18 @@ if [ "$INSTALL_CODIUM" = true ]; then
 	VSCODIUM_REPO_FILE="/etc/yum.repos.d/vscodium.repo"
 
 	if [ ! -f "$VSCODIUM_REPO_FILE" ]; then
-		spinner "Adding VSCodium repository..."
+		info_message "Adding VSCodium repository..."
 
-		REPO_CONTENT="[gitlab.com_paulcarroty_vscodium_repo]\nname=gitlab.com_paulcarroty_vscodium_repo\nbaseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg\nmetadata_expire=1h"
-		if echo -e "$REPO_CONTENT" | sudo tee "$VSCODIUM_REPO_FILE" >/dev/null; then
-			okay_message "VSCodium repository configured."
-		else
-			fail_message "Failed to create VSCodium repository file: $VSCODIUM_REPO_FILE. Aborting VSCodium install."
-		fi
+		sudo tee "$VSCODIUM_REPO_FILE" >/dev/null <<-EOF
+		[gitlab.com_paulcarroty_vscodium_repo]
+		name=gitlab.com_paulcarroty_vscodium_repo
+		baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
+		enabled=1
+		gpgcheck=1
+		repo_gpgcheck=0
+		gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+		metadata_expire=1h
+		EOF
 	else
 		info_message "VSCodium repository already configured: $VSCODIUM_REPO_FILE."
 	fi
@@ -99,8 +105,7 @@ if [ "$INSTALL_CODIUM" = true ]; then
 	if has_cmd codium; then
 		info_message "VSCodium already installed. Skipping package installation."
 	else
-		spinner "Installing VSCodium package ('codium')..."
-		sudo dnf clean all >/dev/null
+		info_message "Installing VSCodium package ('codium')..."
 		if sudo dnf install -y codium; then
 			okay_message "VSCodium installed successfully."
 		else
@@ -116,7 +121,7 @@ if [ "$INSTALL_ZED" = true ]; then
 	if has_cmd zed; then
 		info_message "Zed Editor is already installed. Skipping installation."
 	else
-		spinner "Downloading and executing Zed install script..."
+		info_message "Downloading and executing Zed install script..."
 
 		if curl -sSfL https://zed.dev/install.sh | sh; then
 			okay_message "Zed Editor installed successfully."

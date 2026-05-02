@@ -15,7 +15,7 @@ export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export GOROOT="/usr/local/go"
 export GOPATH="$XDG_DATA_HOME/go"
-export PATH="$PATH:$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$HOME/Projects/apache-maven-3.9.2/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin:$HOME/.config/emacs/bin:$HOME/winhome/AppData/Local/Programs/Microsoft\ VS\ Code/bin/:$HOME/.local/share/omadora/bin/"
+export PATH="$PATH:$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$CARGO_HOME/bin:$XDG_DATA_HOME/npm/bin:$HOME/.config/emacs/bin/"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export MYSQL_HISTFILE="$XDG_DATA_HOME/mysql_history"
@@ -29,7 +29,7 @@ export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
 export XCOMPOSEFILE="$XDG_CONFIG_HOME/x11/xcompose"
 
 # Simple logging setup (optional)
-LOG_DIR="${HOME}/.local/logs"
+readonly LOG_DIR="${HOME}/.local/logs"
 mkdir -p "$LOG_DIR"
 
 # Function: 1. Initializes the log file and opens it on File Descriptor 6 (FD 6)
@@ -46,7 +46,7 @@ log() {
     # This assumes init_log has been called and FD 6 is open.
     # Use 'command date' for cleanliness, as previously determined.
     local timestamp
-    timestamp=$(command date '+%Y-%m-%d %H:%M:%S')
+    printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' -1
 
     # Write the log message to File Descriptor 6
     echo "$timestamp [LOG] $*" >&6
@@ -56,7 +56,7 @@ log() {
 ensure_gum() {
     if ! command -v gum &>/dev/null; then
         echo "The 'gum' package is required but not installed. Installing it now..."
-        sudo dnf install -y gum
+        sudo dnf install -y gum || { echo "FATAL: Failed to install gum. Aborting." >&2; exit 1; }
     fi
 }
 
@@ -75,9 +75,10 @@ banner() {
 # Function: graceful exit message
 finish() {
     local msg="$1"
-    log "FINISH SUCCESS: $msg"
+    local code="${2:-0}"
+    log "FINISH: $msg (exit $code)"
     gum style --border normal --margin "1" --padding "1" --align center --foreground 120 "$msg"
-    exit 0
+    exit "$code"
 }
 
 # Function: Styled messages
@@ -98,7 +99,7 @@ fail_message() {
     local msg="$1"
     log "FAIL: $msg"
     style_message 196 "$msg"
-    exit 0
+    exit 1
 }
 
 okay_message() {
@@ -113,10 +114,9 @@ warn_message() {
     style_message 214 "$msg"
 }
 
-# Function: Spinner wrapper
 spinner() {
-    local title="$1"
-    log "START SPINNER: $title"
-    gum spin --title "$title" -- sleep 2
-    log "END SPINNER: $title"
+    local title="$1"; shift
+    log "START: $title"
+    gum spin --title "$title" -- "$@"
+    log "END: $title"
 }

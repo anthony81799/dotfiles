@@ -23,7 +23,7 @@ config() {
 	/usr/bin/git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
 }
 
-if [ ! -d "$HOME/.cfg" ]; then
+if [[ ! -d "$HOME/.cfg" ]]; then
 	echo "--- Cloning dotfiles repository... ---"
 	if ! git clone --bare --depth=1 https://github.com/anthony81799/dotfiles.git "$HOME/.cfg"; then
 		echo "!!! ERROR: Failed to clone dotfiles repo. Aborting. !!!"
@@ -38,10 +38,9 @@ if [ ! -d "$HOME/.cfg" ]; then
 else
 	echo "--- Dotfiles repository already exists. Updating... ---"
 	if ! config pull --ff-only; then
-		echo "!!! WARNING: Failed to pull latest dotfiles. Continuing. !!!"
-	fi
-	if ! config checkout --force; then
-		echo "!!! WARNING: Failed to force checkout dotfiles. Continuing. !!!"
+		echo "!!! WARNING: Failed to pull latest dotfiles. Skipping checkout. !!!"
+	else
+		config checkout --force || echo "!!! WARNING: Failed to force checkout. !!!"
 	fi
 fi
 
@@ -72,37 +71,29 @@ case "$INSTALL_TYPE" in
 esac
 
 # --- 2. DNF Performance Tweaks ---
-spinner "Optimizing DNF configuration for faster downloads..."
+info_message "Optimizing DNF configuration for faster downloads..."
 
 DNF_CONFIG="/etc/dnf/dnf.conf"
 
-if [ -f "$DNF_CONFIG" ]; then
+if [[ -f "$DNF_CONFIG" ]]; then
 	log "Updating $DNF_CONFIG under [main]."
-
-	# 1. Delete existing lines (consolidated for efficiency)
-	sudo sed -i '/^gpgcheck=/d;/^installonly_limit=/d;/^clean_requirements_on_remove=/d;/^max_parallel_downloads=/d;/^fastestmirror=/d;/^skip_if_unavailable=/d;/^defaultyes=/d' "$DNF_CONFIG"
-
-	# 2. Insert new lines after [main] (consolidated for efficiency)
-	sudo sed -i '/\[main\]/a defaultyes=True\nskip_if_unavailable=True\nfastestmirror=True\nmax_parallel_downloads=10\nclean_requirements_on_remove=True\ninstallonly_limit=3\ngpgcheck=0' "$DNF_CONFIG"
-
+	sudo sed -i '/^gpgcheck=/d;/^installonly_limit=/d;/^clean_requirements_on_remove=/d;/^max_parallel_downloads=/d;/^fastestmirror=/d;/^skip_if_unavailable=/d;/^defaultyes=/d;/\[main\]/a defaultyes=True\nskip_if_unavailable=True\nfastestmirror=True\nmax_parallel_downloads=10\nclean_requirements_on_remove=True\ninstallonly_limit=3\ngpgcheck=0' "$DNF_CONFIG"
 	okay_message "DNF optimized for faster downloads."
 else
 	warn_message "DNF configuration file ($DNF_CONFIG) not found. Skipping DNF optimization."
 fi
 
 # --- 3. Run Installations ---
-if [ "$INSTALL_DESKTOP" = true ]; then
-	spinner "Starting Desktop installation script..."
+if [[ "$INSTALL_DESKTOP" = true ]]; then
+	info_message "Starting Desktop installation script..."
 	bash "${HOME}/install/desktop/install-desktop.sh" || fail_message "Desktop installation script failed. Check log for details."
 
 	INSTALL_TERMINAL=true
 fi
 
-if [ "$INSTALL_TERMINAL" = true ]; then
-	spinner "Starting Terminal utilities installation script..."
+if [[ "$INSTALL_TERMINAL" = true ]]; then
+	info_message "Starting Terminal utilities installation script..."
 	bash "${HOME}/install/terminal/install-terminal.sh" || fail_message "Terminal installation script failed. Check log for details."
 fi
 
 finish "The installation is finished!"
-
-fastfetch

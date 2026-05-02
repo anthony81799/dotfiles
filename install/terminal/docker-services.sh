@@ -19,8 +19,7 @@ banner "Docker and Self-Hosted Services Setup"
 DOCKER_VOLUME_BASE="${XDG_DATA_HOME}/docker/volumes"
 USER_ID="$(id -u)"
 GROUP_ID="$(id -g)"
-DOCKER_SERVICE_STARTED=true
-FAILED_SERVICES=()
+declare -A FAILED_SERVICES
 
 # --- HELPER FUNCTIONS ---
 
@@ -33,10 +32,11 @@ deploy_service() {
 	local restart_policy="$6"
 	local pre_command="$7"
 
-	spinner "Starting $display_name (Web UI on port $web_port)..."
+	info_message "Starting $display_name (Web UI on port $web_port)..."
 
-	if [[ -n "$pre_command" ]]; then
-		eval "$pre_command" >/dev/null 2>&1 || true
+	if [[ "$pre_command" == docker\ volume\ create\ * ]]; then
+    	local volume_name="${pre_command##* }"
+    	docker volume create "$volume_name" >/dev/null 2>&1 || true
 	fi
 
 	# shellcheck disable=SC2086
@@ -47,45 +47,42 @@ deploy_service() {
 		return 0
 	else
 		warn_message "Failed to start $display_name."
-		FAILED_SERVICES+=("$display_name")
+		FAILED_SERVICES["$display_name"]=1
 		return 1
 	fi
 }
 
-is_failed() {
-	local service_name="$1"
-	for failed_service in "${FAILED_SERVICES[@]}"; do
-		[[ "$failed_service" == "$service_name" ]] && return 0
-	done
-	return 1
-}
+is_failed() { [[ -n "${FAILED_SERVICES[$1]+_}" ]]; }
 
 # --- 1. Install Docker and Setup User Permissions ---
 if ! has_cmd docker; then
 	if gum confirm "Docker is not installed. Install now?"; then
 		log "Installing dnf-plugins-core and adding Docker repository."
 		sudo dnf install -y dnf-plugins-core >/dev/null 2>&1
-		sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo >/dev/null 2>&1
 
-		spinner "Installing Docker packages (ce, cli, containerd, plugins)..."
-		sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || {
+		if has_cmd dnf5; then
+			sudo dnf config-manager addrepo --from-repofile=...
+		elif has_cmd dnf-3; then
+			sudo dnf-3 config-manager --add-repo ...
+		else
+			sudo dnf config-manager --add-repo ...
+		fi
+
+		spinner "Installing Docker packages (ce, cli, containerd, plugins)..." sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || {
 			fail_message "Failed to install Docker packages. Skipping setup."
 		}
 
-		spinner "Enabling service and adding user to 'docker' group..."
+		info_message "Enabling service and adding user to 'docker' group..."
 
 		sudo systemctl enable --now docker.service || {
-			DOCKER_SERVICE_STARTED=false
-			warn_message "Failed to enable docker service. Run 'sudo systemctl enable --now docker' manually."
+			warn_message "Failed to enable docker service. Run 'sudo systemctl enable --now docker.service manually."
 		}
 
 		sudo usermod -aG docker "$USER" || {
 			warn_message "Failed to add user to docker group. You must log out/in for 'docker' command to work without 'sudo'."
 		}
 
-		if [ "$DOCKER_SERVICE_STARTED" = true ]; then
-			okay_message "Docker installed and service enabled."
-		fi
+		okay_message "Docker installed."
 	else
 		info_message "Docker installation skipped by user."
 		finish "Docker setup complete."
@@ -131,7 +128,7 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 	if [ "${#FAILED_SERVICES[@]}" -eq 0 ]; then
 		okay_message "All requested containers have been deployed."
 	else
-		warn_message "Some containers failed to deploy: ${FAILED_SERVICES[*]}. Check $LOG_FILE for details."
+		warn_message "Some containers failed to deploy: ${!FAILED_SERVICES[*]}. Check $LOG_FILE for details."
 	fi
 
 	# --- SERVICES ACCESS SUMMARY ---

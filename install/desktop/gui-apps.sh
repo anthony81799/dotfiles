@@ -24,7 +24,7 @@ DNF_PACKAGES=(
 	"xdg-utils"        # Required for xdg-settings
 )
 
-spinner "Installing core GUI applications..."
+info_message "Installing core GUI applications..."
 if ! sudo dnf install -y "${DNF_PACKAGES[@]}"; then
 	warn_message "Some core DNF packages failed to install. Check $LOG_FILE for details."
 else
@@ -35,11 +35,10 @@ fi
 if ! has_cmd brave-browser; then
 	info_message "Starting Brave Browser installation..."
 
-	sudo dnf install -y dnf-plugins-core
 	sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 
 	BRAVE_INSTALLED=false
-	spinner "Installing Brave Browser..."
+	info_message "Installing Brave Browser..."
 	if sudo dnf install -y brave-browser; then
 		BRAVE_INSTALLED=true
 		okay_message "Brave Browser installed."
@@ -51,8 +50,8 @@ else
 	BRAVE_INSTALLED=true
 fi
 
-if [ "${BRAVE_INSTALLED:-false}" = true ]; then
-	spinner "Attempting to set Brave Browser as default web browser..."
+if [[ "$BRAVE_INSTALLED" == true ]]; then
+	info_message "Attempting to set Brave Browser as default web browser..."
 	if has_cmd xdg-settings; then
 		if xdg-settings set default-web-browser brave-browser.desktop; then
 			okay_message "Brave Browser set as default web browser."
@@ -66,8 +65,8 @@ fi
 
 # --- 3. LocalSend File Sharing ---
 if has_cmd flatpak; then
-	if ! flatpak list | grep -q 'org.localsend.localsend_app'; then
-		spinner "Installing LocalSend via Flatpak..."
+	if ! flatpak info org.localsend.localsend_app &>/dev/null; then
+		info_message "Installing LocalSend via Flatpak..."
 
 		if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
 			if flatpak install flathub org.localsend.localsend_app -y; then
@@ -85,13 +84,13 @@ else
 	warn_message "Flatpak not installed. Skipping LocalSend installation. Please install Flatpak/LocalSend manually."
 fi
 
-# --- 4. Call Helper Scripts for GUI Editors ---
+# --- 4. Call Helper Scripts for GUI Editors and Termianl Emulators ---
 EDITOR_SCRIPT="${HOME}/install/desktop/editor.sh"
 TERMINAL_SCRIPT="${HOME}/install/desktop/terminal-emulator.sh"
 
 # Run editor script
 if [ -x "$EDITOR_SCRIPT" ]; then
-	spinner "Running GUI Editor setup script ($EDITOR_SCRIPT)..."
+	info_message "Running GUI Editor setup script ($EDITOR_SCRIPT)..."
 	if bash "$EDITOR_SCRIPT"; then
 		okay_message "GUI Editor setup completed."
 	else
@@ -102,7 +101,7 @@ else
 fi
 
 if [ -x "$TERMINAL_SCRIPT" ]; then
-	spinner "Running Terminal Emulator setup script ($TERMINAL_SCRIPT)..."
+	info_message "Running Terminal Emulator setup script ($TERMINAL_SCRIPT)..."
 	if bash "$TERMINAL_SCRIPT"; then
 		okay_message "Terminal Emulator setup completed."
 	else

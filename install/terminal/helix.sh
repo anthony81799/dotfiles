@@ -8,7 +8,8 @@ IFS=$'\n\t'
 # Load shared library
 source "${HOME}/install/lib.sh"
 
-init_log "${LOG_DIR}/helix-install.log"
+LOG_FILE="${LOG_DIR}/helixgo-install.log"
+init_log "$LOG_FILE"
 
 ensure_gum
 
@@ -17,7 +18,7 @@ banner "Helix Editor"
 HELIXDIR="${HOME}/.local/share/helix"
 
 for cmd in git cargo; do
-	if ! command -v "$cmd" &>/dev/null; then
+	if ! has_cmd "$cmd" &>/dev/null; then
 		warn_message "Command '$cmd' not found. Installing..."
 		sudo dnf install -y "$cmd" || {
 			fail_message "Failed to install $cmd. Please install it manually."
@@ -25,15 +26,14 @@ for cmd in git cargo; do
 	fi
 done
 
-spinner "Installing/Updating Helix and LSPs..."
+info_message "Installing/Updating Helix and LSPs..."
 
 mkdir -p "$HELIXDIR"
 if [ ! -d "$HELIXDIR/.git" ]; then
-	spinner "Cloning Helix repository..."
-	git clone https://github.com/helix-editor/helix "$HELIXDIR"
+	spinner "Cloning Helix repository..." git clone https://github.com/helix-editor/helix "$HELIXDIR"
 else
-	spinner "Updating Helix repository..."
-	cd "$HELIXDIR"
+	info_message "Updating Helix repository..."
+	cd "$HELIXDIR" || fail_message "Cannot enter $HELIXDIR"
 	git checkout master
 	git fetch --all --prune
 	git pull --rebase
@@ -41,27 +41,27 @@ else
 fi
 
 if [ -d "$HELIXDIR/helix-term" ]; then
-	spinner "Building helix-term..."
-	cd "$HELIXDIR"
+	info_message "Building helix-term..."
+	cd "$HELIXDIR" || fail_message "Cannot enter $HELIXDIR"
 	if ! cargo install --path helix-term --locked; then
 		warn_message "cargo install (helix-term) failed or already installed; continuing."
 	fi
 fi
 
-if command -v hx &>/dev/null; then
-	spinner "Fetching/building Helix grammars..."
+if has_cmd hx &>/dev/null; then
+	info_message "Fetching/building Helix grammars..."
 	hx --grammar fetch
 	hx --grammar build
 else
 	warn_message "hx binary not found; skipping grammar fetch/build."
 fi
 
-cd "$HELIXDIR"
+cd "$HELIXDIR" || fail_message "Cannot enter $HELIXDIR"
 if [ -d "runtime" ]; then
 	ln -sfn "$PWD/runtime" "${HOME}/.config/helix/runtime"
 fi
 
-spinner "Select languages to install LSPs..."
+info_message "Select languages to install LSPs..."
 
 CHOICES=$(
 	gum choose --no-limit \
@@ -114,21 +114,20 @@ while IFS= read -r CHOICE; do
 done <<<"$CHOICES"
 
 if [ ${#DNF_LSP_DEPS[@]} -gt 0 ]; then
-	spinner "Installing consolidated DNF dependencies for LSPs: ${DNF_LSP_DEPS[*]}..."
-	sudo dnf install -y "${DNF_LSP_DEPS[@]}" || warn_message "Failed to install some DNF LSP dependencies. Continuing with LSP installs."
+	spinner "Installing consolidated DNF dependencies for LSPs: ${DNF_LSP_DEPS[*]}..." sudo dnf install -y "${DNF_LSP_DEPS[@]}" || warn_message "Failed to install some DNF LSP dependencies. Continuing with LSP installs."
 fi
 
-spinner "Starting individual LSP installations..."
+info_message "Starting individual LSP installations..."
 while IFS= read -r CHOICE; do
 	case "$CHOICE" in
 	"Bash")
-		npm i -g bash-language-server || true
+		npm install -g bash-language-server || true
 		;;
 	"C/C++")
 		info_message "C/C++ dependencies (clang) installation attempted."
 		;;
 	"CSS, HTML, JSON, JSONC, SCSS")
-		npm i -g vscode-langservers-extracted || true
+		npm install -g vscode-langservers-extracted || true
 		;;
 	"Docker, Docker Compose")
 		npm install -g dockerfile-language-server-nodejs @microsoft/compose-language-service || true
@@ -146,25 +145,25 @@ while IFS= read -r CHOICE; do
 		fi
 		;;
 	"GraphQL")
-		npm i -g graphql-language-service-cli || true
+		npm install -g graphql-language-service-cli || true
 		;;
 	"JavaScript, TypeScript")
 		npm install -g typescript typescript-language-server || true
 		;;
 	"Markdown")
-		cargo binstall --no-confirm --git 'https://github.com/feel-ix-343/markdown-oxide' markdown-oxide || true
+		cargo install --git 'https://github.com/feel-ix-343/markdown-oxide' markdown-oxide || true
 		;;
 	"Rust")
 		info_message "Rust dependencies (lldb) installation attempted."
 		;;
 	"SQL")
-		npm i -g sql-language-server || true
+		npm install -g sql-language-server || true
 		;;
 	"TOML")
 		cargo binstall --no-confirm taplo-cli || true
 		;;
 	"YAML")
-		npm i -g yaml-language-server@next || true
+		npm install -g yaml-language-server@next || true
 		;;
 	esac
 done <<<"$CHOICES"

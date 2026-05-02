@@ -7,7 +7,8 @@ IFS=$'\n\t'
 
 source "${HOME}/install/lib.sh"
 
-init_log "${LOG_DIR}/terminal-install.log"
+LOG_FILE="${LOG_DIR}/terminal-install.log"
+init_log "$LOG_FILE"
 
 ensure_gum
 
@@ -19,16 +20,17 @@ INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
 
 install_node() {
-	spinner "Installing Node.js and npm..."
-	sudo dnf install -y nodejs-npm || {
+	spinner "Installing Node.js and npm..." sudo dnf install -y nodejs-npm || {
 		fail_message "Failed to install nodejs-npm via DNF."
 		return 1
 	}
 
-	spinner "Configuring npm for XDG Base Directory structure..."
-	sudo npm config set prefix="${XDG_DATA_HOME}/npm"
-	sudo npm config set cache="${XDG_CACHE_HOME}/npm"
-	sudo npm config set init-module="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
+	info_message "Configuring npm for XDG Base Directory structure..."
+	sudo tee "${XDG_CONFIG_HOME}/npm/npmrc" >/dev/null <<-EOF
+	prefix=${XDG_DATA_HOME}/npm
+	cache=${XDG_CACHE_HOME}/npm
+	init-module=${XDG_CONFIG_HOME}/npm/config/npm-init.js
+	EOF
 
 	mkdir -p "${XDG_CACHE_HOME}/npm"
 	sudo chown -R "$(id -u):$(id -g)" "${XDG_CACHE_HOME}/npm" || true
@@ -54,53 +56,50 @@ while IFS= read -r CHOICE; do
 	esac
 done <<<"$CHOICES"
 
-bash ~/install/terminal/change-shell.sh
+bash "${HOME}/install/terminal/change-shell.sh"
 
-spinner "Installing core DNF dependencies..."
-sudo dnf install -y \
+spinner "Installing core DNF dependencies..." sudo dnf install -y \
 	autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel \
 	python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng \
 	zlib-ng-devel oniguruma-devel luarocks \
-	wget || {
+	wget @fonts @c-development @development-tools || {
 	fail_message "Failed to install core DNF dependencies."
 	finish "Terminal utility setup failed."
 }
 okay_message "Core DNF dependencies installed."
 
-spinner "Installing package group dependencies..."
-sudo dnf group install -y fonts c-development development-tools
-
 # Step 4: Hostname configuration
 STATIC_HOSTNAME=$(gum input --prompt "Static Hostname > " --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
 if [[ -n "$STATIC_HOSTNAME" ]]; then
-	spinner "Setting static hostname to '$STATIC_HOSTNAME'..."
-	sudo hostnamectl set-hostname --static "$STATIC_HOSTNAME"
+	spinner "Setting static hostname to '$STATIC_HOSTNAME'..." sudo hostnamectl set-hostname --static "$STATIC_HOSTNAME"
 fi
 PRETTY_HOSTNAME=$(gum input --prompt "Pretty Hostname > " --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
 if [[ -n "$PRETTY_HOSTNAME" ]]; then
-	spinner "Setting pretty hostname to '$PRETTY_HOSTNAME'..."
-	sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
+	spinner "Setting pretty hostname to '$PRETTY_HOSTNAME'..." sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
 fi
 
-bash ~/install/terminal/git.sh
+bash "${HOME}/install/terminal/git.sh"
 
 if [ "$INSTALL_NODE" = true ]; then
 	install_node
 fi
 
 if [ "$INSTALL_GO" = true ]; then
-	bash ~/install/terminal/golang.sh
+	bash "${HOME}/install/terminal/golang.sh"
 fi
 
-bash ~/install/terminal/rust.sh
-bash ~/install/terminal/editor.sh
+bash "${HOME}/install/terminal/rust.sh" &
+RUST_PID=$!
+wait $RUST_PID || warn_message "Rust install had errors"
+
+bash "${HOME}/install/terminal/editor.sh"
 
 if [ "$INSTALL_DOCKER" = true ]; then
-	bash ~/install/terminal/docker-services.sh
+	bash "${HOME}/install/terminal/docker-services.sh"
 fi
 
 if [ "$INSTALL_XDG_NINJA" = true ]; then
-	spinner "Installing XDG Ninja..."
+	info_message "Installing XDG Ninja..."
 	XDG_NINJA_DIR="${HOME}/.local/share/xdg-ninja"
 	if [ -d "$XDG_NINJA_DIR" ]; then
 		info_message "XDG Ninja already cloned. Skipping clone."

@@ -22,6 +22,11 @@ DESKTOP_SCRIPT_DIR="${HOME}/install/desktop"
 # --- Modular Execution ---
 # -------------------------------------------------------------
 
+for script in nvidia.sh gui-apps.sh; do
+    [[ -x "${DESKTOP_SCRIPT_DIR}/${script}" ]] \
+        || fail_message "Required script not found or not executable: ${DESKTOP_SCRIPT_DIR}/${script}"
+done
+
 # NVIDIA Driver and RPMFusion Setup
 log "Running script: nvidia.sh"
 bash "${DESKTOP_SCRIPT_DIR}/nvidia.sh"

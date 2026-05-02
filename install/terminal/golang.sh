@@ -22,31 +22,28 @@ UPDATE_GO=false
 # --- Functions ---
 install_go_binary() {
   banner "Go Fresh Installation"
-  local GOLATESTURL="https://go.dev/VERSION?m=text"
-  local GOLATEST
-  local ARCHIVE
+  local golatesturl="https://go.dev/VERSION?m=text"
+  local golatest
+  local archive
 
-  spinner "Finding latest Go version from $GOLATESTURL..."
-  GOLATEST=$(curl -sL "$GOLATESTURL" | head -n1) || {
-    fail_message "Failed to fetch latest Go version. Aborting installation."
-    return 1
+  info_message "Finding latest Go version..."
+  golatest=$(curl -sL "$golatesturl" | head -n1) || {
+    fail_message "Failed to fetch latest Go version."
   }
-  log "Latest Go version found: $GOLATEST"
+  log "Latest Go version found: $golatest"
 
-  ARCHIVE="${GOLATEST}.linux-amd64.tar.gz"
+  archive="${golatest}.linux-amd64.tar.gz"
+  trap 'rm -f "$archive"' RETURN
 
-  spinner "Downloading Go $GOLATEST..."
-  wget "https://go.dev/dl/$ARCHIVE" || {
+  info_message "Downloading Go $golatest..."
+  wget "https://go.dev/dl/$archive" || {
     fail_message "Failed to download Go archive."
   }
 
-  spinner "Extracting Go archive to /usr/local/..."
-  sudo tar -C /usr/local -xzf "$ARCHIVE" || {
-    rm -f "$ARCHIVE"
-    fail_message "Failed to extract Go archive."
-  }
+  info_message "Extracting Go archive to /usr/local/..."
+  sudo tar -C /usr/local -xzf "$archive" || fail_message "Failed to extract Go archive."
 
-  rm -f "$ARCHIVE"
+  rm -f "$archive"
 
   # Refresh PATH for current session and disable telemetry
   export PATH="/usr/local/go/bin:$PATH"
@@ -54,7 +51,7 @@ install_go_binary() {
 
   if has_cmd go; then
     go version
-    spinner "Disabling Go telemetry..."
+    info_message "Disabling Go telemetry..."
     go telemetry off || warn_message "Failed to disable Go telemetry."
   fi
 
@@ -63,7 +60,7 @@ install_go_binary() {
 
 update_go_binary() {
   banner "Go Update"
-  spinner "Running go-up script to update Go..."
+  info_message "Running go-up script to update Go..."
   curl -sL https://raw.githubusercontent.com/DieTime/go-up/master/go-up.sh | bash || {
     fail_message "Failed to update Go using go-up script."
   }
@@ -81,7 +78,7 @@ install_go_tools() {
     return 1
   fi
 
-  local GO_TOOLS=(
+  local go_tools=(
     "lazygit (Git TUI, for use with Git)"
     "shfmt (Shell script formatter)"
     "glow (Markdown renderer, for use with 'bat')"
@@ -91,46 +88,46 @@ install_go_tools() {
     "golangci-lint (Fast Go Linter)"
   )
 
-  local INSTALL_CHOICES
-  INSTALL_CHOICES=$(
+  local go_ver=$(go version | awk '{print $3}')
+
+  local install_choices=$(
     gum choose --no-limit \
-      --header "Select optional Go tools to install (Go version: $(go version | awk '{print $3}'))" \
-      "${GO_TOOLS[@]}" ||
+      --header "Select optional Go tools to install (Go version: $go_ver)" \
+      "${go_tools[@]}" ||
       true # Allow user to exit without selection
   )
 
-  if [ -z "$INSTALL_CHOICES" ]; then
+  if [ -z "$install_choices" ]; then
     info_message "No optional Go tools selected."
     return 0
   fi
 
-  local FAILED_TOOLS=()
-  local TOOL_NAME=""
-  local TOOL_PATH=""
+  local failed_tools=()
+  local tool_name=""
+  local tool_path=""
 
   while IFS= read -r CHOICE; do
-    TOOL_NAME=$(echo "$CHOICE" | awk '{print $1}') # Get just the tool name (e.g., lazygit)
+    tool_name=$(echo "$CHOICE" | awk '{print $1}') # Get just the tool name (e.g., lazygit)
 
     case "$CHOICE" in
-    "lazygit (Git TUI, for use with Git)") TOOL_PATH="github.com/jesseduffield/lazygit@latest" ;;
-    "shfmt (Shell script formatter)") TOOL_PATH="mvdan.cc/sh/v3/cmd/shfmt@latest" ;;
-    "glow (Markdown renderer, for use with 'bat')") TOOL_PATH="github.com/charmbracelet/glow/v2@latest" ;;
-    "gopls (Go Language Server, for use with Helix/neovim)") TOOL_PATH="golang.org/x/tools/gopls@latest" ;;
-    "goimports (Go Imports Formatter)") TOOL_PATH="golang.org/x/tools/cmd/goimports@latest" ;;
-    "dlv (Go Debugger)") TOOL_PATH="github.com/go-delve/delve/cmd/dlv@latest" ;;
-    "golangci-lint (Fast Go Linter)") TOOL_PATH="github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" ;;
+    "lazygit (Git TUI, for use with Git)") tool_path="github.com/jesseduffield/lazygit@latest" ;;
+    "shfmt (Shell script formatter)") tool_path="mvdan.cc/sh/v3/cmd/shfmt@latest" ;;
+    "glow (Markdown renderer, for use with 'bat')") tool_path="github.com/charmbracelet/glow/v2@latest" ;;
+    "gopls (Go Language Server, for use with Helix/neovim)") tool_path="golang.org/x/tools/gopls@latest" ;;
+    "goimports (Go Imports Formatter)") tool_path="golang.org/x/tools/cmd/goimports@latest" ;;
+    "dlv (Go Debugger)") tool_path="github.com/go-delve/delve/cmd/dlv@latest" ;;
+    "golangci-lint (Fast Go Linter)") tool_path="github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" ;;
     *)
       warn_message "Unknown selection: $CHOICE"
       continue
       ;;
     esac
 
-    spinner "Installing $TOOL_NAME..."
-    go install "$TOOL_PATH" || FAILED_TOOLS+=("$TOOL_NAME")
-  done <<<"$INSTALL_CHOICES"
+    spinner "Installing $tool_name..." go install "$tool_path" || failed_tools+=("$tool_name")
+  done <<<"$install_choices"
 
-  if [ "${#FAILED_TOOLS[@]}" -ne 0 ]; then
-    warn_message "Failed to install some Go tools: ${FAILED_TOOLS[*]}"
+  if [ "${#failed_tools[@]}" -ne 0 ]; then
+    warn_message "Failed to install some Go tools: ${failed_tools[*]}"
   else
     okay_message "All selected Go tools installed successfully."
   fi
@@ -151,7 +148,7 @@ esac
 
 # Step 2: Determine actual course of action (Install/Update/Reinstall)
 if [ "$INSTALL_GO" = true ]; then
-  spinner "Checking for existing Go installation..."
+  info_message "Checking for existing Go installation..."
 
   if has_cmd go; then
     EXISTING_VER=$(go version | awk '{print $3}')
@@ -163,7 +160,7 @@ if [ "$INSTALL_GO" = true ]; then
       UPDATE_GO=true
     else
       info_message "Reinstalling Go from scratch. Removing /usr/local/go..."
-      spinner "Removing existing Go installation..."
+      info_message "Removing existing Go installation..."
       sudo rm -rf /usr/local/go || {
         fail_message "Failed to remove existing Go installation. Aborting fresh install."
         INSTALL_GO=false

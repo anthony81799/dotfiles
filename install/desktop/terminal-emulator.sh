@@ -8,7 +8,8 @@ IFS=$'\n\t'
 # Load shared library
 source "${HOME}/install/lib.sh"
 
-init_log "${LOG_DIR}/terminal-emulator-install.log"
+LOG_FILE="${LOG_DIR}/terminal-emulator-install.log"
+init_log "$LOG_FILE"
 
 ensure_gum
 
@@ -16,8 +17,7 @@ banner "Terminal Emulator Selection"
 
 # --- 1. Terminal Selection Menu ---
 TERMINAL_CHOICE=$(
-	gum choose --no-limit \
-		--header "Select your preferred terminal emulator to install" \
+	gum choose --header "Select your preferred terminal emulator to install" \
 		"Alacritty" \
 		"Kitty" \
 		"WezTerm" \
@@ -30,35 +30,36 @@ if [[ "$TERMINAL_CHOICE" == "Skip (Do not install a terminal emulator)" ]]; then
 	finish "Terminal emulator setup complete."
 fi
 
-TERMINAL_NAME=$(echo "$TERMINAL_CHOICE" | awk '{print $1}')
+TERMINAL_NAME="${TERMINAL_CHOICE%% *}"
 
 # --- 2. Installation Logic ---
 case "$TERMINAL_NAME" in
 "Alacritty")
-	spinner "Installing Alacritty..."
-	sudo dnf install -y alacritty || {
+	spinner "Installing Alacritty..." sudo dnf install -y alacritty || {
 		fail_message "Failed to install Alacritty."
 	}
 	okay_message "Alacritty installed."
 	;;
 "Kitty")
-	spinner "Installing Kitty..."
-	sudo dnf install -y kitty || {
+	spinner "Installing Kitty..." sudo dnf install -y kitty || {
 		fail_message "Failed to install Kitty."
 	}
 	okay_message "Kitty installed."
 	;;
 "WezTerm")
-	spinner "Installing WezTerm..."
+	info_message "Enabling WezTerm Copr..."
 	sudo dnf copr enable -y wezfurlong/wezterm-nightly
-	sudo dnf install -y wezterm || {
+
+	spinner "Installing WezTerm..." sudo dnf install -y wezterm || {
 		fail_message "Failed to install WezTerm."
 	}
 	okay_message "WezTerm installed."
 	;;
 "Ghostty")
-	sudo dnf copr enable -y scottames/ghostty
-	sudo dnf install -y ghostty || {
+	info_message "Enasbling Ghostty Copr..."
+	sudo dnf copr enable -y scottames/ghostty &&
+
+	spinner "Installing Ghostty..." sudo dnf install -y ghostty || {
 		fail_message "Failed to install Ghostty."
 	}
 	okay_message "Ghostty installed."
