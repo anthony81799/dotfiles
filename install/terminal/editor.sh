@@ -29,8 +29,8 @@ install_neovim() {
 	# 2. Install optional Python client (for providers)
 	if has_cmd pip; then
 		spinner "Installing Python Neovim client (pip install neovim)..." pip install --break-system-packages neovim \
-    	&& pip show neovim | grep ^Version \
-    	|| warn_message "Failed to install Python Neovim client."
+		&& pip show neovim | grep ^Version \
+		|| warn_message "Failed to install Python Neovim client."
 	else
 		info_message "pip not found. Skipping Python Neovim client install."
 	fi
@@ -51,7 +51,7 @@ install_helix() {
 	banner "Helix Editor Installation"
 
 	if [[ ! -x "${HOME}/install/terminal/helix.sh" ]]; then
- 	   fail_message "helix.sh not found or not executable."
+		fail_message "helix.sh not found or not executable."
 	fi
 
 	spinner "Running Helix installation script: ~/install/terminal/helix.sh" bash "${HOME}/install/terminal/helix.sh" || {

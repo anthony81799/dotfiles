@@ -35,8 +35,8 @@ deploy_service() {
 	info_message "Starting $display_name (Web UI on port $web_port)..."
 
 	if [[ "$pre_command" == docker\ volume\ create\ * ]]; then
-    	local volume_name="${pre_command##* }"
-    	docker volume create "$volume_name" >/dev/null 2>&1 || true
+		local volume_name="${pre_command##* }"
+		docker volume create "$volume_name" >/dev/null 2>&1 || true
 	fi
 
 	# shellcheck disable=SC2086

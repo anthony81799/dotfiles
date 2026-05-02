@@ -84,16 +84,16 @@ else
 fi
 
 # --- 3. Run Installations ---
+if [[ "$INSTALL_TERMINAL" = true ]]; then
+	info_message "Starting Terminal utilities installation script..."
+	bash "${HOME}/install/terminal/install-terminal.sh" || fail_message "Terminal installation script failed. Check log for details."
+fi
+
 if [[ "$INSTALL_DESKTOP" = true ]]; then
 	info_message "Starting Desktop installation script..."
 	bash "${HOME}/install/desktop/install-desktop.sh" || fail_message "Desktop installation script failed. Check log for details."
 
 	INSTALL_TERMINAL=true
-fi
-
-if [[ "$INSTALL_TERMINAL" = true ]]; then
-	info_message "Starting Terminal utilities installation script..."
-	bash "${HOME}/install/terminal/install-terminal.sh" || fail_message "Terminal installation script failed. Check log for details."
 fi
 
 finish "The installation is finished!"
