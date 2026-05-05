@@ -66,7 +66,10 @@ INSTALL_TYPE=$(
 )
 
 case "$INSTALL_TYPE" in
-"Full Desktop") INSTALL_DESKTOP=true ;;
+"Full Desktop")
+	INSTALL_DESKTOP=true
+	INSTALL_TERMINAL=true
+;;
 "Terminal Only") INSTALL_TERMINAL=true ;;
 esac
 
@@ -92,8 +95,6 @@ fi
 if [[ "$INSTALL_DESKTOP" = true ]]; then
 	info_message "Starting Desktop installation script..."
 	bash "${HOME}/install/desktop/install-desktop.sh" || fail_message "Desktop installation script failed. Check log for details."
-
-	INSTALL_TERMINAL=true
 fi
 
 finish "The installation is finished!"
