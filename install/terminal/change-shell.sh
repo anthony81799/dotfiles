@@ -75,7 +75,7 @@ fi
 
 # --- 3. Final Change Shell Command ---
 info_message "Setting default shell to ${TARGET_SHELL} using chsh..."
-if sudo chsh -s "$TARGET_SHELL" "$USER"; then
+if chsh -s "$TARGET_SHELL"; then
   okay_message "Default shell successfully changed to ${TARGET_SHELL}."
   warn_message "Please log out and log back in (or restart your terminal) for the new shell to take effect."
 else

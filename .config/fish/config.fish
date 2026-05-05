@@ -28,12 +28,8 @@ fish_add_path \
     $GOPATH/bin \
     $GOROOT/bin \
     $HOME/.local/bin \
-    $HOME/Projects/apache-maven-3.9.2/bin \
     $CARGO_HOME/bin \
     $XDG_DATA_HOME/npm/bin \
-    $HOME/.config/emacs/bin \
-    "$HOME/winhome/AppData/Local/Programs/Microsoft VS Code/bin/" \
-    "$HOME/.local/share/omadora/bin/"
 
 # --- Start Zellij automatically ---
 zellij setup --generate-auto-start fish | source
