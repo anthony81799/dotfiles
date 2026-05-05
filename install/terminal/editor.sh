@@ -22,13 +22,15 @@ INSTALL_HELIX=false
 install_neovim() {
 	banner "Neovim Installation"
 
-	spinner "Installing Neovim via DNF..." sudo dnf install -y neovim || {
+	info_message "Installing Neovim via DNF..."
+	sudo dnf install -y neovim || {
 		fail_message "Failed to install Neovim via DNF. Check $LOG_FILE for details."
 	}
 
 	# 2. Install optional Python client (for providers)
 	if has_cmd pip; then
-		spinner "Installing Python Neovim client (pip install neovim)..." pip install --break-system-packages neovim \
+		info_message "Installing Python Neovim client (pip install neovim)..."
+		pip install --break-system-packages neovim \
 		&& pip show neovim | grep ^Version \
 		|| warn_message "Failed to install Python Neovim client."
 	else
@@ -37,7 +39,8 @@ install_neovim() {
 
 	# 3. Install optional Node.js client (for providers/LSPs)
 	if has_cmd npm; then
-		spinner "Installing Node.js Neovim client (npm install -g neovim)..." sudo npm install -g neovim || {
+		info_message "Installing Node.js Neovim client (npm install -g neovim)..."
+		sudo npm install -g neovim || {
 			warn_message "Failed to install Node.js Neovim client. Proceeding."
 		}
 	else
@@ -54,7 +57,8 @@ install_helix() {
 		fail_message "helix.sh not found or not executable."
 	fi
 
-	spinner "Running Helix installation script: ~/install/terminal/helix.sh" bash "${HOME}/install/terminal/helix.sh" || {
+	info_message "Running Helix installation script: ~/install/terminal/helix.sh"
+	bash "${HOME}/install/terminal/helix.sh" || {
 		fail_message "Helix installation script failed. Check $LOG_FILE for details."
 	}
 	okay_message "Helix installed successfully."

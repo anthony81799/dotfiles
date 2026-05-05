@@ -30,7 +30,8 @@ info_message "Installing/Updating Helix and LSPs..."
 
 mkdir -p "$HELIXDIR"
 if [ ! -d "$HELIXDIR/.git" ]; then
-	spinner "Cloning Helix repository..." git clone https://github.com/helix-editor/helix "$HELIXDIR"
+	info_message "Cloning Helix repository..."
+	git clone https://github.com/helix-editor/helix "$HELIXDIR"
 else
 	info_message "Updating Helix repository..."
 	cd "$HELIXDIR" || fail_message "Cannot enter $HELIXDIR"
@@ -114,7 +115,8 @@ while IFS= read -r CHOICE; do
 done <<<"$CHOICES"
 
 if [ ${#DNF_LSP_DEPS[@]} -gt 0 ]; then
-	spinner "Installing consolidated DNF dependencies for LSPs: ${DNF_LSP_DEPS[*]}..." sudo dnf install -y "${DNF_LSP_DEPS[@]}" || warn_message "Failed to install some DNF LSP dependencies. Continuing with LSP installs."
+	info_message "Installing consolidated DNF dependencies for LSPs: ${DNF_LSP_DEPS[*]}..."
+	sudo dnf install -y "${DNF_LSP_DEPS[@]}" || warn_message "Failed to install some DNF LSP dependencies. Continuing with LSP installs."
 fi
 
 info_message "Starting individual LSP installations..."

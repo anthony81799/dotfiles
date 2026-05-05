@@ -163,13 +163,13 @@ if dnf repolist enabled 2>/dev/null | grep -q 'rpmfusion'; then
 else
     fedora_ver=$(rpm -E %fedora)
 
-    spinner "Adding RPMFusion free and nonfree repositories..." \
-        sudo dnf install -y \
-            "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${fedora_ver}.noarch.rpm" \
-            "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${fedora_ver}.noarch.rpm"
+    info_message "Adding RPMFusion free and nonfree repositories..."
+    sudo dnf install -y \
+        "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${fedora_ver}.noarch.rpm" \
+        "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${fedora_ver}.noarch.rpm"
 
-    spinner "Refreshing package metadata after adding RPMFusion..." \
-        sudo dnf update -y
+    info_message "Refreshing package metadata after adding RPMFusion..."
+    sudo dnf update -y
 
     okay_message "RPMFusion repositories configured."
 fi
@@ -185,13 +185,13 @@ if gum confirm "Install NVIDIA drivers (${DRIVER_PKG}) from RPMFusion?"; then
         cuda_pkg="xorg-x11-drv-nvidia-cuda"
     fi
 
-    spinner "Installing ${DRIVER_PKG} and Vulkan dependencies..." \
-        sudo dnf install -y \
-            "${DRIVER_PKG}" \
-            ${cuda_pkg:+"$cuda_pkg"} \
-            vulkan-loader \
-            vulkan-loader.i686 \
-        || fail_message "Failed to install NVIDIA drivers. Check ${LOG_FILE} for details."
+    info_message "Installing ${DRIVER_PKG} and Vulkan dependencies..."
+    sudo dnf install -y \
+        "${DRIVER_PKG}" \
+        ${cuda_pkg:+"$cuda_pkg"} \
+        vulkan-loader \
+        vulkan-loader.i686 \
+    || fail_message "Failed to install NVIDIA drivers. Check ${LOG_FILE} for details."
 
     okay_message "NVIDIA drivers installed successfully."
     warn_message "The akmod kernel module will compile on the first reboot."

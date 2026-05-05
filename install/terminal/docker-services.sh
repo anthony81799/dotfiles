@@ -68,7 +68,8 @@ if ! has_cmd docker; then
 			sudo dnf config-manager --add-repo ...
 		fi
 
-		spinner "Installing Docker packages (ce, cli, containerd, plugins)..." sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || {
+		info_message "Installing Docker packages (ce, cli, containerd, plugins)..."
+		sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || {
 			fail_message "Failed to install Docker packages. Skipping setup."
 		}
 

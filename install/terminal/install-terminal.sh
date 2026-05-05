@@ -20,7 +20,8 @@ INSTALL_NODE=false
 INSTALL_XDG_NINJA=false
 
 install_node() {
-	spinner "Installing Node.js and npm..." sudo dnf install -y nodejs-npm || {
+	info_message "Installing Node.js and npm..."
+	sudo dnf install -y nodejs-npm || {
 		fail_message "Failed to install nodejs-npm via DNF."
 		return 1
 	}
@@ -58,7 +59,8 @@ done <<<"$CHOICES"
 
 bash "${HOME}/install/terminal/change-shell.sh"
 
-spinner "Installing core DNF dependencies..." sudo dnf install -y \
+info_message "Installing core DNF dependencies..."
+sudo dnf install -y \
 	autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel \
 	python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng \
 	zlib-ng-devel oniguruma-devel luarocks \
@@ -71,11 +73,13 @@ okay_message "Core DNF dependencies installed."
 # Step 4: Hostname configuration
 STATIC_HOSTNAME=$(gum input --prompt "Static Hostname > " --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
 if [[ -n "$STATIC_HOSTNAME" ]]; then
-	spinner "Setting static hostname to '$STATIC_HOSTNAME'..." sudo hostnamectl set-hostname --static "$STATIC_HOSTNAME"
+	info_message "Setting static hostname to '$STATIC_HOSTNAME'..."
+	sudo hostnamectl set-hostname --static "$STATIC_HOSTNAME"
 fi
 PRETTY_HOSTNAME=$(gum input --prompt "Pretty Hostname > " --placeholder "Enter pretty hostname for this machine" --value "$(hostnamectl --pretty)")
 if [[ -n "$PRETTY_HOSTNAME" ]]; then
-	spinner "Setting pretty hostname to '$PRETTY_HOSTNAME'..." sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
+	info_message "Setting pretty hostname to '$PRETTY_HOSTNAME'..."
+	sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
 fi
 
 bash "${HOME}/install/terminal/git.sh"

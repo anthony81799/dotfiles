@@ -35,13 +35,15 @@ TERMINAL_NAME="${TERMINAL_CHOICE%% *}"
 # --- 2. Installation Logic ---
 case "$TERMINAL_NAME" in
 "Alacritty")
-	spinner "Installing Alacritty..." sudo dnf install -y alacritty || {
+	info_message "Installing Alacritty..."
+	sudo dnf install -y alacritty || {
 		fail_message "Failed to install Alacritty."
 	}
 	okay_message "Alacritty installed."
 	;;
 "Kitty")
-	spinner "Installing Kitty..." sudo dnf install -y kitty || {
+	info "Installing Kitty..."
+	sudo dnf install -y kitty || {
 		fail_message "Failed to install Kitty."
 	}
 	okay_message "Kitty installed."
@@ -50,7 +52,8 @@ case "$TERMINAL_NAME" in
 	info_message "Enabling WezTerm Copr..."
 	sudo dnf copr enable -y wezfurlong/wezterm-nightly
 
-	spinner "Installing WezTerm..." sudo dnf install -y wezterm || {
+	info_message "Installing WezTerm..."
+	sudo dnf install -y wezterm || {
 		fail_message "Failed to install WezTerm."
 	}
 	okay_message "WezTerm installed."
@@ -59,7 +62,8 @@ case "$TERMINAL_NAME" in
 	info_message "Enasbling Ghostty Copr..."
 	sudo dnf copr enable -y scottames/ghostty &&
 
-	spinner "Installing Ghostty..." sudo dnf install -y ghostty || {
+	info_message "Installing Ghostty..."
+	sudo dnf install -y ghostty || {
 		fail_message "Failed to install Ghostty."
 	}
 	okay_message "Ghostty installed."

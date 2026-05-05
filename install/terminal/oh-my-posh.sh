@@ -25,7 +25,8 @@ fi
 
 # --- 2. Setup Directory ---
 if [ ! -d "${HOME}/.local/bin" ]; then
-	spinner "Creating local bin directory: ${HOME}/.local/bin" mkdir -p "${HOME}/.local/bin"
+	info_message "Creating local bin directory: ${HOME}/.local/bin"
+	mkdir -p "${HOME}/.local/bin"
 fi
 
 # --- 3. Install/Update Oh My Posh (Robust Execution) ---

@@ -123,7 +123,8 @@ install_go_tools() {
       ;;
     esac
 
-    spinner "Installing $tool_name..." go install "$tool_path" || failed_tools+=("$tool_name")
+    info_message "Installing $tool_name..."
+    go install "$tool_path" || failed_tools+=("$tool_name")
   done <<<"$install_choices"
 
   if [ "${#failed_tools[@]}" -ne 0 ]; then

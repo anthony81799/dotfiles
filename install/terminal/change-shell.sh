@@ -39,7 +39,8 @@ TARGET_SHELL="${DEFAULT_SHELL%% *}"
 TARGET_SHELL_NAME="${TARGET_SHELL##*/}"
 
 if ! has_cmd "$TARGET_SHELL_NAME"; then
-  spinner "Installing ${TARGET_SHELL_NAME}..." sudo dnf install -y "$TARGET_SHELL_NAME" || {
+  info_message "Installing ${TARGET_SHELL_NAME}..."
+  sudo dnf install -y "$TARGET_SHELL_NAME" || {
     fail_message "Failed to install ${TARGET_SHELL_NAME}. Aborting."
   }
   okay_message "${TARGET_SHELL_NAME} installed."
@@ -50,7 +51,8 @@ fi
 # --- 2. Configure Selected Shell (Conditional) ---
 
 if [[ "$TARGET_SHELL_NAME" == "bash" && ! -d "$BASH_BLESH_DIR" ]]; then
-  spinner "Cloning ble.sh for Bash enhancements..." git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR" || {
+  info_message "Cloning ble.sh for Bash enhancements..."
+  git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR" || {
     warn_message "Failed to clone ble.sh. Bash enhancements will be limited."
   }
 
@@ -67,7 +69,7 @@ else
 fi
 
 if [ -f "$OH_MY_POSH_SCRIPT" ]; then
-  spinner "Running Oh My Posh installer script..." bash "$OH_MY_POSH_SCRIPT" || warn_message "Oh My Posh installer script failed. Check log for details."
+  info_message "Running Oh My Posh installer script..." bash "$OH_MY_POSH_SCRIPT" || warn_message "Oh My Posh installer script failed. Check log for details."
   okay_message "Oh My Posh setup initiated."
 else
   warn_message "Oh My Posh script not found at ${OH_MY_POSH_SCRIPT}. Skipping OMP installation."
