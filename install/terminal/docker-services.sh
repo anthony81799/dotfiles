@@ -61,11 +61,11 @@ if ! has_cmd docker; then
 		sudo dnf install -y dnf-plugins-core >/dev/null 2>&1
 
 		if has_cmd dnf5; then
-			sudo dnf config-manager addrepo --from-repofile=...
+			sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo >/dev/null 2>&1
 		elif has_cmd dnf-3; then
-			sudo dnf-3 config-manager --add-repo ...
+			sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo >/dev/null 2>&1
 		else
-			sudo dnf config-manager --add-repo ...
+			sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo >/dev/null 2>&1
 		fi
 
 		info_message "Installing Docker packages (ce, cli, containerd, plugins)..."
