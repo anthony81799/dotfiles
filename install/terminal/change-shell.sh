@@ -69,7 +69,8 @@ else
 fi
 
 if [ -f "$OH_MY_POSH_SCRIPT" ]; then
-  info_message "Running Oh My Posh installer script..." bash "$OH_MY_POSH_SCRIPT" || warn_message "Oh My Posh installer script failed. Check log for details."
+  info_message "Running Oh My Posh installer script..."
+  bash "$OH_MY_POSH_SCRIPT" || warn_message "Oh My Posh installer script failed. Check log for details."
   okay_message "Oh My Posh setup initiated."
 else
   warn_message "Oh My Posh script not found at ${OH_MY_POSH_SCRIPT}. Skipping OMP installation."
