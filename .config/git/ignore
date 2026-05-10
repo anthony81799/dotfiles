@@ -12,6 +12,7 @@
 .config/docker
 .config/git/config
 .config/git/credentials
+.git-credentials
 .config/go/telemetry
 .config/mozilla
 .config/nushell
