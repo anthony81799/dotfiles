@@ -27,10 +27,10 @@ white = "0xd4be98"
 TERM = "xterm-256color"
 
 [font]
-normal = { family = "Cascadia Mono NF", style = "Regular" }
-bold = { family = "Cascadia Mono NF", style = "Bold" }
-italic = { family = "Cascadia Mono NF", style = "Italic" }
-size = 9
+normal = { family = "JetBrains Mono", style = "Regular" }
+bold = { family = "JetBrains Mono", style = "Bold" }
+italic = { family = "JetBrains Mono", style = "Italic" }
+size = 12
 
 [window]
 padding.x = 14
