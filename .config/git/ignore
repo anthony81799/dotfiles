@@ -10,12 +10,14 @@
 .config/BraveSoftware
 .config/discord
 .config/docker
+.config/faugus-launcher
 .config/git/config
 .config/git/credentials
 .git-credentials
 .config/go/telemetry
 .config/mozilla
 .config/nushell
+.config/unity3d
 .config/VSCodium
 .config/yazelix
 .config/zsh/.zcompdump
@@ -27,6 +29,9 @@
 .nix-*
 .pki
 .ssh
+.steam
+.steampath
+.steampid
 .var
 .vscode-remote-containers
 .vscode-server
@@ -34,6 +39,7 @@
 Desktop
 Documents
 Downloads
+Faugus
 Music
 Pictures
 Public
@@ -106,3 +112,11 @@ node_modules
 .config/user-dirs.locale
 .fonts.conf
 .gtkrc-2.0
+.config/baloofilerc
+.config/baloofileinformationrc
+.config/discoverrc
+.config/klassy
+.config/kscreenlockerrc
+.config/plasmanotifyrc
+.config/systemmonitorrc
+.config/trashrc

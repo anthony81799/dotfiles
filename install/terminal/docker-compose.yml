@@ -1,0 +1,73 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${DOCKER_VOLUME_BASE}/searxng:/etc/searxng:ro
+
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    restart: unless-stopped
+    ports:
+      - "8384:8384"
+      - "22000:22000/tcp"
+      - "22000:22000/udp"
+      - "21027:21027/udp"
+    volumes:
+      - ${DOCKER_VOLUME_BASE}/syncthing:/var/syncthing
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+
+  kopia-server:
+    image: kopia/kopia:latest
+    container_name: kopia-server
+    restart: unless-stopped
+    ports:
+      - "5151:5151"
+    volumes:
+      - ${DOCKER_VOLUME_BASE}/kopia:/cache
+      - ${HOME}:/mnt/host
+    environment:
+      - KOPIA_PASSWORD=your_secure_password
+    command: server start --insecure --upgrader-repository=false
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    volumes:
+      - ${DOCKER_VOLUME_BASE}/vaultwarden:/data
+
+  budge-board:
+    image: lscr.io/linuxserver/budge:latest
+    container_name: budge-board
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    volumes:
+      - ${DOCKER_VOLUME_BASE}/budge:/config
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=America/New_York
+
+volumes:
+  portainer_data:

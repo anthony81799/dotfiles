@@ -16,43 +16,12 @@ ensure_gum
 banner "Docker and Self-Hosted Services Setup"
 
 # Define base directory for persistent container data
-DOCKER_VOLUME_BASE="${XDG_DATA_HOME}/docker/volumes"
-USER_ID="$(id -u)"
-GROUP_ID="$(id -g)"
-declare -A FAILED_SERVICES
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.yml"
 
-# --- HELPER FUNCTIONS ---
-
-deploy_service() {
-	local display_name="$1"
-	local container_name="$2"
-	local web_port="$3"
-	local run_args="$4"
-	local image_and_cmd="$5"
-	local restart_policy="$6"
-	local pre_command="$7"
-
-	info_message "Starting $display_name (Web UI on port $web_port)..."
-
-	if [[ "$pre_command" == docker\ volume\ create\ * ]]; then
-		local volume_name="${pre_command##* }"
-		docker volume create "$volume_name" >/dev/null 2>&1 || true
-	fi
-
-	# shellcheck disable=SC2086
-	if docker run -d --name "$container_name" --restart "$restart_policy" $run_args $image_and_cmd; then
-		if [[ "$display_name" == "Kopia" ]]; then
-			warn_message "Kopia server started on port 5151. Initial setup password is 'your_secure_password'. PLEASE CHANGE IT IMMEDIATELY."
-		fi
-		return 0
-	else
-		warn_message "Failed to start $display_name."
-		FAILED_SERVICES["$display_name"]=1
-		return 1
-	fi
-}
-
-is_failed() { [[ -n "${FAILED_SERVICES[$1]+_}" ]]; }
+export DOCKER_VOLUME_BASE="${XDG_DATA_HOME}/docker/volumes"
+export USER_ID="$(id -u)"
+export GROUP_ID="$(id -g)"
 
 # --- 1. Install Docker and Setup User Permissions ---
 if ! has_cmd docker; then
@@ -92,28 +61,7 @@ else
 	info_message "Docker already installed. Proceeding to container deployment."
 fi
 
-# --- 2. Container Deployment Menu ---
-
-# Configuration Array:
-# Display Name | Container Name | Web UI Port | Docker Run Arguments | Image and Command | Restart Policy | Pre-Command (e.g., volume create)
-declare -a SERVICES_CONFIG=(
-	"Portainer|portainer|9000|-v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data -p 8000:8000 -p 9000:9000|portainer/portainer-ce:latest|always|docker volume create portainer_data"
-	"SearxNG|searxng|8080|-p 8080:8080 -v \"$DOCKER_VOLUME_BASE/searxng:/etc/searxng:ro\"|searxng/searxng:latest|unless-stopped|"
-	"Syncthing|syncthing|8384|-p 8384:8384 -p 22000:22000/tcp -p 22000:22000/udp -p 21027:21027/udp -v \"$DOCKER_VOLUME_BASE/syncthing:/var/syncthing\" -e PUID=\"$USER_ID\" -e PGID=\"$GROUP_ID\"|lscr.io/linuxserver/syncthing:latest|unless-stopped|"
-	"Kopia|kopia-server|5151|-p 5151:5151 -v \"$DOCKER_VOLUME_BASE/kopia:/cache\" -v \"$HOME:/mnt/host\" -e KOPIA_PASSWORD=\"your_secure_password\"|kopia/kopia:latest server start --insecure --upgrader-repository=false|unless-stopped|"
-	"Vaultwarden|vaultwarden|3001|-p 3001:80 -v \"$DOCKER_VOLUME_BASE/vaultwarden:/data\"|vaultwarden/server:latest|unless-stopped|"
-	"Budget-Board|budge-board|3002|-p 3002:3000 -v \"$DOCKER_VOLUME_BASE/budge:/config\" -e PUID=\"$USER_ID\" -e PGID=\"$GROUP_ID\" -e TZ=\"America/New_York\"|lscr.io/linuxserver/budge:latest|unless-stopped|"
-)
-
-# Service Summary for the final print (Display Name | Label | URL)
-declare -a SERVICE_SUMMARY_CONFIG=(
-	"Portainer|Container Dashboard (Portainer):|http://localhost:9000"
-	"SearxNG|SearxNG (Metasearch):|http://localhost:8080"
-	"Syncthing|Syncthing (Sync):|http://localhost:8384 (Web UI)"
-	"Kopia|Kopia (Backup):|http://localhost:5151 (Web UI)"
-	"Vaultwarden|Vaultwarden (Password Manager):|http://localhost:3001"
-	"Budget-Board|Budget-Board (Budge):|http://localhost:3002"
-)
+# --- 2. Container Deployment ---
 
 if gum confirm "Do you want to deploy self-hosted services now?"; then
 	if ! has_cmd docker; then
@@ -121,31 +69,27 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 		finish "Docker setup complete."
 	fi
 
-	for config in "${SERVICES_CONFIG[@]}"; do
-		IFS='|' read -r display_name container_name web_port run_args image_and_cmd restart_policy pre_command <<<"$config"
-		deploy_service "$display_name" "$container_name" "$web_port" "$run_args" "$image_and_cmd" "$restart_policy" "$pre_command"
-	done
+	info_message "Starting all services via Docker Compose..."
 
-	if [ "${#FAILED_SERVICES[@]}" -eq 0 ]; then
-		okay_message "All requested containers have been deployed."
+	if docker compose -f "$COMPOSE_FILE" up -d; then
+		warn_message "Kopia server is running on port 5151. Initial setup password is 'your_secure_password'. PLEASE CHANGE IT IMMEDIATELY."
+		okay_message "All services deployed."
 	else
-		warn_message "Some containers failed to deploy: ${!FAILED_SERVICES[*]}. Check $LOG_FILE for details."
+		warn_message "One or more services failed to start. Check $LOG_FILE for details."
 	fi
 
 	# --- SERVICES ACCESS SUMMARY ---
 
 	echo ""
 	echo "=========================================================="
-	echo "SELF-HOSTED SERVICES ACCESS SUMMARY (Successful Deployments):"
+	echo "SELF-HOSTED SERVICES ACCESS SUMMARY:"
 	echo "=========================================================="
-
-	for config in "${SERVICE_SUMMARY_CONFIG[@]}"; do
-		IFS='|' read -r display_name label url <<<"$config"
-		if ! is_failed "$display_name"; then
-			printf "%-35s %s\n" "$label" "$url"
-		fi
-	done
-
+	printf "%-35s %s\n" "Container Dashboard (Portainer):" "http://localhost:9000"
+	printf "%-35s %s\n" "SearxNG (Metasearch):"            "http://localhost:8080"
+	printf "%-35s %s\n" "Syncthing (Sync):"                "http://localhost:8384"
+	printf "%-35s %s\n" "Kopia (Backup):"                  "http://localhost:5151"
+	printf "%-35s %s\n" "Vaultwarden (Password Manager):"  "http://localhost:3001"
+	printf "%-35s %s\n" "Budget-Board (Budge):"            "http://localhost:3002"
 	echo "=========================================================="
 
 else
