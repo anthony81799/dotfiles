@@ -91,7 +91,6 @@
     navigate = true
     side-by-side = true
     line-numbers = true
-    whitespace-error-style = highlight
     minus-style = syntax # use syntax highlighting for deletions
     plus-style = syntax # use syntax highlighting for additions
     hyperlinks = true
