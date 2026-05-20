@@ -6,7 +6,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Load shared library
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/change-shell.log"
 init_log "$LOG_FILE"
@@ -15,7 +16,7 @@ ensure_gum
 
 # --- Variables ---
 BASH_BLESH_DIR="${XDG_DATA_HOME}/ble.sh"
-OH_MY_POSH_SCRIPT="${HOME}/install/terminal/oh-my-posh.sh"
+OH_MY_POSH_SCRIPT="${DOTFILES_DIR}/install/terminal/oh-my-posh.sh"
 
 banner "Default Shell Configuration"
 
@@ -50,13 +51,17 @@ fi
 
 # --- 2. Configure Selected Shell (Conditional) ---
 
-if [[ "$TARGET_SHELL_NAME" == "bash" && ! -d "$BASH_BLESH_DIR" ]]; then
-  info_message "Cloning ble.sh for Bash enhancements..."
-  git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR" || {
-    warn_message "Failed to clone ble.sh. Bash enhancements will be limited."
-  }
+if [[ "$TARGET_SHELL_NAME" == "bash" ]]; then
+  if [[ ! -d "$BASH_BLESH_DIR" ]]; then
+    info_message "Cloning ble.sh for Bash enhancements..."
+    git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$BASH_BLESH_DIR" || {
+      warn_message "Failed to clone ble.sh. Bash enhancements will be limited."
+    }
+  else
+    info_message "ble.sh already cloned. Skipping clone."
+  fi
 
-  if [[ "$TARGET_SHELL_NAME" == "bash" && -d "$BASH_BLESH_DIR" ]]; then
+  if [[ -d "$BASH_BLESH_DIR" ]]; then
     info_message "Building and installing ble.sh..."
     if (cd "$BASH_BLESH_DIR" && make install PREFIX="$BASH_BLESH_DIR"); then
       okay_message "Bash enhancements (ble.sh) set up."
@@ -64,8 +69,6 @@ if [[ "$TARGET_SHELL_NAME" == "bash" && ! -d "$BASH_BLESH_DIR" ]]; then
       warn_message "Failed to build ble.sh. Bash enhancements will be limited."
     fi
   fi
-else
-  info_message "ble.sh already cloned. Skipping build."
 fi
 
 if [ -f "$OH_MY_POSH_SCRIPT" ]; then

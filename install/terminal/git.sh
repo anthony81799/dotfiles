@@ -5,7 +5,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/git-install.log"
 init_log "$LOG_FILE"

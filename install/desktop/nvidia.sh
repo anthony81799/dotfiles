@@ -5,7 +5,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 readonly LOG_FILE="${LOG_DIR}/install-nvidia.log"
 init_log "$LOG_FILE"

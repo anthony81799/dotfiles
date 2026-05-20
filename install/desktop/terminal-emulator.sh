@@ -6,7 +6,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Load shared library
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/terminal-emulator-install.log"
 init_log "$LOG_FILE"
@@ -42,7 +43,7 @@ case "$TERMINAL_NAME" in
 	okay_message "Alacritty installed."
 	;;
 "Kitty")
-	info "Installing Kitty..."
+	info_message "Installing Kitty..."
 	sudo dnf install -y kitty || {
 		fail_message "Failed to install Kitty."
 	}
@@ -59,8 +60,10 @@ case "$TERMINAL_NAME" in
 	okay_message "WezTerm installed."
 	;;
 "Ghostty")
-	info_message "Enasbling Ghostty Copr..."
-	sudo dnf copr enable -y scottames/ghostty &&
+	info_message "Enabling Ghostty Copr..."
+	sudo dnf copr enable -y scottames/ghostty || {
+		fail_message "Failed to enable Ghostty Copr repository."
+	}
 
 	info_message "Installing Ghostty..."
 	sudo dnf install -y ghostty || {

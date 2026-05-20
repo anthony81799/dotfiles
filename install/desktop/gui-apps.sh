@@ -6,7 +6,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Load shared library and initialize logging
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/gui-apps-install.log"
 init_log "$LOG_FILE"
@@ -85,8 +86,8 @@ else
 fi
 
 # --- 4. Call Helper Scripts for GUI Editors and Termianl Emulators ---
-EDITOR_SCRIPT="${HOME}/install/desktop/editor.sh"
-TERMINAL_SCRIPT="${HOME}/install/desktop/terminal-emulator.sh"
+EDITOR_SCRIPT="${DOTFILES_DIR}/install/desktop/editor.sh"
+TERMINAL_SCRIPT="${DOTFILES_DIR}/install/desktop/terminal-emulator.sh"
 
 # Run editor script
 if [ -x "$EDITOR_SCRIPT" ]; then

@@ -1,96 +1,144 @@
-# Dotfiles Installation Scripts
+# Dotfiles
 
-This repository contains a set of modular shell scripts designed to install and configure a modern Linux environment. It is primarily built for a **DNF-based distribution (like Fedora)**, featuring the **Hyprland** Wayland compositor and extensive **Terminal** customization.
+Personal dotfiles for a modern Linux environment, built for **Fedora** (DNF-based). Includes configurations for terminal emulators, editors, shells, and a set of modular install scripts for bootstrapping a new machine.
 
-The installer uses the interactive command-line tool `gum` to guide the user through the setup process.
+The installer uses [`gum`](https://github.com/charmbracelet/gum) for interactive menus.
 
------
+---
 
 ## Installation
 
 ### Prerequisites
 
-1. **Operating System:** A distribution using the DNF package manager (e.g., Fedora, RHEL, CentOS).
-2. **Tools:** `git` and `sudo` access must be available.
-3. **Core Dependency:** The installer will automatically attempt to install the **`gum`** package, which is required for the interactive menus.
+- A DNF-based Linux distribution (Fedora, RHEL, etc.)
+- `git` and `sudo` access
+- The installer will automatically install `gum` if it is not present
 
 ### Running the Installer
-
-To install this repo run the follow command in a terminal:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/anthony81799/dotfiles/master/install.sh)
 ```
 
------
+The script will:
 
-## Installation Options & Components
+1. Clone this repo to `~/dotfiles`
+2. Symlink all configs from `~/dotfiles/config/` to their correct `~/.config/` locations
+3. Prompt for an installation type and run the selected scripts
 
-The installation process is split into two main phases, with the "Full Desktop" option automatically including the "Terminal Only" steps.
+---
 
-### 1\. Full Desktop Environment Setup
+## How Config Symlinking Works
 
-| Step | Component | Description |
-| :--- | :--- | :--- |
-| **Files** | Configuration Copy | Copies or symlinks configuration files (dotfiles) from the install directory to their respective `XDG_CONFIG_HOME` paths. |
-| **Drivers** | NVIDIA/RPMFusion | Sets up **RPMFusion** repositories and offers optional installation of **NVIDIA drivers** and Vulkan support (`akmod-nvidia`, `vulkan-loader`). |
-| **Gaming/Perf**| Bazzite/Nobara Tweaks | Installs common gaming tools (`gamescope`, `steam`, Vulkan drivers, `xpad`) and applies performance-focused kernel tweaks (`irqbalance`, low `vm.swappiness`, high `fs.inotify.max_user_watches`). |
-| **GUI Apps** | Applications | Installs essential graphical applications: **Brave Browser** (set as default), **VS Code**, **Dolphin** file manager, and the **Zed Editor** (via Flatpak). |
+All configurations live under `dotfiles/config/`. The installer creates symlinks so apps find them at their expected XDG paths:
 
------
+| Source | Symlinked to |
+| :--- | :--- |
+| `config/<dir>/` | `~/.config/<dir>/` |
+| `config/shell_aliases` | `~/.config/shell_aliases` |
+| `config/topgrade.toml` | `~/.config/topgrade.toml` |
+| `config/.bashrc` | `~/.bashrc` |
+| `config/zsh/.zshenv` | `~/.zshenv` (sets `ZDOTDIR` for zsh) |
 
-### 2\. Terminal Only Setup (User Choices)
+Existing files are backed up with a `.bak` extension before linking. Re-running `install.sh` on an existing machine will pull the latest changes and refresh all symlinks.
 
-The terminal setup is highly customizable, allowing the user to select which toolchains and utilities to install.
+---
 
-| Category | Option | Components Installed |
-| :--- | :--- | :--- |
-| **Shell** | **Zsh**, **Bash**, or **Fish** | **Zsh:** Configured to use **XDG Base Directory** structure (`ZDOTDIR`) **Bash:** Installs **ble.sh** for enhancements. Installs **Oh My Posh** for prompt customization. |
-| **Toolchain**| **Go** Toolchain | Installs the latest Go toolchain, sets up `GOPATH` to follow XDG standards, and installs global utilities like **`lazygit`** and **`shfmt`**. |
-| **Toolchain**| **Rust** Toolchain | Installs **`rustup`** and a comprehensive list of useful **Cargo crates** (see "Key Terminal Utilities" below). Also offers optional installation/update of **Helix Editor** and its Language Servers (LSPs). |
-| **Utility** | **Docker** | Installs and enables the Docker service. |
-| **Utility** | **Node.js/npm** | Installs Node.js and configures **npm** to use the XDG Base Directory specification. |
-| **Utility** | **XDG Ninja** | Installs the `xdg-ninja` tool for checking XDG compliance. |
+## Configurations
 
------
+| Directory | Application |
+| :--- | :--- |
+| `config/alacritty/` | [Alacritty](https://alacritty.org/) terminal emulator |
+| `config/atuin/` | [Atuin](https://github.com/atuinsh/atuin) shell history |
+| `config/fastfetch/` | [Fastfetch](https://github.com/fastfetch-cli/fastfetch) system info |
+| `config/fish/` | [Fish](https://fishshell.com/) shell config |
+| `config/ghostty/` | [Ghostty](https://ghostty.org/) terminal emulator |
+| `config/git/` | Git global config and global gitignore |
+| `config/gitui/` | [Gitui](https://github.com/extrawurst/gitui) TUI theme |
+| `config/glow/` | [Glow](https://github.com/charmbracelet/glow) markdown renderer |
+| `config/helix/` | [Helix](https://helix-editor.com/) editor config and language servers |
+| `config/kitty/` | [Kitty](https://sw.kovidgoyal.net/kitty/) terminal emulator |
+| `config/npm/` | npm XDG-compliant config (`npmrc`) |
+| `config/nvim/` | [Neovim](https://neovim.io/) (LazyVim) config |
+| `config/oh-my-posh/` | [Oh My Posh](https://ohmyposh.dev/) prompt theme |
+| `config/wezterm/` | [WezTerm](https://wezfurlong.org/wezterm/) terminal emulator |
+| `config/xplr/` | [xplr](https://xplr.dev/) file manager config |
+| `config/zellij/` | [Zellij](https://zellij.dev/) terminal multiplexer |
+| `config/zsh/` | Zsh config (`.zshrc`, `.zprofile`, `.zshenv`) |
+| `config/shell_aliases` | Shared aliases sourced by both zsh and fish |
+| `config/topgrade.toml` | [Topgrade](https://github.com/topgrade-rs/topgrade) updater config |
 
-## Key Terminal Utilities & Configuration
+---
 
-The dotfiles configure several core utilities for an optimized terminal experience, primarily revealed through the environment variables and aliases in the `.zshrc`, `.bashrc`, or `config.fish` file:
+## Installation Options
+
+The installer is split into two modes. **Full Desktop** runs both.
+
+### Terminal Only
+
+| Script | What it does |
+| :--- | :--- |
+| `change-shell.sh` | Sets default shell (Zsh / Bash / Fish). Installs `ble.sh` for Bash. |
+| `git.sh` | Configures global Git identity and settings (uses `delta` as pager). |
+| `golang.sh` | Installs or updates the Go toolchain; optional Go tools (`lazygit`, `gopls`, `dlv`, etc.). |
+| `rust.sh` | Installs `rustup` and a set of Cargo crates via `cargo-binstall`. |
+| `editor.sh` | Offers Neovim and/or Helix installation. |
+| `oh-my-posh.sh` | Installs or updates Oh My Posh to `~/.local/bin`. |
+| `helix.sh` | Builds Helix from source and optionally installs LSPs. |
+| `docker-services.sh` | Installs Docker and optionally deploys self-hosted services via Compose. |
+
+### Full Desktop (adds)
+
+| Script | What it does |
+| :--- | :--- |
+| `nvidia.sh` | Detects your NVIDIA GPU generation and installs the correct RPMFusion `akmod` driver. |
+| `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, and LocalSend (Flatpak). |
+| `editor.sh` (desktop) | Offers VS Code, VSCodium, and Zed editor installation. |
+| `terminal-emulator.sh` | Choose one of Alacritty, Kitty, WezTerm, or Ghostty to install. |
+
+---
+
+## Key Terminal Utilities
+
+### Shells
+
+- **Zsh** (default): configured via `ZDOTDIR=~/.config/zsh`. Uses `zinit` for plugins (syntax highlighting, autosuggestions, `fzf-tab`).
+- **Fish**: full XDG-compliant config with abbreviations, functions, and plugin support.
+- **Bash**: enhanced with `ble.sh`.
+
+All shells share aliases via `~/.config/shell_aliases`.
 
 ### Core Tools
 
-* **Shells:** **Zsh** (default), **Bash**, **Fish**.
-* **Multiplexer:** **Zellij** is configured to auto-start upon opening the terminal.
-* **History:** **Atuin** is used as a history manager.
-* **File Manager:** **Yazi** is used as a terminal file manager, with a custom wrapper function (`ya()`) to allow changing the current working directory upon exit.
-* **Directory Jumper:** **Zoxide** is configured for smart directory navigation.
-* **Prompt:** **Oh My Posh**
+| Tool | Role |
+| :--- | :--- |
+| [Zellij](https://zellij.dev/) | Terminal multiplexer (auto-starts on shell open) |
+| [Atuin](https://github.com/atuinsh/atuin) | Shell history with sync |
+| [Zoxide](https://github.com/ajeetdsouza/zoxide) | Smart `cd` replacement |
+| [Yazi](https://github.com/sxyazi/yazi) | Terminal file manager (`ya()` wrapper to `cd` on exit) |
+| [Oh My Posh](https://ohmyposh.dev/) | Shell prompt |
+| [Eza](https://eza.rocks/) | `ls` replacement |
+| [Bat](https://github.com/sharkdp/bat) | `cat` replacement |
+| [Ripgrep](https://github.com/BurntSushi/ripgrep) | `grep` replacement |
+| [fd](https://github.com/sharkdp/fd) | `find` replacement |
+| [Delta](https://github.com/dandavison/delta) | Git diff pager |
+| [Lazygit](https://github.com/jesseduffield/lazygit) | Git TUI |
 
-### Installed Rust Crates
+### Rust Crates installed by `rust.sh`
 
-If the Rust option is selected, the following popular command-line utilities are installed via `cargo install`:
+`ast-grep`, `atuin`, `bacon`, `bat`, `bottom`, `broot`, `cargo-info`, `cargo-update`,
+`du-dust`, `dysk`, `eza`, `fd-find`, `git-delta`, `hyperfine`, `procs`, `ripgrep`,
+`rusty-man`, `sd`, `tealdeer`, `tokei`, `topgrade`, `xplr`, `zellij`, `zoxide`
 
-* **`atuin`**: History manager
-* **`eza`**: `ls` replacement
-* **`fd-find`**: `find` replacement
-* **`ripgrep`**: `grep` replacement
-* **`zoxide`**: Directory jumper
-* **`bat`**: `cat` replacement
-* **`bottom`**: Process viewer
-* **`tealdeer`**: Simplified man pages
-* **`topgrade`**: System and package updater
-* **`wallust`**: Color scheme generation
-* **`yazi-fm`** / **`yazi-cli`**: Terminal file manager
-* **`zellij`**: Terminal multiplexer
-* **`dysk`**: Disk usage analyzer
-* **`ast-grep`**: Structural code search
-* **`bacon`**: File watcher / code runner for Rust
-* **`cargo-update`**: Allows cargo to update itself and installed crates
-* **`sd`** `sed` replacement
+### XDG Compliance
 
-### Environment
+All configs and tools are redirected away from `$HOME` using the XDG Base Directory spec:
 
-* **XDG Base Directory:** All scripts enforce the XDG Base Directory specification, redirecting config, data, cache, and state files away from the `$HOME` directory (`$HOME/.config`, `$HOME/.local/share`, etc.).
-* **Path:** Includes essential paths for Go, Rust, npm, and custom local binaries.
-* **Aliases:** Common aliases are configured, such as `ls='eza'`, `find='fd'`, `c='clear'`, `omadora='uwsm...'`, and `nv='nvim'`.
+| Variable | Path |
+| :--- | :--- |
+| `XDG_CONFIG_HOME` | `~/.config` |
+| `XDG_DATA_HOME` | `~/.local/share` |
+| `XDG_CACHE_HOME` | `~/.cache` |
+| `XDG_STATE_HOME` | `~/.local/state` |
+
+Tools affected: Cargo, rustup, Go, npm, Git, Less, MySQL history, Java, .NET, Azure CLI, Docker, X11 compose.

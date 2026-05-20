@@ -6,7 +6,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Load shared library and initialize logging
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/terminal-editor.log"
 init_log "$LOG_FILE"
@@ -53,12 +54,12 @@ install_neovim() {
 install_helix() {
 	banner "Helix Editor Installation"
 
-	if [[ ! -x "${HOME}/install/terminal/helix.sh" ]]; then
+	if [[ ! -x "${DOTFILES_DIR}/install/terminal/helix.sh" ]]; then
 		fail_message "helix.sh not found or not executable."
 	fi
 
-	info_message "Running Helix installation script: ~/install/terminal/helix.sh"
-	bash "${HOME}/install/terminal/helix.sh" || {
+	info_message "Running Helix installation script: ${DOTFILES_DIR}/install/terminal/helix.sh"
+	bash "${DOTFILES_DIR}/install/terminal/helix.sh" || {
 		fail_message "Helix installation script failed. Check $LOG_FILE for details."
 	}
 	okay_message "Helix installed successfully."

@@ -6,7 +6,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Load shared library
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/rust-install.log"
 init_log "$LOG_FILE"

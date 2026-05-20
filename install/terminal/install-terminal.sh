@@ -5,7 +5,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-source "${HOME}/install/lib.sh"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
 
 LOG_FILE="${LOG_DIR}/terminal-install.log"
 init_log "$LOG_FILE"
@@ -57,7 +58,7 @@ while IFS= read -r CHOICE; do
 	esac
 done <<<"$CHOICES"
 
-bash "${HOME}/install/terminal/change-shell.sh"
+bash "${DOTFILES_DIR}/install/terminal/change-shell.sh"
 
 info_message "Installing core DNF dependencies..."
 sudo dnf install -y \
@@ -82,24 +83,24 @@ if [[ -n "$PRETTY_HOSTNAME" ]]; then
 	sudo hostnamectl set-hostname --pretty "$PRETTY_HOSTNAME"
 fi
 
-bash "${HOME}/install/terminal/git.sh"
+bash "${DOTFILES_DIR}/install/terminal/git.sh"
 
 if [ "$INSTALL_NODE" = true ]; then
 	install_node
 fi
 
 if [ "$INSTALL_GO" = true ]; then
-	bash "${HOME}/install/terminal/golang.sh"
+	bash "${DOTFILES_DIR}/install/terminal/golang.sh"
 fi
 
-bash "${HOME}/install/terminal/rust.sh" &
+bash "${DOTFILES_DIR}/install/terminal/rust.sh" &
 RUST_PID=$!
 wait $RUST_PID || warn_message "Rust install had errors"
 
-bash "${HOME}/install/terminal/editor.sh"
+bash "${DOTFILES_DIR}/install/terminal/editor.sh"
 
 if [ "$INSTALL_DOCKER" = true ]; then
-	bash "${HOME}/install/terminal/docker-services.sh"
+	bash "${DOTFILES_DIR}/install/terminal/docker-services.sh"
 fi
 
 if [ "$INSTALL_XDG_NINJA" = true ]; then
