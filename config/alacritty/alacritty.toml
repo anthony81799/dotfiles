@@ -23,6 +23,39 @@ magenta = "0xd3869b"
 cyan = "0x89b482"
 white = "0xd4be98"
 
+[window]
+decorations = "None"
+padding = { x = 12, y = 12 }
+opacity = 1.0
+
+[scrolling]
+history = 3023
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
+unfocused_hollow = true
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = true
+
+[bell]
+duration = 0
+
+[keyboard]
+bindings = [
+  { key = "C",       mods = "Control|Shift", action = "Copy"  },
+  { key = "V",       mods = "Control|Shift", action = "Paste" },
+  { key = "N",       mods = "Control|Shift", action = "SpawnNewInstance" },
+  { key = "Equals",  mods = "Control|Shift", action = "IncreaseFontSize" },
+  { key = "Minus",   mods = "Control",       action = "DecreaseFontSize" },
+  { key = "Key0",    mods = "Control",       action = "ResetFontSize"    },
+  { key = "Enter",   mods = "Shift",         chars = "\n" },
+]
+
 [env]
 TERM = "xterm-256color"
 
@@ -31,12 +64,3 @@ normal = { family = "JetBrains Mono", style = "Regular" }
 bold = { family = "JetBrains Mono", style = "Bold" }
 italic = { family = "JetBrains Mono", style = "Italic" }
 size = 12
-
-[window]
-padding.x = 14
-padding.y = 14
-
-[keyboard]
-bindings = [
-{ key = "F11", action = "ToggleFullscreen" }
-]
