@@ -1,0 +1,114 @@
+# Better ls
+alias ls='eza --color=always --icons --group-directories-first'
+
+# Detailed listing
+alias ll='eza -lh --icons --git --group-directories-first'
+
+# Detailed listing including hidden files
+alias la='eza -lah --icons --git --group-directories-first'
+
+# Tree view
+alias tree='eza --tree --icons'
+
+# Reuse ls completions for eza (avoids defining a separate completion function)
+compdef eza=ls
+
+# Better cat
+alias cat='bat'
+
+# =========================================================
+# DNF
+# =========================================================
+
+alias dnfc='sudo dnf clean all'
+alias dnfgi='sudo dnf groupinstall'
+alias dnfgl='dnf grouplist'
+alias dnfgr='sudo dnf groupremove'
+alias dnfi='sudo dnf install'
+alias dnfl='dnf list'
+alias dnfli='dnf list installed'
+alias dnfmc='dnf makecache'
+alias dnfp='dnf info'
+alias dnfr='sudo dnf remove'
+alias dnfs='dnf search'
+alias dnfu='sudo dnf upgrade'
+
+# =========================================================
+# Core utilities
+# =========================================================
+
+alias diff='diff --color=auto'
+alias mv='mv -i'
+alias rm='rm -i'
+alias cp='cp -i'
+alias grep='rg --color=auto'
+alias c='clear'
+alias sed='sd'
+alias find='fd'
+alias tg='topgrade'
+alias wget="wget --hsts-file='${XDG_DATA_HOME}/wget-hsts'"
+alias df='dysk'
+alias du='dust'
+alias ps='procs'
+
+# =========================================================
+# Cargo
+# =========================================================
+
+alias ca='cargo add'
+alias ci='cargo install'
+alias crm='cargo remove'
+alias cu='cargo uninstall'
+alias cr='cargo run'
+alias cb='cargo build'
+alias cc='cargo clean'
+alias cl='cargo clippy'
+alias cf='cargo fmt'
+alias ct='cargo test'
+
+# =========================================================
+# Navigation
+# =========================================================
+
+alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previous directory
+
+lf() { # zsh follow lf navigation
+    tmp=$(mktemp)
+    command lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir=$(cat "$tmp")
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+# =========================================================
+# Editor
+# =========================================================
+
+alias vim='nvim'
+alias nv='nvim'
+
+# =========================================================
+# Git
+# =========================================================
+
+alias ga='git add'
+alias gap='ga --patch'
+alias gb='git branch'
+alias gba='gb --all'
+alias gc='git commit'
+alias gca='gc --amend --no-edit'
+alias gce='gc --amend'
+alias gco='git checkout'
+alias gcl='git clone --recursive'
+alias gd='git diff --output-indicator-new=" " --output-indicator-old=" "'
+alias gds='gd --staged'
+alias gi='git init'
+alias gl='git log --graph --all --pretty=format:"%C(orange)%h %C(white) %an  %ar%C(auto)  %D%n%s%n"'
+alias gm='git merge'
+alias gn='git checkout -b' # new branch
+alias gp='git push'
+alias gr='git reset'
+alias gs='git status --short'
+alias gu='git pull'

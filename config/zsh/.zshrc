@@ -1,10 +1,6 @@
-# --- XDG Directories ---
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-
-# --- Environment Variables ---
+# =========================================================
+# Environment Variables
+# =========================================================
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export GOROOT="/usr/local/go"
@@ -28,53 +24,87 @@ else
 	export EDITOR='nvim'
 fi
 
-# --- Start Zellij automatically ---
-eval "$(zellij setup --generate-auto-start zsh)"
+# =========================================================
+# History
+# =========================================================
 
-# --- Zinit setup ---
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[[ ! -d "$ZINIT_HOME" ]] && mkdir -p "$(dirname $ZINIT_HOME)" && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
-
-# --- Zinit plugins ---
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-zinit snippet OMZP::colorize
-zinit snippet OMZP::command-not-found
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-autoload -Uz compinit
-compinit -u -d "${XDG_CACHE_HOME}/zsh/zcompdump"
-zinit cdreplay -q
-
-# --- Completion styling ---
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors '${(s.:.)LS_COLORS}'
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-# --- History ---
-HISTSIZE=5000
 HISTFILE="$XDG_STATE_HOME/zsh/history"
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
+HISTSIZE=100000
+SAVEHIST=100000
 
-# --- Aliases ---
-source "$XDG_CONFIG_HOME/shell_aliases"
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
 
-# --- Zoxide & Atuin ---
+# =========================================================
+# Shell behaviour
+# =========================================================
+
+setopt AUTOCD
+setopt NOBEEP
+setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
+
+# =========================================================
+# Smart directory navigation & lf
+# =========================================================
+
+# Initialize zoxide
 eval "$(zoxide init zsh)"
-eval "$(atuin init zsh)"
+
+# =========================================================
+# Completion
+# =========================================================
+
+# Load completion system
+autoload -Uz compinit
+
+# Initialize completion with cached metadata file
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+
+# Enable interactive completion menu selection
+zstyle ':completion:*' menu select
+
+# Make completion case-insensitive
+# Example: "doc" can complete to "Documents"
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matches upper and lower
+
+# Docker completions
+if command -v docker &>/dev/null && docker info &>/dev/null; then
+	completion_output=$(docker completion zsh 2>/dev/null)
+	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
+fi
+if command -v docker-compose &>/dev/null && docker-compose info &>/dev/null; then
+	completion_output=$(docker-compose completion zsh 2>/dev/null)
+	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
+fi
+
+# =========================================================
+# Fuzzy finder
+# =========================================================
+
+if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
+	source /usr/share/fzf/shell/key-bindings.zsh
+	source /usr/share/fzf/shell/completion.zsh
+fi
+
+# =========================================================
+# Modular Config Files
+# =========================================================
+
+# fzf configuration
+source "$ZDOTDIR/fzf.zsh"
+
+# Aliases
+source "$ZDOTDIR/aliases.zsh"
+
+# Custom keybindings
+source "$ZDOTDIR/bindings.zsh"
+
+# Plugins and plugin manager
+source "$ZDOTDIR/plugins.zsh"
 
 # --- yazi wrapper ---
 ya() {
@@ -86,32 +116,6 @@ ya() {
 	fi
 	rm -f -- "$tmp"
 }
-
-# --- Docker completions ---
-if command -v docker &>/dev/null && docker info &>/dev/null; then
-	completion_output=$(docker completion zsh 2>/dev/null)
-	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
-fi
-if command -v docker-compose &>/dev/null && docker-compose info &>/dev/null; then
-	completion_output=$(docker-compose completion zsh 2>/dev/null)
-	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
-fi
-
-# --- OSC7 / precmd ---
-osc7() {
-	local LC_ALL=C
-	export LC_ALL
-	local uri="file://$HOSTNAME${PWD//\//%2F}"
-	printf '\e]7;%s\a' "$uri"
-}
-
-precmd() {
-	printf '\e]133;A\a'
-}
-
-autoload -Uz add-zsh-hook
-add-zsh-hook -Uz chpwd osc7
-precmd_functions+=(precmd)
 
 # --- Oh My Posh theme ---
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.json)"

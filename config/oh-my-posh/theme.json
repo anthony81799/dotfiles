@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "transient_prompt": {
     "style": "diamond",
-    "template": " {{ .Folder }}<#2B2B2B,transparent>\ue0b0</>",
+    "template": " \uf30a \ue0b1 {{ .Folder }}<#2B2B2B,transparent>\ue0b0</>",
     "foreground": "#0377C8",
     "background": "#2B2B2B"
   },
