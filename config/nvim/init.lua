@@ -32,6 +32,7 @@ vim.opt.showmode = false -- do not show the mode, instead have it in statusline
 vim.opt.pumheight = 10 -- popup menu height
 vim.opt.pumblend = 10 -- popup menu transparency
 vim.opt.winblend = 0 -- floating window transparency
+vim.opt.conceallevel = 2 -- obsidian requirement
 vim.opt.concealcursor = "" -- do not hide cursorline in markup
 vim.opt.synmaxcol = 300 -- syntax highlighting limit
 vim.opt.fillchars = { eob = " " } -- hide "~" on empty lines
@@ -195,7 +196,7 @@ _G.file_type = file_type
 _G.file_size = file_size
 
 vim.cmd([[
-  highlight StatusLineBold gui=bold cterm=bold
+	highlight StatusLineBold gui=bold cterm=bold
 ]])
 
 -- Function to change statusline based on window focus
@@ -414,11 +415,15 @@ vim.pack.add({
 	"https://github.com/folke/zen-mode.nvim",
 	"https://github.com/folke/which-key.nvim",
 	{
-		src = "https://github.com/m4xshen/hardtime.nvim",
-		dependencies = { "MunifTanjim/nui.nvim" },
-		opts = {},
+		src = "https://github.com/MunifTanjim/nui.nvim"
 	},
-	"https://github.com/folke/flash.nvim"
+	{
+		src = "https://github.com/m4xshen/hardtime.nvim",
+		version = vim.version.range("1.*")
+	},
+	"https://github.com/folke/flash.nvim",
+	"https://github.com/obsidian-nvim/obsidian.nvim",
+	"https://github.com/folke/trouble.nvim"
 })
 
 -- ============================================================================
@@ -538,6 +543,31 @@ require("zen-mode").setup({})
 require("which-key").setup({})
 require("hardtime").setup({})
 require("flash").setup({})
+require("trouble").setup({})
+
+local function setup_obsidian()
+	if vim.fn.isdirectory(vim.fn.expand("~/Nextcloud/Everything/Obsidian/amason/")) == 0 then
+		return
+	end
+	require("obsidian").setup({
+		legacy_commands = false,
+		workspaces = { { name = "Amason Vault", path = vim.fn.expand("~/Nextcloud/Everything/Obsidian/amason/") } },
+		picker = { name = "fzf-lua" },
+	})
+
+	vim.keymap.set("n", "<leader>nn", function()
+		vim.cmd("Obsidian workspace")
+		vim.defer_fn(function()
+			vim.cmd("Obsidian new")
+		end, 500)
+	end, { desc = "New note" })
+	vim.keymap.set("n", "<leader>nf", "<cmd>Obsidian quick_switch<cr>", { desc = "Find note" })
+	vim.keymap.set("n", "<leader>ns", "<cmd>Obsidian search<cr>", { desc = "Search notes" })
+	vim.keymap.set("n", "<leader>nt", "<cmd>Obsidian today<cr>", { desc = "Today's daily note" })
+	vim.keymap.set("n", "<leader>nw", "<cmd>Obsidian workspace<cr>", { desc = "Switch workspace" })
+end
+
+setup_obsidian()
 
 -- ============================================================================
 -- LSP, Linting, Formatting & Completion
