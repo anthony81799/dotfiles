@@ -1,6 +1,39 @@
+#!/usr/bin/env bash
+# ===============================================
+# Git installer
+# ===============================================
+set -euo pipefail
+IFS=$'\n\t'
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+source "${DOTFILES_DIR}/install/lib.sh"
+
+LOG_FILE="${LOG_DIR}/git-install.log"
+init_log "$LOG_FILE"
+
+ensure_gum
+
+banner "Configuring Git"
+readonly GIT_CONFIG_FILE="${DOTFILES_DIR}/config/git/config"
+GIT_NAME=$(gum input --placeholder "Enter your Git Name (e.g., Jane Doe)")
+if [[ -z "$GIT_NAME" ]]; then
+    fail_message "Git name cannot be empty."
+fi
+GIT_EMAIL=$(gum input --placeholder "Enter your Git Email (e.g., jane@example.com)")
+if [[ -z "$GIT_EMAIL" ]]; then
+    fail_message "Git email cannot be empty."
+fi
+if [[ ! "$GIT_EMAIL" =~ ^[^@]+@[^@]+\.[^@]+$ ]]; then
+    warn_message "Email '$GIT_EMAIL' does not look valid. Continuing anyway."
+fi
+
+info_message "Configuring Git..."
+mkdir -p "$(dirname "${GIT_CONFIG_FILE}")"
+
+tee "$GIT_CONFIG_FILE" >/dev/null <<EOF
 [user]
-    name = Anthony Mason
-    email = anthony81799@gmail.com
+    name = ${GIT_NAME}
+    email = ${GIT_EMAIL}
 
 [commit]
     verbose = true  # add more context to commit messages
@@ -95,5 +128,11 @@
     plus-style = syntax # use syntax highlighting for additions
     hyperlinks = true
     diff-so-fancy = true
-[credential]
-	helper = store
+EOF
+
+if ! has_cmd delta; then
+    warn_message "'delta' is not installed. The [core] pager and [delta] config will not work."
+    warn_message "Install it with: cargo install git-delta"
+fi
+
+finish "Git configured successfully!"
