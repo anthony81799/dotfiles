@@ -67,7 +67,7 @@ vim.opt.clipboard:append("unnamedplus") -- use system clipboard
 vim.opt.modifiable = true -- allow buffer modifications
 
 vim.opt.guicursor =
-	"n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175" -- cursor blinking and settings
+	"n-v-c:block,i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175" -- cursor blinking and settings
 
 -- Folding: requires treesitter available at runtime; safe fallback if not
 vim.opt.foldmethod = "expr" -- use expression for folding
@@ -257,11 +257,6 @@ vim.keymap.set({ "n", "v" }, "<leader>x", '"_d', { desc = "Delete without yankin
 vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
 
-vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", { desc = "Move to left window/pane" })
-vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", { desc = "Move to bottom window/pane" })
-vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { desc = "Move to top window/pane" })
-vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { desc = "Move to right window/pane" })
-
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
 vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
@@ -423,7 +418,14 @@ vim.pack.add({
 	},
 	"https://github.com/folke/flash.nvim",
 	"https://github.com/obsidian-nvim/obsidian.nvim",
-	"https://github.com/folke/trouble.nvim"
+	"https://github.com/folke/trouble.nvim",
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/nvim-telescope/telescope.nvim",
+	"https://github.com/stevearc/oil.nvim",
+	{
+		src = "https://github.com/ThePrimeagen/harpoon",
+		branch = "harpoon2",
+	},
 })
 
 -- ============================================================================
@@ -544,6 +546,63 @@ require("which-key").setup({})
 require("hardtime").setup({})
 require("flash").setup({})
 require("trouble").setup({})
+
+require("telescope").setup({})
+vim.keymap.set("n", "<leader>pf", "<cmd>Telescope find_files<cr>", { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>pg", "<cmd>Telescope live_grep<cr>", { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>pb", "<cmd>Telescope buffers<cr>", { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>ph", "<cmd>Telescope help_tags<cr>", { desc = "Telescope help tags" })
+
+require("oil").setup({})
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
+
+local harpoon = require("harpoon")
+harpoon:setup()
+
+vim.keymap.set("n", "<leader>a", function()
+	harpoon:list():add()
+end, { desc = "Harpoon: add file" })
+
+vim.keymap.set("n", "<C-h>", function()
+	harpoon:list():select(1)
+end, { desc = "Harpoon: select file 1" })
+vim.keymap.set("n", "<C-t>", function()
+	harpoon:list():select(2)
+end, { desc = "Harpoon: select file 2" })
+vim.keymap.set("n", "<C-n>", function()
+	harpoon:list():select(3)
+end, { desc = "Harpoon: select file 3" })
+vim.keymap.set("n", "<C-s>", function()
+	harpoon:list():select(4)
+end, { desc = "Harpoon: select file 4" })
+
+vim.keymap.set("n", "<C-S-P>", function()
+	harpoon:list():prev()
+end, { desc = "Harpoon: previous file" })
+vim.keymap.set("n", "<C-S-N>", function()
+	harpoon:list():next()
+end, { desc = "Harpoon: next file" })
+
+local function harpoon_telescope(harpoon_files)
+	local conf = require("telescope.config").values
+	local file_paths = {}
+	for _, item in ipairs(harpoon_files.items) do
+		table.insert(file_paths, item.value)
+	end
+
+	require("telescope.pickers").new({}, {
+		prompt_title = "Harpoon",
+		finder = require("telescope.finders").new_table({
+			results = file_paths,
+		}),
+		previewer = conf.file_previewer({}),
+		sorter = conf.generic_sorter({}),
+	}):find()
+end
+
+vim.keymap.set("n", "<C-e>", function()
+	harpoon_telescope(harpoon:list())
+end, { desc = "Harpoon: open Telescope window" })
 
 local function setup_obsidian()
 	if vim.fn.isdirectory(vim.fn.expand("~/Nextcloud/Everything/Obsidian/amason/")) == 0 then
