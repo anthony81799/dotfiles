@@ -54,7 +54,7 @@ export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
 CRATES=(
-	"ast-grep" "atuin" "bacon" "bat" "bottom" "broot" "cargo-info" "cargo-update"
+	"ast-grep" "bacon" "bat" "bottom" "cargo-info" "cargo-update"
 	"du-dust" "dysk" "eza" "fd-find" "git-delta" "hyperfine" "procs" "ripgrep"
 	"rusty-man" "sd" "tealdeer" "tokei" "topgrade" "xplr" "zellij" "zoxide"
 )
