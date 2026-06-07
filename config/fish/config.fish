@@ -45,16 +45,27 @@ if test -n "$SSH_CONNECTION"
     set -gx EDITOR vim
 else
     set -gx EDITOR nvim
+    set -gx VISUAL nvim
 end
+
+# --- Pager ---
+if type -q bat
+    set -gx MANPAGER "bat -l man -p"
+end
+
+# --- GPG ---
+set -gx GPG_TTY (tty)
 
 # --- History ---
 set -gx fish_history_file "$XDG_STATE_HOME/fish/history"
 
 # --- Aliases ---
-abbr ls 'eza --color=always --icons=always --group-directories-first'
-abbr l 'eza --color=always --icons=always --group-directories-first -alF'
-abbr tree 'eza --color=always --icons=always --tree'
-# Use functions for interactive commands
+abbr ls 'eza --color=always --icons --group-directories-first'
+abbr ll 'eza -lh --icons --git --group-directories-first'
+abbr la 'eza -lah --icons --git --group-directories-first'
+abbr tree 'eza --tree --icons'
+abbr cat bat
+abbr diff 'diff --color=auto'
 function mv
     command mv -i $argv
 end
@@ -64,19 +75,31 @@ end
 function cp
     command cp -i $argv
 end
-abbr dnfc 'sudo dnf5 clean all'
-abbr dnfgi 'sudo dnf5 groupinstall'
-abbr dnfgl 'dnf5 grouplist'
-abbr dnfgr 'sudo dnf5 groupremove'
-abbr dnfi 'sudo dnf5 install'
-abbr dnfl 'dnf5 list'
-abbr dnfli 'dnf5 list installed'
-abbr dnfmc 'dnf5 makecache'
-abbr dnfp 'dnf5 info'
-abbr dnfr 'sudo dnf5 remove'
-abbr dnfs 'dnf5 search'
-abbr dnfu 'sudo dnf5 upgrade'
 abbr grep rg
+abbr c clear
+abbr sed sd
+abbr find fd
+abbr tg topgrade
+function wget
+    command wget --hsts-file="$XDG_DATA_HOME/wget-hsts" $argv
+end
+abbr df dysk
+abbr du dust
+abbr ps procs
+
+abbr dnfc 'sudo dnf clean all'
+abbr dnfgi 'sudo dnf groupinstall'
+abbr dnfgl 'dnf grouplist'
+abbr dnfgr 'sudo dnf groupremove'
+abbr dnfi 'sudo dnf install'
+abbr dnfl 'dnf list'
+abbr dnfli 'dnf list installed'
+abbr dnfmc 'dnf makecache'
+abbr dnfp 'dnf info'
+abbr dnfr 'sudo dnf remove'
+abbr dnfs 'dnf search'
+abbr dnfu 'sudo dnf upgrade'
+
 abbr ca 'cargo add'
 abbr ci 'cargo install'
 abbr crm 'cargo remove'
@@ -87,15 +110,10 @@ abbr cc 'cargo clean'
 abbr cl 'cargo clippy'
 abbr cf 'cargo fmt'
 abbr ct 'cargo test'
-abbr c clear
-abbr sed sd
-abbr find fd
-abbr tg topgrade
-function wget
-    command wget --hsts-file="$XDG_DATA_HOME/wget-hsts" $argv
-end
+
+abbr vim nvim
 abbr nv nvim
-abbr df dysk
+
 abbr ga 'git add'
 abbr gap 'ga --patch'
 abbr gb 'git branch'
@@ -108,7 +126,7 @@ abbr gcl 'git clone --recursive'
 abbr gd 'git diff --output-indicator-new=" " --output-indicator-old=" "'
 abbr gds 'gd --staged'
 abbr gi 'git init'
-abbr gl 'git log --graph --all --pretty=format:"%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n"'
+abbr gl 'git log --graph --all --pretty=format:"%C(orange)%h %C(white) %an  %ar%C(auto)  %D%n%s%n"'
 abbr gm 'git merge'
 abbr gn 'git checkout -b'
 abbr gp 'git push'

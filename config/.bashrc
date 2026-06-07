@@ -29,10 +29,10 @@ else
 fi
 
 # --- Start Zellij automatically ---
-eval "$(zellij setup --generate-auto-start zsh)"
+eval "$(zellij setup --generate-auto-start bash)"
 
 # --- History ---
-HISTSIZE=5000
+HISTSIZE=100000
 HISTFILE="$XDG_STATE_HOME/bash/history"
 SAVEHIST=$HISTSIZE
 shopt -s histappend
@@ -65,11 +65,11 @@ ya() {
 
 # --- Docker completions ---
 if command -v docker &>/dev/null && docker info &>/dev/null; then
-	completion_output=$(docker completion zsh 2>/dev/null)
+	completion_output=$(docker completion bash 2>/dev/null)
 	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
 fi
 if command -v docker-compose &>/dev/null && docker-compose info &>/dev/null; then
-	completion_output=$(docker-compose completion zsh 2>/dev/null)
+	completion_output=$(docker-compose completion bash 2>/dev/null)
 	[[ -n "$completion_output" ]] && source <(echo "$completion_output")
 fi
 
