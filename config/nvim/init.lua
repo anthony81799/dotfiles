@@ -391,7 +391,6 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ============================================================================
 vim.pack.add({
 	"https://www.github.com/echasnovski/mini.nvim",
-	"https://www.github.com/ibhagwan/fzf-lua",
 	{
 		src = "https://github.com/nvim-treesitter/nvim-treesitter",
 		branch = "main",
@@ -483,27 +482,6 @@ end
 
 setup_treesitter()
 
-require("fzf-lua").setup({})
-
-vim.keymap.set("n", "<leader>ff", function()
-	require("fzf-lua").files()
-end, { desc = "FZF Files" })
-vim.keymap.set("n", "<leader>fg", function()
-	require("fzf-lua").live_grep()
-end, { desc = "FZF Live Grep" })
-vim.keymap.set("n", "<leader>fb", function()
-	require("fzf-lua").buffers()
-end, { desc = "FZF Buffers" })
-vim.keymap.set("n", "<leader>fh", function()
-	require("fzf-lua").help_tags()
-end, { desc = "FZF Help Tags" })
-vim.keymap.set("n", "<leader>fx", function()
-	require("fzf-lua").diagnostics_document()
-end, { desc = "FZF Diagnostics Document" })
-vim.keymap.set("n", "<leader>fX", function()
-	require("fzf-lua").diagnostics_workspace()
-end, { desc = "FZF Diagnostics Workspace" })
-
 require("mini.ai").setup({})
 require("mini.comment").setup({})
 require("mini.move").setup({})
@@ -548,10 +526,15 @@ require("flash").setup({})
 require("trouble").setup({})
 
 require("telescope").setup({})
-vim.keymap.set("n", "<leader>pf", "<cmd>Telescope find_files<cr>", { desc = "Telescope find files" })
-vim.keymap.set("n", "<leader>pg", "<cmd>Telescope live_grep<cr>", { desc = "Telescope live grep" })
-vim.keymap.set("n", "<leader>pb", "<cmd>Telescope buffers<cr>", { desc = "Telescope buffers" })
-vim.keymap.set("n", "<leader>ph", "<cmd>Telescope help_tags<cr>", { desc = "Telescope help tags" })
+local telescope_builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>fg", telescope_builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>fb", telescope_builtin.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fh", telescope_builtin.help_tags, { desc = "Telescope help tags" })
+vim.keymap.set("n", "<leader>fx", function()
+	telescope_builtin.diagnostics({ bufnr = 0 })
+end, { desc = "Telescope document diagnostics" })
+vim.keymap.set("n", "<leader>fX", telescope_builtin.diagnostics, { desc = "Telescope workspace diagnostics" })
 
 require("oil").setup({})
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
@@ -611,7 +594,7 @@ local function setup_obsidian()
 	require("obsidian").setup({
 		legacy_commands = false,
 		workspaces = { { name = "Amason Vault", path = vim.fn.expand("~/Nextcloud/Everything/Obsidian/amason/") } },
-		picker = { name = "fzf-lua" },
+		picker = { name = "telescope.nvim" },
 	})
 
 	vim.keymap.set("n", "<leader>nn", function()
@@ -661,6 +644,38 @@ vim.diagnostic.config({
 	},
 })
 
+-- Neovim's default Diagnostic* highlights don't match retrobox's palette;
+-- re-derive them from retrobox's colors so diagnostics blend with the theme.
+local function set_retrobox_diagnostic_colors()
+	local palette = {
+		red = "#fb5944",
+		orange = "#fe8019",
+		blue = "#83a598",
+		aqua = "#8ec07c",
+		green = "#b8bb26",
+	}
+
+	vim.api.nvim_set_hl(0, "DiagnosticError", { fg = palette.red })
+	vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = palette.orange })
+	vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = palette.blue })
+	vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = palette.aqua })
+	vim.api.nvim_set_hl(0, "DiagnosticOk", { fg = palette.green })
+
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { sp = palette.red, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { sp = palette.orange, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { sp = palette.blue, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { sp = palette.aqua, underline = true })
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = augroup,
+	pattern = "retrobox",
+	desc = "Re-derive diagnostic colors from the retrobox palette",
+	callback = set_retrobox_diagnostic_colors,
+})
+
+set_retrobox_diagnostic_colors()
+
 do
 	local orig = vim.lsp.util.open_floating_preview
 	function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -679,54 +694,46 @@ local function lsp_on_attach(ev)
 	local bufnr = ev.buf
 	local opts = { noremap = true, silent = true, buffer = bufnr }
 
-	vim.keymap.set("n", "<leader>gd", function()
-		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
-	end, opts)
+	local function map(lhs, rhs, desc)
+		vim.keymap.set("n", lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
+	end
 
-	vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
+	map("<leader>gd", telescope_builtin.lsp_definitions, "Telescope LSP definitions")
 
-	vim.keymap.set("n", "<leader>gS", function()
+	map("<leader>gD", vim.lsp.buf.definition, "Go to definition")
+
+	map("<leader>gS", function()
 		vim.cmd("vsplit")
 		vim.lsp.buf.definition()
-	end, opts)
+	end, "Go to definition in vertical split")
 
-	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-	vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+	map("<leader>ca", vim.lsp.buf.code_action, "Code action")
+	map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
 
-	vim.keymap.set("n", "<leader>D", function()
+	map("<leader>D", function()
 		vim.diagnostic.open_float({ scope = "line" })
-	end, opts)
-	vim.keymap.set("n", "<leader>d", function()
+	end, "Show line diagnostics (float)")
+	map("<leader>d", function()
 		vim.diagnostic.open_float({ scope = "cursor" })
-	end, opts)
-	vim.keymap.set("n", "<leader>nd", function()
+	end, "Show diagnostic under cursor (float)")
+	map("<leader>nd", function()
 		vim.diagnostic.jump({ count = 1 })
-	end, opts)
+	end, "Next diagnostic")
 
-	vim.keymap.set("n", "<leader>pd", function()
+	map("<leader>pd", function()
 		vim.diagnostic.jump({ count = -1 })
-	end, opts)
+	end, "Previous diagnostic")
 
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+	map("K", vim.lsp.buf.hover, "Hover documentation")
 
-	vim.keymap.set("n", "<leader>fr", function()
-		require("fzf-lua").lsp_references()
-	end, opts)
-	vim.keymap.set("n", "<leader>ft", function()
-		require("fzf-lua").lsp_typedefs()
-	end, opts)
-	vim.keymap.set("n", "<leader>fs", function()
-		require("fzf-lua").lsp_document_symbols()
-	end, opts)
-	vim.keymap.set("n", "<leader>fw", function()
-		require("fzf-lua").lsp_workspace_symbols()
-	end, opts)
-	vim.keymap.set("n", "<leader>fi", function()
-		require("fzf-lua").lsp_implementations()
-	end, opts)
+	map("<leader>fr", telescope_builtin.lsp_references, "Telescope LSP references")
+	map("<leader>ft", telescope_builtin.lsp_type_definitions, "Telescope LSP type definitions")
+	map("<leader>fs", telescope_builtin.lsp_document_symbols, "Telescope LSP document symbols")
+	map("<leader>fw", telescope_builtin.lsp_workspace_symbols, "Telescope LSP workspace symbols")
+	map("<leader>fi", telescope_builtin.lsp_implementations, "Telescope LSP implementations")
 
 	if client:supports_method("textDocument/codeAction", bufnr) then
-		vim.keymap.set("n", "<leader>oi", function()
+		map("<leader>oi", function()
 			vim.lsp.buf.code_action({
 				context = { only = { "source.organizeImports" }, diagnostics = {} },
 				apply = true,
@@ -735,7 +742,7 @@ local function lsp_on_attach(ev)
 			vim.defer_fn(function()
 				vim.lsp.buf.format({ bufnr = bufnr })
 			end, 50)
-		end, opts)
+		end, "Organize imports and format")
 	end
 end
 
