@@ -26,7 +26,8 @@
         "playtime": 612,
         "hidden": false,
         "prevent_sleep": "",
-        "category": false
+        "category": false,
+        "icon": "/home/amason/.config/faugus-launcher/icons/battlenet.ico"
     },
     {
         "gameid": "ea-app",
@@ -55,7 +56,8 @@
         "playtime": 5066,
         "hidden": false,
         "prevent_sleep": "",
-        "category": false
+        "category": false,
+        "icon": "/home/amason/.config/faugus-launcher/icons/ea-app.ico"
     },
     {
         "gameid": "epic-games",
@@ -84,7 +86,8 @@
         "playtime": 29,
         "hidden": false,
         "prevent_sleep": "",
-        "category": false
+        "category": false,
+        "icon": "/home/amason/.config/faugus-launcher/icons/epic-games.ico"
     },
     {
         "gameid": "ubisoft-connect",
@@ -113,6 +116,7 @@
         "playtime": 14,
         "hidden": false,
         "prevent_sleep": "",
-        "category": false
+        "category": false,
+        "icon": "/home/amason/.config/faugus-launcher/icons/ubisoft-connect.ico"
     }
 ]

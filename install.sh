@@ -66,8 +66,9 @@ mkdir -p "$XDG_CONFIG_HOME"
 
 # Directories inside config/ to symlink into ~/.config/
 CONFIG_DIRS=(
-	alacritty atuin bottom btop fastfetch fish ghostty git gitui glow
-	helix kitty npm nvim oh-my-posh wezterm xplr zellij zsh
+	alacritty atuin bottom btop Codium efm-langserver fastfetch
+	faugus-launcher fish ghostty git gitui glow go helix kitty npm nvim
+	oh-my-posh wezterm xplr zellij zsh
 )
 
 # Standalone files inside config/ to symlink into ~/.config/
