@@ -24,7 +24,6 @@ vim.pack.add({
 		src = "https://github.com/m4xshen/hardtime.nvim",
 		version = vim.version.range("1.*"),
 	},
-	"https://github.com/folke/flash.nvim",
 	"https://github.com/folke/trouble.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/nvim-telescope/telescope.nvim",
@@ -127,6 +126,12 @@ require("mason").setup({})
 
 require("mason-tool-installer").setup({
 	ensure_installed = {
+		-- LSP servers
+		"pyright",
+		"bash-language-server",
+		"typescript-language-server",
+		"clangd",
+
 		-- linters/formatters used by the efm config below
 		"luacheck",
 		"stylua",
@@ -146,9 +151,29 @@ require("mason-tool-installer").setup({
 
 require("zen-mode").setup({})
 require("which-key").setup({})
-require("hardtime").setup({})
-require("flash").setup({})
+require("hardtime").setup({ restriction_mode = "hint" })
 require("trouble").setup({})
+vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+vim.keymap.set(
+	"n",
+	"<leader>xX",
+	"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+	{ desc = "Buffer Diagnostics (Trouble)" }
+)
+vim.keymap.set(
+	"n",
+	"<leader>cs",
+	"<cmd>Trouble symbols toggle focus=false<cr>",
+	{ desc = "Symbols (Trouble)" }
+)
+vim.keymap.set(
+	"n",
+	"<leader>cl",
+	"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+	{ desc = "LSP Definitions / references / ... (Trouble)" }
+)
+vim.keymap.set("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
+vim.keymap.set("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
 
 require("telescope").setup({})
 local telescope_builtin = require("telescope.builtin")

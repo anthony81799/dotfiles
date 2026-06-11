@@ -1,4 +1,4 @@
-local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+local augroup = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
 
 -- Format on save (ONLY real file buffers, ONLY when efm is attached)
 vim.api.nvim_create_autocmd("BufWritePre", {

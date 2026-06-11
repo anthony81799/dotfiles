@@ -1,4 +1,4 @@
-local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = false })
+local augroup = vim.api.nvim_create_augroup("UserLsp", { clear = true })
 local telescope_builtin = require("telescope.builtin")
 
 local diagnostic_signs = {
@@ -168,7 +168,6 @@ vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lsp_on_at
 vim.keymap.set("n", "<leader>q", function()
 	vim.diagnostic.setloclist({ open = true })
 end, { desc = "Open diagnostic list" })
-vim.keymap.set("n", "<leader>dl", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
 
 require("blink.cmp").setup({
 	keymap = {

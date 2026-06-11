@@ -20,7 +20,7 @@ vim.opt.hlsearch = true -- highlight search matches
 vim.opt.incsearch = true -- show matches as you type
 
 vim.opt.signcolumn = "yes" -- always show a sign column
-vim.opt.colorcolumn = "80" -- show a column at 100 position chars
+vim.opt.colorcolumn = "80" -- show a column at 80 position chars
 vim.opt.showmatch = true -- highlights matching brackets
 vim.opt.cmdheight = 1 -- single line command line
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
@@ -57,7 +57,6 @@ vim.opt.autochdir = false -- do not autochange directories
 vim.opt.iskeyword:append("-") -- include - in words
 vim.opt.path:append("**") -- include subdirs in search
 vim.opt.selection = "inclusive" -- include last char in selection
-vim.opt.mouse = "a" -- enable mouse support
 vim.opt.clipboard:append("unnamedplus") -- use system clipboard
 vim.opt.modifiable = true -- allow buffer modifications
 

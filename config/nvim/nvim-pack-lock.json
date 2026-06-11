@@ -13,14 +13,6 @@
       "rev": "2f5dc31042cc76fc3d5a859842a8416085c4d41f",
       "src": "https://github.com/creativenull/efmls-configs-nvim"
     },
-    "flash.nvim": {
-      "rev": "fcea7ff883235d9024dc41e638f164a450c14ca2",
-      "src": "https://github.com/folke/flash.nvim"
-    },
-    "fzf-lua": {
-      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
-      "src": "https://www.github.com/ibhagwan/fzf-lua"
-    },
     "hardtime.nvim": {
       "rev": "b9a989191b3a97c9316a0efea02341c4cdab845a",
       "src": "https://github.com/m4xshen/hardtime.nvim",
@@ -54,10 +46,6 @@
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
-    },
-    "obsidian.nvim": {
-      "rev": "76545ae41a3af898e607c03224309e15dabb4a26",
-      "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "oil.nvim": {
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
