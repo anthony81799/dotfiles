@@ -41,7 +41,7 @@ install_neovim() {
 	# 3. Install optional Node.js client (for providers/LSPs)
 	if has_cmd npm; then
 		info_message "Installing Node.js Neovim client (npm install -g neovim)..."
-		sudo npm install -g neovim || {
+		npm install -g neovim || {
 			warn_message "Failed to install Node.js Neovim client. Proceeding."
 		}
 	else

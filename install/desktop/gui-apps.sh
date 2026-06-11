@@ -85,7 +85,7 @@ else
 	warn_message "Flatpak not installed. Skipping LocalSend installation. Please install Flatpak/LocalSend manually."
 fi
 
-# --- 4. Call Helper Scripts for GUI Editors and Termianl Emulators ---
+# --- 4. Call Helper Scripts for GUI Editors and Terminal Emulators ---
 EDITOR_SCRIPT="${DOTFILES_DIR}/install/desktop/editor.sh"
 TERMINAL_SCRIPT="${DOTFILES_DIR}/install/desktop/terminal-emulator.sh"
 

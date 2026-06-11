@@ -70,10 +70,20 @@ if gum confirm "Do you want to deploy self-hosted services now?"; then
 		finish "Docker setup complete."
 	fi
 
+	# Generate (or reuse) a random Kopia server password
+	KOPIA_PASSWORD_FILE="${XDG_DATA_HOME}/docker/kopia-password"
+	mkdir -p "$(dirname "$KOPIA_PASSWORD_FILE")"
+	if [ ! -f "$KOPIA_PASSWORD_FILE" ]; then
+		head -c 24 /dev/urandom | base64 >"$KOPIA_PASSWORD_FILE"
+		chmod 600 "$KOPIA_PASSWORD_FILE"
+	fi
+	export KOPIA_PASSWORD
+	KOPIA_PASSWORD="$(cat "$KOPIA_PASSWORD_FILE")"
+
 	info_message "Starting all services via Docker Compose..."
 
 	if docker compose -f "$COMPOSE_FILE" up -d; then
-		warn_message "Kopia server is running on port 5151. Initial setup password is 'your_secure_password'. PLEASE CHANGE IT IMMEDIATELY."
+		warn_message "Kopia server is running on http://localhost:5151. Password saved to $KOPIA_PASSWORD_FILE"
 		okay_message "All services deployed."
 	else
 		warn_message "One or more services failed to start. Check $LOG_FILE for details."

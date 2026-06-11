@@ -58,8 +58,6 @@ while IFS= read -r CHOICE; do
 	esac
 done <<<"$CHOICES"
 
-bash "${DOTFILES_DIR}/install/terminal/change-shell.sh"
-
 info_message "Installing core DNF dependencies..."
 sudo dnf install -y \
 	autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel \
@@ -70,6 +68,8 @@ sudo dnf install -y \
 	finish "Terminal utility setup failed."
 }
 okay_message "Core DNF dependencies installed."
+
+bash "${DOTFILES_DIR}/install/terminal/change-shell.sh"
 
 # Step 4: Hostname configuration
 STATIC_HOSTNAME=$(gum input --prompt "Static Hostname > " --placeholder "Enter static hostname for this machine" --value "$(hostnamectl --static)")
@@ -93,9 +93,7 @@ if [ "$INSTALL_GO" = true ]; then
 	bash "${DOTFILES_DIR}/install/terminal/golang.sh"
 fi
 
-bash "${DOTFILES_DIR}/install/terminal/rust.sh" &
-RUST_PID=$!
-wait $RUST_PID || warn_message "Rust install had errors"
+bash "${DOTFILES_DIR}/install/terminal/rust.sh" || warn_message "Rust install had errors"
 
 bash "${DOTFILES_DIR}/install/terminal/editor.sh"
 

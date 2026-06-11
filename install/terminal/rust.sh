@@ -36,11 +36,11 @@ ensure_cargo_env() {
 
 	if [ -f "$rustup_env_file" ]; then
 		log "Sourcing rustup environment from $rustup_env_file"
-		# shellcheck disable=SC1090
+		# shellcheck disable=SC1090,SC1091
 		source "$rustup_env_file"
 	elif [ -f "${HOME}/.cargo/env" ]; then
 		log "Sourcing rustup environment from ${HOME}/.cargo/env (default location)"
-		# shellcheck disable=SC1090
+		# shellcheck disable=SC1090,SC1091
 		source "${HOME}/.cargo/env"
 	else
 		warn_message "Could not find a Rust environment file. Subsequent cargo commands may fail."
@@ -54,9 +54,19 @@ export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
 CRATES=(
-	"ast-grep" "bacon" "bat" "bottom" "cargo-info" "cargo-update"
+	"ast-grep" "bacon" "bat" "bottom" "cargo-info" "cargo-update" "cargo-cache"
 	"du-dust" "dysk" "eza" "fd-find" "git-delta" "hyperfine" "procs" "ripgrep"
 	"rusty-man" "sd" "tealdeer" "tokei" "topgrade" "xplr" "zellij" "zoxide"
+)
+
+# Crates whose installed binary name differs from the crate name
+declare -A CRATE_BIN_OVERRIDES=(
+	["du-dust"]="dust"
+	["ripgrep"]="rg"
+	["fd-find"]="fd"
+	["git-delta"]="delta"
+	["tealdeer"]="tldr"
+	["bottom"]="btm"
 )
 
 # Install rustup non-interactively and check for success
@@ -81,21 +91,28 @@ else
 	INSTALL_BINSTALL=false
 fi
 
-# Parallel binstall — saturates your download bandwidth
 info_message "Installing common Rust crates..."
-printf '%s\n' "${CRATES[@]}" | xargs -P "$(nproc)" -I{} \
-    cargo binstall --no-confirm --no-symlinks {} 2>>"$LOG_FILE" \
-    || warn_message "Some crates failed, check log"
+if [ "$INSTALL_BINSTALL" = true ]; then
+	# Parallel binstall — saturates your download bandwidth
+	printf '%s\n' "${CRATES[@]}" | xargs -P "$(nproc)" -I{} \
+		cargo binstall --no-confirm --no-symlinks {} 2>>"$LOG_FILE" ||
+		warn_message "Some crates failed, check log"
+else
+	# No prebuilt binaries available — compile from source one at a time
+	printf '%s\n' "${CRATES[@]}" | xargs -P 1 -I{} \
+		cargo install {} 2>>"$LOG_FILE" ||
+		warn_message "Some crates failed, check log"
+fi
 
 FAILED_CRATES=()
 for crate in "${CRATES[@]}"; do
-    # Map crate name to expected binary name (most match, some differ)
-    if ! has_cmd "$crate" && ! has_cmd "${crate//-/_}"; then
-        FAILED_CRATES+=("$crate")
-    fi
+	bin_name="${CRATE_BIN_OVERRIDES[$crate]:-$crate}"
+	if ! has_cmd "$bin_name"; then
+		FAILED_CRATES+=("$crate")
+	fi
 done
 if [[ ${#FAILED_CRATES[@]} -gt 0 ]]; then
-    warn_message "These crates may not have installed: ${FAILED_CRATES[*]}"
+	warn_message "These crates may not have installed: ${FAILED_CRATES[*]}"
 fi
 
 finish "Rust installation complete!"
