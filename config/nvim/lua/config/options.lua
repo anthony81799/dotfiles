@@ -1,3 +1,15 @@
+-- Disable unused remote plugin providers (no node/perl/ruby plugins in use)
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+
+-- gopls reports filetype "gotmpl" for Go template files; teach vim about it
+vim.filetype.add({
+	pattern = {
+		[".*%.tmpl"] = "gotmpl",
+	},
+})
+
 vim.opt.termguicolors = true
 vim.cmd.colorscheme("retrobox")
 vim.opt.number = true -- line number

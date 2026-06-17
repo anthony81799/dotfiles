@@ -13,7 +13,6 @@ vim.pack.add({
 		src = "https://github.com/saghen/blink.cmp",
 		version = vim.version.range("1.*"),
 	},
-	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/mrcjkb/rustaceanvim",
 	"https://github.com/folke/zen-mode.nvim",
 	"https://github.com/folke/which-key.nvim",
