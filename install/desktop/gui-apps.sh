@@ -85,7 +85,28 @@ else
 	warn_message "Flatpak not installed. Skipping LocalSend installation. Please install Flatpak/LocalSend manually."
 fi
 
-# --- 4. Call Helper Scripts for GUI Editors and Terminal Emulators ---
+# --- 4. Obsidian Note-Taking App ---
+if has_cmd flatpak; then
+	if ! flatpak info md.obsidian.Obsidian &>/dev/null; then
+		info_message "Installing Obsidian via Flatpak..."
+
+		if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
+			if flatpak install flathub md.obsidian.Obsidian -y; then
+				okay_message "Obsidian (Flatpak) installed."
+			else
+				warn_message "Failed to install Obsidian via Flatpak. Check $LOG_FILE for details."
+			fi
+		else
+			warn_message "Failed to add Flathub repository. Skipping Obsidian installation."
+		fi
+	else
+		info_message "Obsidian (Flatpak) is already installed."
+	fi
+else
+	warn_message "Flatpak not installed. Skipping Obsidian installation. Please install Flatpak/Obsidian manually."
+fi
+
+# --- 5. Call Helper Scripts for GUI Editors and Terminal Emulators ---
 EDITOR_SCRIPT="${DOTFILES_DIR}/install/desktop/editor.sh"
 TERMINAL_SCRIPT="${DOTFILES_DIR}/install/desktop/terminal-emulator.sh"
 

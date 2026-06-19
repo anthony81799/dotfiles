@@ -36,7 +36,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "a683e0ddf0cf64c6cd689e18ffb480ade3c162b7",
+      "rev": "fef8b117ad5fb73943913f444f22065c4b834a60",
       "src": "https://www.github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
@@ -52,7 +52,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "rustaceanvim": {
-      "rev": "a22902f216b068faa311807c9f361c6b1d971367",
+      "rev": "1cbbab3a8959bbc1cd136cb1670b75c172073fce",
       "src": "https://github.com/mrcjkb/rustaceanvim"
     },
     "telescope.nvim": {
