@@ -65,24 +65,79 @@ if [[ "$BRAVE_INSTALLED" == true ]]; then
 fi
 
 # --- 3. LocalSend File Sharing ---
-if has_cmd flatpak; then
-	if ! flatpak info org.localsend.localsend_app &>/dev/null; then
-		info_message "Installing LocalSend via Flatpak..."
+# Installed as a native binary straight from upstream's GitHub release (not
+# Flatpak or AppImage). The Flatpak sandboxes UDP broadcast/multicast, which
+# breaks LocalSend's mDNS-based device discovery; a native binary has full,
+# unsandboxed network access and just works.
+LOCALSEND_INSTALL_DIR="/usr/share/localsend_app"
+LOCALSEND_BIN="/usr/bin/localsend_app"
 
-		if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
-			if flatpak install flathub org.localsend.localsend_app -y; then
-				okay_message "LocalSend (Flatpak) installed."
-			else
-				warn_message "Failed to install LocalSend via Flatpak. Check $LOG_FILE for details."
-			fi
-		else
-			warn_message "Failed to add Flathub repository. Skipping LocalSend installation."
-		fi
-	else
-		info_message "LocalSend (Flatpak) is already installed."
-	fi
+if has_cmd flatpak && flatpak info org.localsend.localsend_app &>/dev/null; then
+	info_message "Removing broken Flatpak build of LocalSend..."
+	sudo flatpak uninstall -y org.localsend.localsend_app || warn_message "Failed to remove the Flatpak build of LocalSend."
+fi
+
+info_message "Checking for the latest LocalSend release..."
+LOCALSEND_LATEST_TAG="$(curl -fsSL https://api.github.com/repos/localsend/localsend/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | cut -d '"' -f4 || true)"
+
+if [[ -z "$LOCALSEND_LATEST_TAG" ]]; then
+	warn_message "Could not reach GitHub to determine the latest LocalSend version. Skipping LocalSend installation."
 else
-	warn_message "Flatpak not installed. Skipping LocalSend installation. Please install Flatpak/LocalSend manually."
+	LOCALSEND_LATEST_VERSION="${LOCALSEND_LATEST_TAG#v}"
+	LOCALSEND_INSTALLED_VERSION=""
+	[[ -f "${LOCALSEND_INSTALL_DIR}/.version" ]] && LOCALSEND_INSTALLED_VERSION="$(cat "${LOCALSEND_INSTALL_DIR}/.version")"
+
+	if [[ "$LOCALSEND_INSTALLED_VERSION" == "$LOCALSEND_LATEST_VERSION" ]]; then
+		info_message "LocalSend v${LOCALSEND_LATEST_VERSION} is already installed."
+	else
+		info_message "Installing LocalSend v${LOCALSEND_LATEST_VERSION} as a native binary..."
+
+		if ! sudo dnf install -y libayatana-appindicator-gtk3 libayatana-ido-gtk3 xdg-user-dirs; then
+			warn_message "Failed to install some LocalSend runtime dependencies. Check $LOG_FILE for details."
+		fi
+
+		LOCALSEND_TMP_DIR="$(mktemp -d)"
+		LOCALSEND_TARBALL="LocalSend-${LOCALSEND_LATEST_VERSION}-linux-x86-64.tar.gz"
+		LOCALSEND_URL="https://github.com/localsend/localsend/releases/download/${LOCALSEND_LATEST_TAG}/${LOCALSEND_TARBALL}"
+
+		if curl -fsSL -o "${LOCALSEND_TMP_DIR}/localsend.tar.gz" "$LOCALSEND_URL" &&
+			tar -xzf "${LOCALSEND_TMP_DIR}/localsend.tar.gz" -C "$LOCALSEND_TMP_DIR"; then
+
+			sudo rm -rf "$LOCALSEND_INSTALL_DIR"
+			sudo mkdir -p "$LOCALSEND_INSTALL_DIR"
+			sudo cp -r "${LOCALSEND_TMP_DIR}/data" "${LOCALSEND_TMP_DIR}/lib" "${LOCALSEND_TMP_DIR}/localsend_app" "$LOCALSEND_INSTALL_DIR/"
+			echo "$LOCALSEND_LATEST_VERSION" | sudo tee "${LOCALSEND_INSTALL_DIR}/.version" >/dev/null
+
+			sudo ln -sf "${LOCALSEND_INSTALL_DIR}/localsend_app" "$LOCALSEND_BIN"
+
+			sudo install -Dm644 "${LOCALSEND_INSTALL_DIR}/data/flutter_assets/assets/img/logo-128.png" \
+				/usr/share/icons/hicolor/128x128/apps/localsend_app.png
+			sudo install -Dm644 "${LOCALSEND_INSTALL_DIR}/data/flutter_assets/assets/img/logo-256.png" \
+				/usr/share/icons/hicolor/256x256/apps/localsend_app.png
+
+			sudo tee /usr/share/applications/localsend_app.desktop >/dev/null <<-EOF
+				[Desktop Entry]
+				Type=Application
+				Version=${LOCALSEND_LATEST_VERSION}
+				Name=LocalSend
+				GenericName=An open source cross-platform alternative to AirDrop
+				Icon=localsend_app
+				Exec=localsend_app %U
+				Categories=GTK;FileTransfer;Utility;
+				Keywords=Sharing;LAN;Files;
+				StartupNotify=true
+			EOF
+
+			has_cmd update-desktop-database && sudo update-desktop-database /usr/share/applications &>/dev/null
+			has_cmd gtk-update-icon-cache && sudo gtk-update-icon-cache /usr/share/icons/hicolor &>/dev/null
+
+			okay_message "LocalSend v${LOCALSEND_LATEST_VERSION} installed natively to ${LOCALSEND_INSTALL_DIR}."
+		else
+			warn_message "Failed to download or extract LocalSend. Check $LOG_FILE for details."
+		fi
+
+		rm -rf "$LOCALSEND_TMP_DIR"
+	fi
 fi
 
 # --- 4. Obsidian Note-Taking App ---
