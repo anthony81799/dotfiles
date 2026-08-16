@@ -19,7 +19,11 @@ assume_yes = true
 
 # Run `sudo -v` to cache credentials at the start of the run; this avoids a
 # blocking password prompt in the middle of a possibly-unattended run.
-pre_sudo = true
+# Disabled: `sudo -v` validates a generic ticket, which command-scoped
+# NOPASSWD sudoers entries (dnf, flatpak) don't satisfy -- it prompted for a
+# password even with those in place. The actual `sudo dnf ...`/`sudo flatpak
+# ...` calls each match their own NOPASSWD rule fine without this.
+pre_sudo = false
 
 # Run inside tmux
 #run_in_tmux = true
