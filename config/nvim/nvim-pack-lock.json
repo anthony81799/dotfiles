@@ -32,15 +32,33 @@
       "src": "https://www.github.com/echasnovski/mini.nvim"
     },
     "nui.nvim": {
+<<<<<<< Updated upstream
       "rev": "a25dd472316d806eb38a5dd667c2e40da5570c75",
+||||||| Stash base
+      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+=======
+      "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
+>>>>>>> Stashed changes
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lspconfig": {
+<<<<<<< Updated upstream
       "rev": "51dbf5359da86721662c87ca10eb73add973737b",
+||||||| Stash base
+      "rev": "292f44408498103c47996ff5c18fd366293840d8",
+=======
+      "rev": "221c43884319e791519f0d6c94a7f2fbcd653278",
+>>>>>>> Stashed changes
       "src": "https://www.github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
+<<<<<<< Updated upstream
       "rev": "074aa4422bf029908338e855d0c0f71470a971bb",
+||||||| Stash base
+      "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
+=======
+      "rev": "e82ef6ae2c3eeb96c6916b29917f96bf630b2cdb",
+>>>>>>> Stashed changes
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "oil.nvim": {
@@ -52,11 +70,17 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "rustaceanvim": {
+<<<<<<< Updated upstream
       "rev": "f659765f93e207b8c44ee4a90eb88bd6e93bf05f",
+||||||| Stash base
+      "rev": "24958d97c0e2393339e59404ebe7ee687951ea24",
+=======
+      "rev": "d1da25b7398831b6bf3c053a7abe955ba9b22cc2",
+>>>>>>> Stashed changes
       "src": "https://github.com/mrcjkb/rustaceanvim"
     },
     "telescope.nvim": {
-      "rev": "427b576c16792edad01a92b89721d923c19ad60f",
+      "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "trouble.nvim": {
