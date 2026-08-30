@@ -140,25 +140,45 @@ else
 	fi
 fi
 
-# --- 4. Obsidian Note-Taking App ---
-if has_cmd flatpak; then
-	if ! flatpak info md.obsidian.Obsidian &>/dev/null; then
-		info_message "Installing Obsidian via Flatpak..."
+# --- 4. Flatpak Applications ---
+# App ID / friendly name pairs for everything installed via Flatpak on this
+# system. Add new apps here as they're picked up.
+FLATPAK_APPS=(
+	"com.github.tchx84.Flatseal|Flatseal"
+	"com.heroicgameslauncher.hgl|Heroic Games Launcher"
+	"com.vysp3r.ProtonPlus|ProtonPlus"
+	"dev.lizardbyte.app.Sunshine|Sunshine"
+	"io.github.dvlv.boxbuddyrs|BoxBuddy"
+	"md.obsidian.Obsidian|Obsidian"
+	"net.kuribo64.melonDS|melonDS"
+	"nl.jknaapen.fladder|Fladder"
+	"org.DolphinEmu.dolphin-emu|Dolphin Emulator"
+	"org.jeffvli.feishin|Feishin"
+	"org.libretro.RetroArch|RetroArch"
+)
 
-		if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
-			if flatpak install flathub md.obsidian.Obsidian -y; then
-				okay_message "Obsidian (Flatpak) installed."
+if has_cmd flatpak; then
+	if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
+		for entry in "${FLATPAK_APPS[@]}"; do
+			FLATPAK_ID="${entry%%|*}"
+			FLATPAK_NAME="${entry##*|}"
+
+			if ! flatpak info "$FLATPAK_ID" &>/dev/null; then
+				info_message "Installing ${FLATPAK_NAME} via Flatpak..."
+				if flatpak install flathub "$FLATPAK_ID" -y; then
+					okay_message "${FLATPAK_NAME} (Flatpak) installed."
+				else
+					warn_message "Failed to install ${FLATPAK_NAME} via Flatpak. Check $LOG_FILE for details."
+				fi
 			else
-				warn_message "Failed to install Obsidian via Flatpak. Check $LOG_FILE for details."
+				info_message "${FLATPAK_NAME} (Flatpak) is already installed."
 			fi
-		else
-			warn_message "Failed to add Flathub repository. Skipping Obsidian installation."
-		fi
+		done
 	else
-		info_message "Obsidian (Flatpak) is already installed."
+		warn_message "Failed to add Flathub repository. Skipping Flatpak app installation."
 	fi
 else
-	warn_message "Flatpak not installed. Skipping Obsidian installation. Please install Flatpak/Obsidian manually."
+	warn_message "Flatpak not installed. Skipping Flatpak app installation. Please install Flatpak manually."
 fi
 
 # --- 5. Call Helper Scripts for GUI Editors and Terminal Emulators ---

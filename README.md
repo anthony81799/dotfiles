@@ -92,7 +92,7 @@ The installer is split into two modes. **Full Desktop** runs both.
 | Script | What it does |
 | :--- | :--- |
 | `nvidia.sh` | Detects your NVIDIA GPU generation and installs the correct RPMFusion `akmod` driver. |
-| `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, and LocalSend (Flatpak). |
+| `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, LocalSend (native binary), and Flatpak apps (Flatseal, Heroic, ProtonPlus, Sunshine, BoxBuddy, Obsidian, melonDS, Fladder, Dolphin Emulator, Feishin, RetroArch). |
 | `editor.sh` (desktop) | Offers VS Code, VSCodium, and Zed editor installation. |
 | `terminal-emulator.sh` | Choose one of Alacritty, Kitty, WezTerm, or Ghostty to install. |
 
