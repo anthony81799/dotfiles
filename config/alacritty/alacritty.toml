@@ -26,7 +26,7 @@ white = "0xd4be98"
 [window]
 decorations = "None"
 padding = { x = 12, y = 12 }
-opacity = 1.0
+opacity = 0.85
 
 [scrolling]
 history = 3023

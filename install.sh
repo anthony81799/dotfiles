@@ -125,6 +125,10 @@ else
 	warn_message "DNF configuration file ($DNF_CONFIG) not found. Skipping DNF optimization."
 fi
 
+# --- 6.5. Btrfs Snapshots (runs regardless of install type; no-ops on non-btrfs) ---
+bash "${DOTFILES_DIR}/install/system/btrfs-snapshots.sh" || \
+	warn_message "Btrfs snapshot setup failed. Check log for details."
+
 # --- 7. Run Installations ---
 if [[ "$INSTALL_TERMINAL" = true ]]; then
 	info_message "Starting Terminal utilities installation script..."

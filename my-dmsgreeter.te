@@ -1,0 +1,10 @@
+
+module my-dmsgreeter 1.0;
+
+require {
+	type xdm_t;
+	class dir write;
+}
+
+#============= xdm_t ==============
+allow xdm_t self:dir write;

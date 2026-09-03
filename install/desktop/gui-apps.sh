@@ -151,7 +151,6 @@ FLATPAK_APPS=(
 	"io.github.dvlv.boxbuddyrs|BoxBuddy"
 	"md.obsidian.Obsidian|Obsidian"
 	"net.kuribo64.melonDS|melonDS"
-	"nl.jknaapen.fladder|Fladder"
 	"org.DolphinEmu.dolphin-emu|Dolphin Emulator"
 	"org.jeffvli.feishin|Feishin"
 	"org.libretro.RetroArch|RetroArch"

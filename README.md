@@ -74,6 +74,12 @@ Existing files are backed up with a `.bak` extension before linking. Re-running 
 
 The installer is split into two modes. **Full Desktop** runs both.
 
+### Always (regardless of mode)
+
+| Script | What it does |
+| :--- | :--- |
+| `system/btrfs-snapshots.sh` | On a btrfs root, installs `snapper` + the DNF plugin so every `dnf` transaction gets an automatic before/after snapshot, plus a pruned hourly/daily/weekly/monthly timeline. No-ops on non-btrfs. Roll back with `sudo snapper -c root undochange <first>..<second>`. |
+
 ### Terminal Only
 
 | Script | What it does |
@@ -92,7 +98,7 @@ The installer is split into two modes. **Full Desktop** runs both.
 | Script | What it does |
 | :--- | :--- |
 | `nvidia.sh` | Detects your NVIDIA GPU generation and installs the correct RPMFusion `akmod` driver. |
-| `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, LocalSend (native binary), and Flatpak apps (Flatseal, Heroic, ProtonPlus, Sunshine, BoxBuddy, Obsidian, melonDS, Fladder, Dolphin Emulator, Feishin, RetroArch). |
+| `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, LocalSend (native binary), and Flatpak apps (Flatseal, Heroic, ProtonPlus, Sunshine, BoxBuddy, Obsidian, melonDS, Dolphin Emulator, Feishin, RetroArch). |
 | `editor.sh` (desktop) | Offers VS Code, VSCodium, and Zed editor installation. |
 | `terminal-emulator.sh` | Choose one of Alacritty, Kitty, WezTerm, or Ghostty to install. |
 
