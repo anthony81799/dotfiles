@@ -101,7 +101,8 @@ The installer is split into two modes. **Full Desktop** runs both.
 | `gui-apps.sh` | Installs Dolphin, Thunderbird, Discord, Brave Browser, LocalSend (native binary), and Flatpak apps (Flatseal, Heroic, ProtonPlus, Sunshine, BoxBuddy, Obsidian, melonDS, Dolphin Emulator, Feishin, RetroArch). |
 | `editor.sh` (desktop) | Offers VS Code, VSCodium, and Zed editor installation. |
 | `terminal-emulator.sh` | Choose one of Alacritty, Kitty, WezTerm, or Ghostty to install. |
-| `greetd.sh` | If greetd/dms-greeter is present: loads the `my-dmsgreeter` SELinux module and syncs the greeter's monitor layout to match the real desktop session (see `scripts/regen-greeter-monitors.sh`). No-ops if greetd isn't installed. |
+| `dms.sh` | Optionally runs [DankMaterialShell](https://danklinux.com/)'s own installer (`install.danklinux.com`, installs Hyprland + DMS + deps, optionally `dms-greeter`). Then offers to sync `hyprland.lua` + `dms/binds-user.lua` (symlinked) and `DankMaterialShell/{settings,plugin_settings,firefox.css}.json` + `themes/` + `plugins.lock.json` (copied, never symlinked, to preserve the `greeter`-group ACLs DMS sets on that directory) between the dotfiles repo and the live machine. DMS's own auto-regenerated files (`binds.lua`, `colors.lua`, `cursor.lua`, `layout.lua`, `windowrules.lua`, `outputs.lua`) are intentionally never tracked. |
+| `greetd.sh` | If greetd/dms-greeter is present: installs `gnome-keyring-pam` and enables `gnome-keyring-daemon.socket` (so the login keyring auto-unlocks), loads the `my-dmsgreeter` SELinux module, and syncs the greeter's monitor layout to match the real desktop session (see `scripts/regen-greeter-monitors.sh`). No-ops if greetd isn't installed. |
 
 ---
 

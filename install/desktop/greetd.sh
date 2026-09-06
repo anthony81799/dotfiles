@@ -6,6 +6,9 @@
 # login screen) so it matches the real desktop session instead of falling
 # back to defaults:
 #
+# - Installs gnome-keyring-pam and enables gnome-keyring-daemon.socket, so
+#   the PAM hooks greetd already ships (in /etc/pam.d/greetd) can actually
+#   unlock your login keyring instead of silently no-op-ing.
 # - Loads the my-dmsgreeter SELinux module (allows xdm_t to write to its own
 #   dir; without it, targeted enforcing mode blocks part of the greeter
 #   session).
@@ -37,7 +40,29 @@ if ! has_cmd greetd && ! systemctl list-unit-files greetd.service &>/dev/null; t
 	finish "No greeter to configure."
 fi
 
-# --- 1. Load the SELinux module the greeter needs under enforcing mode ---
+# --- 1. Ensure gnome-keyring can actually auto-unlock at greetd login ---
+# /etc/pam.d/greetd (shipped by the greetd package itself, not hand-edited --
+# verify with `rpm -qf /etc/pam.d/greetd`) already includes optional
+# pam_gnome_keyring.so auth/session lines; they silently no-op unless the
+# module providing pam_gnome_keyring.so is actually installed.
+if ! rpm -q gnome-keyring-pam &>/dev/null; then
+	info_message "Installing gnome-keyring-pam so the greeter's PAM hooks can unlock your keyring..."
+	sudo dnf install -y gnome-keyring-pam || warn_message "Failed to install gnome-keyring-pam."
+else
+	info_message "gnome-keyring-pam already installed."
+fi
+
+if has_cmd systemctl; then
+	if ! systemctl --user is-enabled gnome-keyring-daemon.socket &>/dev/null; then
+		info_message "Enabling gnome-keyring-daemon.socket (user unit)..."
+		systemctl --user enable --now gnome-keyring-daemon.socket \
+			|| warn_message "Failed to enable gnome-keyring-daemon.socket."
+	else
+		info_message "gnome-keyring-daemon.socket already enabled."
+	fi
+fi
+
+# --- 2. Load the SELinux module the greeter needs under enforcing mode ---
 SELINUX_MODULE="${DOTFILES_DIR}/my-dmsgreeter.pp"
 if has_cmd getenforce && [[ "$(getenforce)" != "Disabled" ]]; then
 	if [[ -f "$SELINUX_MODULE" ]]; then
@@ -54,7 +79,7 @@ else
 	info_message "SELinux disabled -- skipping module install."
 fi
 
-# --- 2. Sync the greeter's monitor layout + config.toml wiring ---
+# --- 3. Sync the greeter's monitor layout + config.toml wiring ---
 REGEN_SCRIPT="${DOTFILES_DIR}/scripts/regen-greeter-monitors.sh"
 if [[ -x "$REGEN_SCRIPT" ]]; then
 	info_message "Syncing greeter monitor layout..."

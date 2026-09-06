@@ -1,0 +1,201 @@
+{
+  "currentThemeName": "custom",
+  "currentThemeCategory": "registry",
+  "customThemeFile": "/home/amason/.config/DankMaterialShell/themes/flexoki/theme.json",
+  "registryThemeVariants": {
+    "gruvboxMulti": {
+      "dark": {
+        "flavor": "material-hard-dark",
+        "accent": "green"
+      }
+    },
+    "gruvboxMaterial": "hard",
+    "bru": {
+      "dark": {
+        "flavor": "espresso",
+        "accent": "orange"
+      }
+    },
+    "amoledBlack": {
+      "dark": {
+        "flavor": "black",
+        "accent": "orange"
+      }
+    },
+    "flexoki": "orange"
+  },
+  "cornerRadius": 12,
+  "hyprlandLayoutGapsOverride": 2,
+  "useFahrenheit": true,
+  "barElevationEnabled": false,
+  "workspaceFocusedBorderColor": "surfaceText",
+  "workspaceFocusedBorderThickness": 3,
+  "networkPreference": "wifi",
+  "cursorSettings": {
+    "theme": "breeze_cursors",
+    "size": 24,
+    "niri": {
+      "hideWhenTyping": false,
+      "hideAfterInactiveMs": 0
+    },
+    "hyprland": {
+      "hideOnKeyPress": false,
+      "hideOnTouch": false,
+      "inactiveTimeout": 0
+    },
+    "dwl": {
+      "cursorHideTimeout": 0
+    }
+  },
+  "launcherLogoMode": "os",
+  "launcherLogoColorOverride": "primary",
+  "monoFontFamily": "JetBrainsMono NF",
+  "acMonitorTimeout": 1800,
+  "acLockTimeout": 900,
+  "lockBeforeSuspend": true,
+  "fadeToLockEnabled": false,
+  "fadeToDpmsEnabled": false,
+  "muxType": "zellij",
+  "matugenTemplateNeovim": true,
+  "dockSmartAutoHide": true,
+  "dockGroupByApp": true,
+  "dockIconSize": 30,
+  "dockIndicatorStyle": "line",
+  "dockIsolateDisplays": true,
+  "dockLauncherLogoMode": "os",
+  "notificationCompactMode": true,
+  "dankIslandBarId": "default",
+  "dankIslandPalette": "bright",
+  "dankIslandHomeCompactTight": true,
+  "updaterHideWidget": true,
+  "screenPreferences": {
+    "lockScreen": [
+      "DP-3"
+    ]
+  },
+  "barConfigs": [
+    {
+      "id": "default",
+      "name": "Main Bar",
+      "enabled": true,
+      "position": 0,
+      "screenPreferences": [
+        {
+          "name": "DP-3",
+          "model": "LC27G5xT"
+        }
+      ],
+      "showOnLastDisplay": false,
+      "leftWidgets": [
+        "launcherButton",
+        {
+          "id": "workspaceSwitcher",
+          "enabled": true
+        },
+        {
+          "id": "focusedWindow",
+          "enabled": true,
+          "focusedWindowCompactMode": false
+        }
+      ],
+      "centerWidgets": [
+        "music",
+        "clock",
+        "weather"
+      ],
+      "rightWidgets": [
+        {
+          "id": "systemTray",
+          "enabled": true
+        },
+        {
+          "id": "steamFlagsPlugin",
+          "enabled": true
+        },
+        {
+          "id": "clipboard",
+          "enabled": true
+        },
+        {
+          "id": "systemUpdate",
+          "enabled": true
+        },
+        {
+          "id": "notificationButton",
+          "enabled": true
+        },
+        {
+          "id": "controlCenterButton",
+          "enabled": true
+        }
+      ],
+      "spacing": 4,
+      "innerPadding": 4,
+      "bottomGap": 0,
+      "transparency": 1,
+      "widgetTransparency": 1,
+      "squareCorners": false,
+      "noBackground": false,
+      "gothCornersEnabled": false,
+      "gothCornerRadiusOverride": false,
+      "gothCornerRadiusValue": 12,
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "fontScale": 1,
+      "autoHide": false,
+      "autoHideDelay": 250,
+      "openOnOverview": false,
+      "visible": true,
+      "popupGapsAuto": true,
+      "popupGapsManual": 4,
+      "clickThrough": false,
+      "showOnWindowsOpen": true,
+      "shadowIntensity": 0,
+      "attachToScreenEdge": false,
+      "hoverPopouts": false
+    }
+  ],
+  "desktopClockCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "systemMonitorCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "builtInPluginSettings": {
+    "dms_settings_search": {
+      "trigger": "?"
+    },
+    "dms_clipboard_search": {
+      "trigger": "cb"
+    },
+    "dms_power": {
+      "trigger": "pw"
+    },
+    "dms_qr_generator": {
+      "trigger": "qrg"
+    }
+  },
+  "configVersion": 17
+}

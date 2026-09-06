@@ -23,7 +23,7 @@ DESKTOP_SCRIPT_DIR="${DOTFILES_DIR}/install/desktop"
 # --- Modular Execution ---
 # -------------------------------------------------------------
 
-for script in nvidia.sh gui-apps.sh greetd.sh; do
+for script in nvidia.sh gui-apps.sh dms.sh greetd.sh; do
     [[ -x "${DESKTOP_SCRIPT_DIR}/${script}" ]] \
         || fail_message "Required script not found or not executable: ${DESKTOP_SCRIPT_DIR}/${script}"
 done
@@ -35,6 +35,11 @@ bash "${DESKTOP_SCRIPT_DIR}/nvidia.sh"
 # Install GUI Applications
 log "Running script: gui-apps.sh"
 bash "${DESKTOP_SCRIPT_DIR}/gui-apps.sh"
+
+# DankMaterialShell + Hyprland setup (must run before greetd.sh, which
+# depends on ~/.config/hypr/dms/outputs.lua existing)
+log "Running script: dms.sh"
+bash "${DESKTOP_SCRIPT_DIR}/dms.sh"
 
 # greetd / dms-greeter setup (no-ops if greetd isn't installed)
 log "Running script: greetd.sh"

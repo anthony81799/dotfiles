@@ -51,20 +51,18 @@ banner "Starting dotfiles setup and installation"
 # --- 4. Symlink config files ---
 info_message "Linking dotfiles configuration to $XDG_CONFIG_HOME..."
 
-_link() {
-	local src="$1"
-	local dst="$2"
-	if [[ -e "$dst" && ! -L "$dst" ]]; then
-		warn_message "Backing up existing $(basename "$dst") → ${dst}.bak"
-		mv "$dst" "${dst}.bak"
-	fi
-	ln -sfn "$src" "$dst"
-	log "Linked: $src → $dst"
-}
+# _link() comes from install/lib.sh (sourced above).
 
 mkdir -p "$XDG_CONFIG_HOME"
 
 # Directories inside config/ to symlink into ~/.config/
+# NOTE: deliberately does NOT include `hypr` or `DankMaterialShell` -- both
+# are handled by install/desktop/dms.sh instead, which tracks only the
+# user-owned files within them (hyprland.lua, dms/binds-user.lua, and a
+# handful of DankMaterialShell/*.json + themes/) via copy, not a whole-dir
+# symlink. DMS regenerates several hypr/dms/*.lua files at runtime (they'd
+# fight a symlink), and DankMaterialShell/ carries a `greeter`-group ACL that
+# a symlink into this world-readable repo would silently widen.
 CONFIG_DIRS=(
 	alacritty atuin bottom btop Codium efm-langserver fastfetch
 	faugus-launcher fish ghostty git gitui glow go helix kitty npm nvim

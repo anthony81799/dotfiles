@@ -9,11 +9,12 @@
 # to your logged-in session.
 #
 # This script reads DMS's own generated Hyprland output config
-# (~/.config/hypr/dms/outputs.conf) -- the source of truth for your current
-# monitor layout -- and regenerates /etc/greetd/dms-hypr-monitors.lua from
-# it, so the greeter always mirrors whatever layout DMS currently has set.
-# It also makes sure /etc/greetd/config.toml actually passes that file to
-# dms-greeter via `-C`.
+# (~/.config/hypr/dms/outputs.lua, or the older outputs.conf if that's what
+# this machine still has) -- the source of truth for your current monitor
+# layout -- and regenerates /etc/greetd/dms-hypr-monitors.lua from it, so the
+# greeter always mirrors whatever layout DMS currently has set. It also makes
+# sure /etc/greetd/config.toml actually passes that file to dms-greeter via
+# `-C`.
 #
 # Safe to re-run any time your monitor layout changes (new monitor,
 # re-arranged positions, rotation). No-ops if the greeter is already in
@@ -34,18 +35,20 @@ ensure_gum
 
 banner "Greeter Monitor Layout Sync"
 
-SRC="${XDG_CONFIG_HOME}/hypr/dms/outputs.conf"
+SRC_LUA="${XDG_CONFIG_HOME}/hypr/dms/outputs.lua"
+SRC_CONF="${XDG_CONFIG_HOME}/hypr/dms/outputs.conf"
 DEST="/etc/greetd/dms-hypr-monitors.lua"
 CONFIG_TOML="/etc/greetd/config.toml"
 
-if [[ ! -f "$SRC" ]]; then
-	fail_message "Source layout not found: $SRC (is DMS/Hyprland set up on this machine?)"
+if [[ ! -f "$SRC_LUA" && ! -f "$SRC_CONF" ]]; then
+	fail_message "Neither $SRC_LUA nor $SRC_CONF found (is DMS/Hyprland set up on this machine?)"
 fi
 
 # --- 1. Convert Hyprland `monitor = ...` lines into hl.monitor({...}) calls ---
 # outputs.conf lines look like:
 #   monitor = DP-1, 2560x1440@143.998, 0x0, 1, transform, 1, vrr, 0
 # i.e. output, mode, position, scale, then arbitrary keyword/value pairs.
+# Only used as a fallback for machines that haven't migrated to outputs.lua yet.
 lua_line_from_monitor() {
 	local raw="$1"
 	raw="${raw#*=}"          # drop "monitor ="
@@ -74,19 +77,32 @@ lua_line_from_monitor() {
 	echo "hl.monitor(${out})"
 }
 
-info_message "Reading monitor layout from ${SRC}..."
 LUA_BODY=""
-while IFS= read -r line; do
-	[[ "$line" =~ ^[[:space:]]*monitor[[:space:]]*= ]] || continue
-	lua_line="$(lua_line_from_monitor "$line")" || {
-		warn_message "Skipping unparsable line: $line"
-		continue
-	}
-	LUA_BODY+="${lua_line}"$'\n'
-done <"$SRC"
+SRC_USED=""
+if [[ -f "$SRC_LUA" ]]; then
+	info_message "Reading monitor layout from ${SRC_LUA}..."
+	# outputs.lua's hl.monitor({...}) calls are already in the exact syntax
+	# dms-hypr-monitors.lua needs -- just drop DMS's generic empty-output
+	# fallback entry (output = "") and take real monitors as-is.
+	LUA_BODY="$(grep -E '^\s*hl\.monitor\(' "$SRC_LUA" | grep -v 'output = ""' || true)"
+	[[ -n "$LUA_BODY" ]] && { LUA_BODY+=$'\n'; SRC_USED="$SRC_LUA"; }
+fi
+
+if [[ -z "$LUA_BODY" && -f "$SRC_CONF" ]]; then
+	info_message "Reading monitor layout from ${SRC_CONF}..."
+	while IFS= read -r line; do
+		[[ "$line" =~ ^[[:space:]]*monitor[[:space:]]*= ]] || continue
+		lua_line="$(lua_line_from_monitor "$line")" || {
+			warn_message "Skipping unparsable line: $line"
+			continue
+		}
+		LUA_BODY+="${lua_line}"$'\n'
+	done <"$SRC_CONF"
+	[[ -n "$LUA_BODY" ]] && SRC_USED="$SRC_CONF"
+fi
 
 if [[ -z "$LUA_BODY" ]]; then
-	fail_message "No monitor lines found in ${SRC}. Refusing to write an empty layout."
+	fail_message "No monitor lines found in ${SRC_LUA} or ${SRC_CONF}. Refusing to write an empty layout."
 fi
 
 TMP_LUA="$(mktemp /tmp/dms-hypr-monitors.XXXXXX.lua)"
@@ -94,7 +110,7 @@ trap 'rm -f "$TMP_LUA"' EXIT
 
 cat >"$TMP_LUA" <<EOF
 -- Monitor layout for the DMS/greetd login screen (Hyprland).
--- Mirrors ${SRC/#$HOME/\~} so the greeter matches the logged-in session.
+-- Mirrors ${SRC_USED/#$HOME/\~} so the greeter matches the logged-in session.
 -- dms-greeter appends its own quickshell/session-start hook to this file automatically
 -- (via -C), so this file should contain ONLY compositor settings like monitors/input.
 --

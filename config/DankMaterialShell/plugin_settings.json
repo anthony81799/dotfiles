@@ -1,0 +1,62 @@
+{
+  "dankLauncherKeys": {
+    "enabled": true
+  },
+  "dankNotepadModule": {
+    "enabled": true
+  },
+  "dankKDEConnect": {
+    "enabled": true
+  },
+  "dankHyprlandWindows": {
+    "enabled": true
+  },
+  "dankHooks": {
+    "enabled": true
+  },
+  "dankActions": {
+    "enabled": true
+  },
+  "dankClight": {
+    "enabled": true
+  },
+  "calculator": {
+    "enabled": true,
+    "trigger": "="
+  },
+  "powerOptions": {
+    "enabled": true
+  },
+  "wallpaperCarousel": {
+    "enabled": true,
+    "overlayOpacity": 80
+  },
+  "extendedNetworkToggle": {
+    "enabled": true
+  },
+  "usbManager": {
+    "enabled": true
+  },
+  "obsidianSearch": {
+    "enabled": true
+  },
+  "sshConnections": {
+    "enabled": true
+  },
+  "dankObsidian": {
+    "enabled": true,
+    "isFlatpak": false
+  },
+  "commandRunner": {
+    "enabled": true
+  },
+  "dankQuickSearch": {
+    "enabled": true
+  },
+  "steamFlagsPlugin": {
+    "enabled": true
+  },
+  "confirmPowerActions": {
+    "enabled": true
+  }
+}

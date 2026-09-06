@@ -1,0 +1,70 @@
+{
+  "lockfileVersion": 1,
+  "plugins": {
+    "calculator": {
+      "repo": "https://github.com/rochacbruno/DankCalculator",
+      "commit": "73073d051d08254633f28f89d2609344c8289813"
+    },
+    "commandRunner": {
+      "repo": "https://github.com/devnullvoid/dms-command-runner",
+      "commit": "35277695de06beadaba701cb94cc8b096b233319"
+    },
+    "dankHyprlandWindows": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankHyprlandWindows",
+      "commit": "547023b3ba65bcb195c93fd4b111d0f1eebe0432"
+    },
+    "dankKDEConnect": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankKDEConnect",
+      "commit": "547023b3ba65bcb195c93fd4b111d0f1eebe0432"
+    },
+    "dankLauncherKeys": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankLauncherKeys",
+      "commit": "547023b3ba65bcb195c93fd4b111d0f1eebe0432"
+    },
+    "dankNotepadModule": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankNotepadModule",
+      "commit": "547023b3ba65bcb195c93fd4b111d0f1eebe0432"
+    },
+    "dankObsidian": {
+      "repo": "https://github.com/Samoggino/dankObsidian",
+      "commit": "a31c335d2ba83921fdc105ab3128d5cf3ca3d8cc"
+    },
+    "dankQuickSearch": {
+      "repo": "https://github.com/alcxyz/DankQuickSearch",
+      "commit": "46d4bf2a8f50f8c1ead1625c694aae12b907896f"
+    },
+    "extendedNetworkToggle": {
+      "repo": "https://github.com/notherealmarco/dms-plugin-extended-network",
+      "commit": "f58b4b28391eaa6157e9b89faf9837f711315930"
+    },
+    "obsidianSearch": {
+      "repo": "https://github.com/kmf/dms-obsidian-search",
+      "commit": "ecaa6963be10b0ff0adb61c5f38dbd7f3b96d2fc"
+    },
+    "powerOptions": {
+      "repo": "https://github.com/Nazahim/PowerOptions",
+      "commit": "95fa7949fd9614a21bcc7a14ff8cc917a7208cf8"
+    },
+    "sshConnections": {
+      "repo": "https://github.com/merdely/dms-plugins",
+      "path": "sshConnections",
+      "commit": "b45d16f30f56c16371d93ecf54c3d0b4c23a24a5"
+    },
+    "steamFlagsPlugin": {
+      "repo": "https://github.com/Gateton/dank-bar-steam-flags",
+      "commit": "a96deedfe0c141241e1c51b2442da97f876d3b9d"
+    },
+    "usbManager": {
+      "repo": "https://github.com/NordicsSys/dms-usb-manager",
+      "commit": "0a2e13ea9e6cc6061688e073d41df26eb66f0e45"
+    },
+    "wallpaperCarousel": {
+      "repo": "https://github.com/motor-dev/wallpaperCarousel",
+      "commit": "bca1f457763d51c8001f8edcc89df3e619420163"
+    }
+  }
+}

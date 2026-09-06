@@ -114,6 +114,19 @@ warn_message() {
     style_message 214 "$msg"
 }
 
+# Function: Symlink src -> dst, backing up any pre-existing non-symlink file/dir as dst.bak
+_link() {
+    local src="$1"
+    local dst="$2"
+    if [[ -e "$dst" && ! -L "$dst" ]]; then
+        warn_message "Backing up existing $(basename "$dst") → ${dst}.bak"
+        mv "$dst" "${dst}.bak"
+    fi
+    mkdir -p "$(dirname "$dst")"
+    ln -sfn "$src" "$dst"
+    log "Linked: $src → $dst"
+}
+
 spinner() {
     local title="$1"; shift
     log "START: $title"
