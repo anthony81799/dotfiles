@@ -23,7 +23,7 @@ DESKTOP_SCRIPT_DIR="${DOTFILES_DIR}/install/desktop"
 # --- Modular Execution ---
 # -------------------------------------------------------------
 
-for script in nvidia.sh gui-apps.sh; do
+for script in nvidia.sh gui-apps.sh greetd.sh; do
     [[ -x "${DESKTOP_SCRIPT_DIR}/${script}" ]] \
         || fail_message "Required script not found or not executable: ${DESKTOP_SCRIPT_DIR}/${script}"
 done
@@ -35,5 +35,9 @@ bash "${DESKTOP_SCRIPT_DIR}/nvidia.sh"
 # Install GUI Applications
 log "Running script: gui-apps.sh"
 bash "${DESKTOP_SCRIPT_DIR}/gui-apps.sh"
+
+# greetd / dms-greeter setup (no-ops if greetd isn't installed)
+log "Running script: greetd.sh"
+bash "${DESKTOP_SCRIPT_DIR}/greetd.sh"
 
 finish "Desktop Environment installation complete. Please reboot for all changes to take effect."
