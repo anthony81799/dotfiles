@@ -23,7 +23,7 @@ DESKTOP_SCRIPT_DIR="${DOTFILES_DIR}/install/desktop"
 # --- Modular Execution ---
 # -------------------------------------------------------------
 
-for script in nvidia.sh gui-apps.sh dms.sh greetd.sh; do
+for script in nvidia.sh gui-apps.sh dms.sh greetd.sh drive-watcher.sh; do
     [[ -x "${DESKTOP_SCRIPT_DIR}/${script}" ]] \
         || fail_message "Required script not found or not executable: ${DESKTOP_SCRIPT_DIR}/${script}"
 done
@@ -44,5 +44,9 @@ bash "${DESKTOP_SCRIPT_DIR}/dms.sh"
 # greetd / dms-greeter setup (no-ops if greetd isn't installed)
 log "Running script: greetd.sh"
 bash "${DESKTOP_SCRIPT_DIR}/greetd.sh"
+
+# Background watcher that offers to partition/format/mount new drives
+log "Running script: drive-watcher.sh"
+bash "${DESKTOP_SCRIPT_DIR}/drive-watcher.sh"
 
 finish "Desktop Environment installation complete. Please reboot for all changes to take effect."

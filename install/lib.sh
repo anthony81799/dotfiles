@@ -129,7 +129,9 @@ _link() {
 
 spinner() {
     local title="$1"; shift
+    local rc=0
     log "START: $title"
-    gum spin --title "$title" -- "$@"
-    log "END: $title"
+    gum spin --show-error --title "$title" -- "$@" || rc=$?
+    log "END: $title (exit $rc)"
+    return "$rc"
 }
