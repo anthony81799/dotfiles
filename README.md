@@ -91,7 +91,7 @@ The installer is split into two modes. **Full Desktop** runs both.
 | `editor.sh` | Offers Neovim and/or Helix installation. |
 | `oh-my-posh.sh` | Installs or updates Oh My Posh to `~/.local/bin`. |
 | `helix.sh` | Builds Helix from source and optionally installs LSPs. |
-| `docker-services.sh` | Installs Docker and optionally deploys self-hosted services via Compose. |
+| `docker-services.sh` | Sets up the full homelab-setup media server (Docker, Tailscale, MariaDB, cert, crons, all containers); `--export DIR` on the old server makes a migration bundle it can restore from. |
 
 ### Full Desktop (adds)
 
