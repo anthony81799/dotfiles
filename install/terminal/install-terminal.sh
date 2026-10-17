@@ -97,6 +97,8 @@ bash "${DOTFILES_DIR}/install/terminal/rust.sh" || warn_message "Rust install ha
 
 bash "${DOTFILES_DIR}/install/terminal/editor.sh"
 
+bash "${DOTFILES_DIR}/install/terminal/claude.sh"
+
 if [ "$INSTALL_DOCKER" = true ]; then
 	bash "${DOTFILES_DIR}/install/terminal/docker-services.sh"
 fi
