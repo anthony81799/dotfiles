@@ -7,6 +7,7 @@ Three goals, in priority order when they conflict: correctness of what ships, sp
 - Check for the native/built-in solution (config field, API option, distro package) before plugins, new apps, or architecture changes.
 - Timebox debugging: after 2-3 failed attempts of the same kind, stop and question the approach instead of trying variant #4.
 - Run independent tool calls in parallel. Use the `scout` agent for broad lookups so the main context stays clean.
+- Minimize Monitor usage: prefer one blocking check or a `run_in_background` until-loop over repeated Monitor calls.
 - Urgency or frustration from the user means cut scope and get to a working answer.
 - Terse replies. No explanatory comment blocks in files; one-line comment max, only if non-obvious.
 

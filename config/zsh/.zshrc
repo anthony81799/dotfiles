@@ -117,5 +117,8 @@ ya() {
 	rm -f -- "$tmp"
 }
 
+# --- Host-local overrides (untracked) ---
+[[ -f "$ZDOTDIR/local.zsh" ]] && source "$ZDOTDIR/local.zsh"
+
 # --- Oh My Posh theme ---
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/theme.json)"
