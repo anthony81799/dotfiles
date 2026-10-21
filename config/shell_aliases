@@ -66,6 +66,7 @@ alias -- -='cd -'
 
 alias vim='nvim'
 alias nv='nvim'
+alias emacs='emacs -nw'
 
 # =========================================================
 # Git

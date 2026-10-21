@@ -65,7 +65,7 @@ mkdir -p "$XDG_CONFIG_HOME"
 # a symlink into this world-readable repo would silently widen.
 CONFIG_DIRS=(
 	alacritty atuin bottom btop Codium efm-langserver fastfetch
-	faugus-launcher fish ghostty git gitui glow go helix kitty npm nvim
+	doom faugus-launcher fish ghostty git gitui glow go helix kitty npm nvim
 	oh-my-posh wezterm xplr zellij zsh
 )
 
