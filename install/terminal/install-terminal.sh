@@ -69,6 +69,8 @@ sudo dnf install -y \
 }
 okay_message "Core DNF dependencies installed."
 
+bash "${DOTFILES_DIR}/install/terminal/fonts.sh"
+
 bash "${DOTFILES_DIR}/install/terminal/change-shell.sh"
 
 # Step 4: Hostname configuration
