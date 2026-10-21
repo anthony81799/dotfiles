@@ -29,7 +29,9 @@
       auto-save-default nil
       auto-revert-verbose nil
       select-enable-clipboard t
-      ring-bell-function #'ignore)
+      ring-bell-function #'ignore
+      ;; only prompt on quit when buffers are unsaved
+      confirm-kill-emacs nil)
 
 (setq-default truncate-lines t
               tab-width 4

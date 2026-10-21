@@ -78,6 +78,7 @@ alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previou
 
 alias vim='nvim'
 alias nv='nvim'
+alias emacs='emacs -nw'
 
 # =========================================================
 # Git
