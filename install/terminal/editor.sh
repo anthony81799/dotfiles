@@ -95,6 +95,8 @@ install_doom() {
 	fi
 	if has_cmd uv; then
 		uv tool install pytest && uv tool install pipenv || warn_message "Failed to install Python tools."
+	else
+		warn_message "uv not found; skipping pytest/pipenv."
 	fi
 
 	info_message "Running doom install (config is symlinked from dotfiles)..."

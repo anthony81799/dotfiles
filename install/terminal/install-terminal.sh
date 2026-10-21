@@ -62,7 +62,7 @@ info_message "Installing core DNF dependencies..."
 sudo dnf install -y \
 	autojump-zsh perl jq fastfetch alsa-lib-devel entr fzf git-all openssl-devel \
 	python3-pip protobuf protobuf-c protobuf-compiler protobuf-devel cmake zlib-ng \
-	zlib-ng-devel oniguruma-devel luarocks \
+	zlib-ng-devel oniguruma-devel luarocks uv \
 	wget @fonts @c-development @development-tools || {
 	fail_message "Failed to install core DNF dependencies."
 	finish "Terminal utility setup failed."
