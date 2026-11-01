@@ -79,6 +79,8 @@ alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previou
 alias vim='nvim'
 alias nv='nvim'
 alias emacs='emacs -nw'
+# alacritty's terminfo has curly + colored underlines; xterm-256color (kept for ssh) doesn't
+[[ -n $ALACRITTY_SOCKET ]] && alias emacs='TERM=alacritty emacs -nw'
 
 # =========================================================
 # Git
