@@ -113,5 +113,8 @@
 ;; blink.cmp auto_show is off in markdown
 (add-hook '+corfu-inhibit-auto-functions (lambda () (derived-mode-p 'markdown-mode)))
 
+;; lsp-mode ships a just-lsp client; it only needs starting
+(add-hook 'just-mode-local-vars-hook #'lsp! 'append)
+
 ;; guess the root from .git/projectile instead of prompting; files outside a project start without a root
 (setq lsp-auto-guess-root t)
