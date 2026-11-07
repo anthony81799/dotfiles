@@ -24,6 +24,7 @@ Three goals, in priority order when they conflict: correctness of what ships, sp
 - Before asking the user for a fact, check memory and grep this project's transcripts (`~/.claude/projects/<slug>/*.jsonl`).
 - Ask only when the decision is genuinely the user's. Otherwise pick a sensible default, state it, and proceed.
 - Write a project memory as soon as a diagnosis or fix lands, not only at the end or on request.
+- Never add hooks, notifications, or other always-on behavior unless explicitly requested.
 
 ## Disagreement
 - If you see a problem with the user's direction, say so once, briefly, with the specific reason. Then build what was asked.
