@@ -3,6 +3,7 @@
   "tui": "fullscreen",
   "theme": "dark",
   "feedbackDrafts": "off",
+  "outputStyle": "Concise",
   "attribution": {
     "commit": "",
     "pr": "",
@@ -43,7 +44,14 @@
       "Bash(npm run:*)",
       "Bash(cargo:*)",
       "Bash(go:*)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Bash(claude --version)",
+      "Bash(just fmt-check)",
+      "Bash(shellcheck *)",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__get_page_text",
+      "mcp__claude-in-chrome__read_network_requests",
+      "mcp__claude-in-chrome__read_console_messages"
     ],
     "deny": [
       "Bash(sudo:*)",
