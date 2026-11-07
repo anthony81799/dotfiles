@@ -168,7 +168,10 @@ require("mason-tool-installer").setup({
 
 require("zen-mode").setup({})
 require("which-key").setup({})
-require("hardtime").setup({ restriction_mode = "hint" })
+require("hardtime").setup({
+	restriction_mode = "hint",
+	disabled_keys = { ["<Up>"] = false, ["<Down>"] = false, ["<Left>"] = false, ["<Right>"] = false },
+})
 require("trouble").setup({})
 vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 vim.keymap.set(
