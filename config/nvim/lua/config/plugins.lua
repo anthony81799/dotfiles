@@ -1,9 +1,23 @@
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+		if name == "sniprun" and (kind == "install" or kind == "update") then
+			vim.system({ "sh", "install.sh" }, { cwd = ev.data.path })
+		end
+		if name == "nvim-treesitter" and kind == "update" then
+			if not ev.data.active then
+				vim.cmd.packadd("nvim-treesitter")
+			end
+			vim.cmd("TSUpdate")
+		end
+	end,
+})
+
 vim.pack.add({
 	"https://www.github.com/echasnovski/mini.nvim",
 	{
 		src = "https://github.com/nvim-treesitter/nvim-treesitter",
-		branch = "main",
-		build = ":TSUpdate",
+		version = "main",
 	},
 	-- Language Server Protocols
 	"https://www.github.com/neovim/nvim-lspconfig",
@@ -32,6 +46,10 @@ vim.pack.add({
 		version = "harpoon2",
 	},
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+	"https://github.com/sindrets/diffview.nvim",
+	"https://github.com/NeogitOrg/neogit",
+	"https://github.com/nvim-orgmode/orgmode",
+	"https://github.com/michaelb/sniprun",
 })
 
 local setup_treesitter = function()
@@ -184,6 +202,17 @@ vim.keymap.set("n", "<leader>fx", function()
 	telescope_builtin.diagnostics({ bufnr = 0 })
 end, { desc = "Telescope document diagnostics" })
 vim.keymap.set("n", "<leader>fX", telescope_builtin.diagnostics, { desc = "Telescope workspace diagnostics" })
+
+require("diffview").setup({})
+require("neogit").setup({})
+vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
+
+require("orgmode").setup({
+	org_agenda_files = "~/org/**/*",
+	org_default_notes_file = "~/org/refile.org",
+})
+
+require("sniprun").setup({})
 
 require("oil").setup({})
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
