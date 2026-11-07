@@ -52,6 +52,14 @@
       :n "J" #'+my/join-keep-cursor
       :n "-" #'dired-jump
 
+      ;; vim built-ins, not in nvim/lua
+      :n "C-a"   #'evil-numbers/inc-at-pt
+      :n "C-x"   #'evil-numbers/dec-at-pt
+      :v "C-a"   #'evil-numbers/inc-at-pt
+      :v "C-x"   #'evil-numbers/dec-at-pt
+      :v "g C-a" #'evil-numbers/inc-at-pt-incremental
+      :v "g C-x" #'evil-numbers/dec-at-pt-incremental
+
       :n "C-<up>"    (cmd! (evil-window-increase-height 2))
       :n "C-<down>"  (cmd! (evil-window-decrease-height 2))
       :n "C-<left>"  (cmd! (evil-window-decrease-width 2))
