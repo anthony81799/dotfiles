@@ -176,6 +176,8 @@ require("blink.cmp").setup({
 		["<CR>"] = { "accept", "fallback" },
 		["<C-j>"] = { "select_next", "fallback" },
 		["<C-k>"] = { "select_prev", "fallback" },
+		["<Down>"] = { "select_next", "fallback" },
+		["<Up>"] = { "select_prev", "fallback" },
 	},
 	appearance = { nerd_font_variant = "mono" },
 	completion = {
