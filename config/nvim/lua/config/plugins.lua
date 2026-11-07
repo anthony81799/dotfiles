@@ -109,7 +109,18 @@ require("mini.move").setup({})
 require("mini.surround").setup({})
 require("mini.cursorword").setup({})
 require("mini.indentscope").setup({})
-require("mini.pairs").setup({})
+-- Don't pair next to word characters (opening before a word, closing quote after one)
+local skip_next = "[^%w%%%'%[%\"%.%`%$]"
+require("mini.pairs").setup({
+	mappings = {
+		["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]" .. skip_next },
+		["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]" .. skip_next },
+		["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]" .. skip_next },
+		['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\%w]" .. skip_next, register = { cr = false } },
+		["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^\\%w]" .. skip_next, register = { cr = false } },
+		["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\%w]" .. skip_next, register = { cr = false } },
+	},
+})
 require("mini.trailspace").setup({})
 require("mini.bufremove").setup({})
 require("mini.notify").setup({})
